@@ -36,6 +36,15 @@ public class TagListFragment extends Fragment {
         String[] tagArray = {
                 "Tag 1 - Shoe",
                 "Tag 2 - Key",
+                "Tag 3 - Phone",
+                "Tag 1 - Shoe",
+                "Tag 2 - Key",
+                "Tag 3 - Phone",
+                "Tag 1 - Shoe",
+                "Tag 2 - Key",
+                "Tag 3 - Phone",
+                "Tag 1 - Shoe",
+                "Tag 2 - Key",
                 "Tag 3 - Phone"
         };
 
@@ -48,7 +57,6 @@ public class TagListFragment extends Fragment {
                 R.layout.list_tag,//ID of list tag layout
                 R.id.list_tag_textview, //ID of textview to populate
                 listTag); //list data
-
         // Get reference to the list view, and attach adapter
         ListView listView = (ListView) rootView.findViewById(R.id.listview_tag);
         listView.setAdapter(mTagListAdapter);

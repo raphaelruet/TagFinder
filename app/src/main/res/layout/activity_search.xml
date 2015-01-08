@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".LibraryActivity"
-    android:id="@+id/libraryActivity"
+    tools:context=".StartActivity"
+    android:id="@+id/startActivity"
     android:background="@color/background_material_dark">
 
     <ImageView
@@ -32,7 +32,7 @@
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/back_button"
+        android:src="@drawable/back_button_white"
         android:background="#00ffffff"
         android:longClickable="false"
         android:scaleType="fitEnd"
@@ -43,18 +43,30 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.eseoteam.android.tagfinder.TagListFragment"
-        android:id="@+id/fragment"
+    <TextView
+        android:id="@+id/ipAdressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Please scan a tag to begin"
+        android:layout_marginTop="90dp"
+        android:textColor="@color/main_theme_white"
         android:layout_below="@+id/top_bar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true" />
+
+
+    <ImageView
+        android:id="@+id/bottomBar"
+        android:src="@drawable/top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:background="@color/main_theme_grey"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/backButton"
-        android:layout_alignEnd="@+id/backButton"
-        tools:layout="@layout/fragment_library" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </ImageView>
+
+
 
 
 </RelativeLayout>

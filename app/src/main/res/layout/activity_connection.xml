@@ -13,6 +13,7 @@
         android:background="@color/main_theme_grey">
     </ImageView>
 
+    <!-- LOGO TAGFINDER
     <ImageView
         android:id="@+id/logo_tagfinder"
         android:src="@drawable/ic_tagfinder"
@@ -22,83 +23,27 @@
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/top_bar"
         android:paddingLeft="10dp"
-        android:paddingTop="5dp"
+        android:paddingTop="15dp"
         android:paddingRight="150dp"
-        android:scaleType="fitStart" />
-
+        android:scaleType="fitStart"/>
+    -->
 
     <TextView
         android:id="@+id/ipAdressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="IP Adress"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:text="Please scan a tag to begin"
+        android:layout_marginTop="90dp"
         android:textColor="@color/main_theme_white"
-         />
-
-    <EditText
-        android:id="@+id/ipField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/main_theme_grey"
-        android:minWidth="200dp"
-        android:minHeight="30dp"
-        android:maxLines="1"
-        android:minLines="1"
-        android:textColor="@color/main_theme_white"
-        android:text="@string/default_ip"
-        android:textSize="25sp"
-        android:textIsSelectable="true"
-        android:padding="5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/ipAdressText" />
-
-    <TextView
-        android:id="@+id/portText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Port"
-        android:textColor="@color/main_theme_white"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/ipField"
-        android:paddingTop="20dp"/>
-
-    <EditText
-        android:id="@+id/portField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/main_theme_grey"
-        android:minWidth="200dp"
-        android:minHeight="30dp"
-        android:maxLines="1"
-        android:minLines="1"
-        android:textColor="@color/main_theme_white"
-        android:text="@string/default_port"
-        android:textSize="25sp"
-        android:textIsSelectable="true"
-        android:padding="5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/portText"/>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="210dp"
-        android:text="Connect"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/portField"
-        android:layout_alignEnd="@+id/portField"
-        android:layout_marginBottom="20dp" />
+        android:layout_below="@+id/top_bar"
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/back_button"
+        android:src="@drawable/back_button_white"
         android:background="#00ffffff"
         android:longClickable="false"
         android:scaleType="fitEnd"
@@ -106,9 +51,39 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:paddingRight="10dp"
-        android:layout_toRightOf="@+id/ipField"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ProgressBar
+        android:id="@+id/loadingGif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="50dp"
+        android:layout_below="@+id/ipAdressText"
+        android:layout_centerHorizontal="true"
+        android:minHeight="100dp"
+        android:minWidth="100dp" />
+
+    <Button
+        android:id="@+id/skipButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skip connection"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="CONNECTION"
+        android:textColor="@color/main_theme_white"
+        android:layout_below="@id/top_bar"
+        android:paddingTop="30dp"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

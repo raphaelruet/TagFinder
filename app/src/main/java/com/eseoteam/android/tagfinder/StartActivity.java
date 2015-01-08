@@ -27,24 +27,6 @@ public class StartActivity extends ActionBarActivity {
         setContentView(R.layout.activity_start);
         getSupportActionBar().hide();
 
-        Button btnOne = (Button)findViewById(R.id.buttonOne);
-        btnOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentBtnOne = new Intent(getApplicationContext(), ConnectionActivity.class);
-                startActivity(intentBtnOne);
-            }
-        });
-
-        Button btnTwo = (Button)findViewById(R.id.buttonTwo);
-        btnTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentBtnTwo = new Intent(getApplicationContext(), LibraryActivity.class);
-                startActivity(intentBtnTwo);
-            }
-        });
-
         if(ENABLE_TIMER) {
             //Switch to the connectionActivity after SPLASH_TIME_OUT milliseconds.
             new Handler().postDelayed(new Runnable() {
