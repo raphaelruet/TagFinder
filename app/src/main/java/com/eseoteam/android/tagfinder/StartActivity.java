@@ -1,18 +1,25 @@
 package com.eseoteam.android.tagfinder;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
 
 public class StartActivity extends ActionBarActivity {
+
+    /**
+     * SplashScreen duration in millisecond.
+     */
+    private static final int SPLASH_TIME_OUT = 3000;
+
+    /**
+     * Enable the SPLASH_TIME_OUT duration display of the screen.
+     */
+    private static final boolean ENABLE_TIMER = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,19 @@ public class StartActivity extends ActionBarActivity {
                 startActivity(intentBtnTwo);
             }
         });
+
+        if(ENABLE_TIMER) {
+            //Switch to the connectionActivity after SPLASH_TIME_OUT milliseconds.
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), ConnectionActivity.class);
+                    startActivity(intent);
+                    // Close this activity
+                    finish();
+                }
+            }, SPLASH_TIME_OUT);
+        }
     }
 
 
