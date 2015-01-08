@@ -57,6 +57,12 @@ public class StartActivity extends ActionBarActivity {
                 }
             }, SPLASH_TIME_OUT);
         }
+        else {
+            Intent intent = new Intent(getApplicationContext(), ConnectionActivity.class);
+            startActivity(intent);
+            // Close this activity
+            finish();
+        }
     }
 
 
