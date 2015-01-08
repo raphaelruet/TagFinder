@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".StartActivity"
+    android:id="@+id/startActivity"
+    android:background="@color/background_material_dark">
+
+    <ImageView
+        android:id="@+id/top_bar"
+        android:src="@drawable/top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:background="@color/main_theme_grey">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/logo_tagfinder"
+        android:src="@drawable/ic_tagfinder"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/top_bar"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="150dp"
+        android:scaleType="fitStart" />
+
+
+    <TextView
+        android:id="@+id/ipAdressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="IP Adress"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/main_theme_white"
+         />
+
+    <EditText
+        android:id="@+id/ipField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/main_theme_grey"
+        android:minWidth="200dp"
+        android:minHeight="30dp"
+        android:maxLines="1"
+        android:minLines="1"
+        android:textColor="@color/main_theme_white"
+        android:text="@string/default_ip"
+        android:textSize="25sp"
+        android:textIsSelectable="true"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ipAdressText" />
+
+    <TextView
+        android:id="@+id/portText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Port"
+        android:textColor="@color/main_theme_white"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ipField"
+        android:paddingTop="20dp"/>
+
+    <EditText
+        android:id="@+id/portField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/main_theme_grey"
+        android:minWidth="200dp"
+        android:minHeight="30dp"
+        android:maxLines="1"
+        android:minLines="1"
+        android:textColor="@color/main_theme_white"
+        android:text="@string/default_port"
+        android:textSize="25sp"
+        android:textIsSelectable="true"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/portText"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="210dp"
+        android:text="Connect"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/portField"
+        android:layout_alignEnd="@+id/portField"
+        android:layout_marginBottom="20dp" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_button"
+        android:background="#00ffffff"
+        android:longClickable="false"
+        android:scaleType="fitEnd"
+        android:layout_alignBottom="@+id/top_bar"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:layout_toRightOf="@+id/ipField"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>

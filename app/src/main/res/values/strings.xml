@@ -5,4 +5,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+
+    <!-- Colors -->
+    <color name="main_theme_blue" >#03A5FF</color>
+    <color name="main_theme_grey" >#f04f4f4f</color>
+    <color name="main_theme_white" >#DDDDDD</color>
+
 </resources>

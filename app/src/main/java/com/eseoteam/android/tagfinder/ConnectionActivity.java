@@ -3,40 +3,29 @@ package com.eseoteam.android.tagfinder;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.ImageButton;
 
 
-public class StartActivity extends ActionBarActivity {
+public class ConnectionActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_connection);
         getSupportActionBar().hide();
 
-        Button btnOne = (Button)findViewById(R.id.buttonOne);
-        btnOne.setOnClickListener(new View.OnClickListener() {
+        final ImageButton backButton = (ImageButton)findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentBtnOne = new Intent(getApplicationContext(), ConnectionActivity.class);
-                startActivity(intentBtnOne);
+                Intent intentGoBack = new Intent(getApplicationContext(),StartActivity.class);
+                startActivity(intentGoBack);
             }
         });
 
-        Button btnTwo = (Button)findViewById(R.id.buttonTwo);
-        btnTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentBtnTwo = new Intent(getApplicationContext(), LibraryActivity.class);
-                startActivity(intentBtnTwo);
-            }
-        });
     }
 
 

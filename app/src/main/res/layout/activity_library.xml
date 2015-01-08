@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".LibraryActivity"
+    android:id="@+id/libraryActivity"
+    android:background="@color/background_material_dark">
+
+    <ImageView
+        android:id="@+id/top_bar"
+        android:src="@drawable/top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:background="@color/main_theme_grey">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/logo_tagfinder"
+        android:src="@drawable/ic_tagfinder"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/top_bar"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="150dp" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_button"
+        android:background="#00ffffff"
+        android:longClickable="false"
+        android:scaleType="fitEnd"
+        android:layout_alignBottom="@+id/top_bar"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:layout_toRightOf="@+id/ipField"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default configuration -->
+    <string name="default_ip">10.13.19.60</string>
+    <string name="default_port">1234</string>
+
+
+</resources>
