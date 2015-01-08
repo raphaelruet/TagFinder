@@ -16,9 +16,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ConnectionActivity"></activity>
-        <activity android:name=".LibraryActivity"></activity>
-
+        <activity android:name=".ConnectionActivity" />
+        <activity android:name=".LibraryActivity" />
+        <activity
+            android:name=".InfoTagActivity"
+            android:label="@string/title_activity_info_tag"
+            android:parentActivityName=".LibraryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eseoteam.android.tagfinder.LibraryActivity" />
+        </activity>
     </application>
 
 </manifest>
