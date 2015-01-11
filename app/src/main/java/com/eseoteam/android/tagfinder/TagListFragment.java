@@ -37,15 +37,15 @@ public class TagListFragment extends Fragment {
                 "Tag 1 - Shoe",
                 "Tag 2 - Key",
                 "Tag 3 - Phone",
-                "Tag 1 - Shoe",
-                "Tag 2 - Key",
-                "Tag 3 - Phone",
-                "Tag 1 - Shoe",
-                "Tag 2 - Key",
-                "Tag 3 - Phone",
-                "Tag 1 - Shoe",
-                "Tag 2 - Key",
-                "Tag 3 - Phone"
+                "Tag 4 - Shoe",
+                "Tag 5 - Key",
+                "Tag 6 - Phone",
+                "Tag 7 - Shoe",
+                "Tag 8 - Key",
+                "Tag 9 - Phone",
+                "Tag 10 - Shoe",
+                "Tag 11 - Key",
+                "Tag 12 - Phone"
         };
 
         List<String> listTag = new ArrayList<String>(

@@ -22,7 +22,8 @@ public class InfoTagActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+                    .commit();        getSupportActionBar().hide();
+
         }
     }
 

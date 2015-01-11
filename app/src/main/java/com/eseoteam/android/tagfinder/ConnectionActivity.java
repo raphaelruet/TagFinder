@@ -20,21 +20,12 @@ public class ConnectionActivity extends ActionBarActivity {
         setContentView(R.layout.activity_connection);
         getSupportActionBar().hide();
 
-        final ImageButton backButton = (ImageButton)findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentGoBack = new Intent(getApplicationContext(),StartActivity.class);
-                startActivity(intentGoBack);
-            }
-        });
-
-        findViewById(R.id.skipButton).setOnClickListener(new View.OnClickListener() {
+        /*findViewById(R.id.skipButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
             }
-        });
+        });*/
 
 
 

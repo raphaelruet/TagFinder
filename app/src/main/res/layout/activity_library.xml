@@ -13,35 +13,60 @@
         android:background="@color/main_theme_grey">
     </ImageView>
 
-    <!-- LOGO TAGFINDER
-    <ImageView
-        android:id="@+id/logo_tagfinder"
-        android:src="@drawable/ic_tagfinder"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/top_bar"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:paddingRight="150dp"
-        android:scaleType="fitStart"/>
-    -->
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/back_button"
-        android:background="#00ffffff"
-        android:longClickable="false"
-        android:scaleType="fitEnd"
-        android:layout_alignBottom="@+id/top_bar"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/fragment"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/logo_tagfinder"
+            android:src="@drawable/ic_tagfinder"
+            android:layout_width="200dp"
+            android:layout_height="fill_parent"
+
+            android:layout_toLeftOf="@+id/addButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:contentDescription="the button to ad a tag"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/add_icon_white"
+            android:background="#00ffffff"
+            android:longClickable="false"
+            android:scaleType="fitEnd"
+            android:layout_alignParentRight="true"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="10dp"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageButton
+            android:id="@+id/quitButton"
+            android:contentDescription="the button to quit tagfinder"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/quit_icon_white"
+            android:background="#00ffffff"
+            android:longClickable="false"
+            android:scaleType="fitCenter"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            tools:ignore="RtlSymmetry"
+            android:layout_toRightOf="@+id/logo_tagfinder"
+            android:layout_toEndOf="@+id/logo_tagfinder" />
+    </RelativeLayout>
+
 
     <fragment
         android:layout_width="match_parent"
@@ -52,8 +77,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/backButton"
-        android:layout_alignEnd="@+id/backButton"
         tools:layout="@layout/fragment_library" />
 
 
