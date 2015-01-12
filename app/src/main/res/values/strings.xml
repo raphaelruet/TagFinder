@@ -12,6 +12,7 @@
     <string name="tag_name_text">Tag name</string>
     <string name="tag_id_text">Tag ID</string>
     <string name="tag_info_text">Tag Information</string>
+    <string name="tag_date_text">Added on</string>
 
     <!-- Colors -->
     <color name="main_theme_blue">#03A5FF</color>

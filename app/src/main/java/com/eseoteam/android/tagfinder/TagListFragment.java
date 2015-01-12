@@ -61,12 +61,21 @@ public class TagListFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_tag);
         listView.setAdapter(mTagListAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String tagInfo = mTagListAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), InfoTagActivity.class)
                         .putExtra(Intent.EXTRA_TEXT,tagInfo);
+                startActivity(intent);
+            }
+        });*/
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String tagInfo = mTagListAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
             }
         });

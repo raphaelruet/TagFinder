@@ -10,9 +10,10 @@
         android:id="@+id/list_tag_textview"
         android:minHeight="?android:listPreferredItemHeight"
         tools:context=".PlaceholderFragment"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textStyle="normal"
         android:gravity="center_vertical"
-        android:textColor="@color/main_theme_white"/>
-
+        android:textColor="@color/main_theme_white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 </LinearLayout>
