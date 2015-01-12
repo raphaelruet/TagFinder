@@ -6,10 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 
 public class ConnectionActivity extends ActionBarActivity {
@@ -20,14 +16,13 @@ public class ConnectionActivity extends ActionBarActivity {
         setContentView(R.layout.activity_connection);
         getSupportActionBar().hide();
 
-        /*findViewById(R.id.skipButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.skipButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
             }
-        });*/
-
-
+        });
 
     }
 
