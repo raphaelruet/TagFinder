@@ -1,0 +1,165 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".StartActivity"
+    android:id="@+id/startActivity"
+    android:background="@color/background_material_dark">
+
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/ipAdressText"
+        android:id="@+id/relativeLayout">
+
+        <ImageView
+            android:id="@+id/top_bar"
+            android:src="@drawable/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_theme_grey">
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/logo_tagfinder"
+            android:src="@drawable/ic_tagfinder"
+            android:layout_width="200dp"
+            android:layout_height="fill_parent"
+            android:layout_toLeftOf="@+id/quitButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/back_button_white"
+            android:background="#00ffffff"
+            android:longClickable="false"
+            android:scaleType="fitEnd"
+            android:layout_alignParentRight="true"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="10dp"
+            tools:ignore="RtlSymmetry" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout2">
+
+        <ImageView
+            android:id="@+id/bottomBar"
+            android:src="@drawable/top_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_theme_grey">
+        </ImageView>
+
+        <ImageButton
+            android:id="@+id/validButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/valid_icon_white"
+            android:background="#00ffffff"
+            android:scaleType="centerInside"
+            android:layout_alignParentRight="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/relativeLayout2">
+
+        <TextView
+            android:id="@+id/tagNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/tag_name_text"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/relativeLayout"
+            android:textColor="@color/main_theme_white"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:id="@+id/tagNameField"
+            android:layout_below="@+id/tagNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/main_theme_grey"
+            android:minHeight="40dp"
+            android:minWidth="300dp" />
+
+        <TextView
+            android:id="@+id/tagIdText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tagNameField"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/tag_id_text"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/main_theme_white"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:id="@+id/tagIdField"
+            android:layout_below="@+id/tagIdText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/main_theme_grey"
+            android:minHeight="40dp"
+            android:minWidth="300dp" />
+
+        <TextView
+            android:id="@+id/tagDataText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tagIdField"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/tag_info_text"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/main_theme_white"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:id="@+id/tagDataField"
+            android:layout_below="@+id/tagDataText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/main_theme_grey"
+            android:minLines="5"
+            android:minWidth="300dp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
