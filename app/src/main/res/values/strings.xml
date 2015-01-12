@@ -4,12 +4,19 @@
     <string name="app_name">TagFinder</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_info_tag">InfoTagActivity</string>
+
+
+
+    <!-- Label strings -->
+    <string name="tag_name_text">Tag name</string>
+    <string name="tag_id_text">Tag ID</string>
+    <string name="tag_info_text">Tag Information</string>
 
     <!-- Colors -->
     <color name="main_theme_blue">#03A5FF</color>
     <color name="main_theme_grey">#f04f4f4f</color>
     <color name="main_theme_white">#DDDDDD</color>
 
-    <string name="title_activity_info_tag">InfoTagActivity</string>
 
 </resources>
