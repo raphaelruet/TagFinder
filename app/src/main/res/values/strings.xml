@@ -13,6 +13,12 @@
     <string name="tag_id_text">Tag ID</string>
     <string name="tag_info_text">Tag Information</string>
 
+    <!-- Wifi AlertDialog strings -->
+    <string name="wifi_dialog_title">Wifi is not enabled!</string>
+    <string name="wifi_dialog_message">Do you want to enable wifi ?</string>
+    <string name="wifi_dialog_yes">Yes</string>
+    <string name="wifi_dialog_no">No</string>
+
     <!-- Colors -->
     <color name="main_theme_blue">#03A5FF</color>
     <color name="main_theme_grey">#f04f4f4f</color>
