@@ -11,16 +11,24 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class ConnectionActivity extends ActionBarActivity {
+
+    /**
+     * The request code chen user goes to the Wifi settings.
+     * Must be >=0 to be returned.
+     */
+    private static final int REQUEST_ENABLE_WIFI = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection);
+        //Hide the top action bar.
         getSupportActionBar().hide();
-
+        //Set the skip checking connection button.
         Button skipButton = (Button)findViewById(R.id.skipButton);
         skipButton.setOnClickListener(this.skipButtonListener);
     }
@@ -28,21 +36,16 @@ public class ConnectionActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //Retrieve the network state.
-        ConnectivityManager connManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
         //If the wifi is disabled, ask the user to enable it.
-        if (!mWifi.isConnected()) {
-            this.startWifiAlertDialog();
+        if (!this.isWifiEnabled()) {
+            this.displayWifiAlertDialog();
         }
     }
 
     /**
      * Displays an AlertDialog asking to enable wifi or not.
      */
-    private void startWifiAlertDialog() {
+    private void displayWifiAlertDialog() {
         //Creates alertDialog
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
@@ -63,6 +66,35 @@ public class ConnectionActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //If the wifi is disabled, ask the user to enable it.
+        switch (requestCode) {
+            case REQUEST_ENABLE_WIFI:
+                if (!this.isWifiEnabled()) {
+                    this.displayWifiAlertDialog();
+                }
+                break;
+            default:
+                Toast.makeText(getApplicationContext(),
+                        R.string.result_error,Toast.LENGTH_SHORT).show();
+                this.finish();
+                break;
+        }
+
+    }
+
+    /**
+     * Checks if the Wifi is enabled
+     * @return True if the Wifi is enabled else false.
+     */
+    private boolean isWifiEnabled() {
+        //Retrieve the network state.
+        ConnectivityManager connManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return mWifi.isConnected();
+    }
     /**
      * Listener on the skipButton.
      * Switches to the libraryActivity when pressed.
@@ -83,7 +115,7 @@ public class ConnectionActivity extends ActionBarActivity {
             = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), REQUEST_ENABLE_WIFI);
         }
     };
 
