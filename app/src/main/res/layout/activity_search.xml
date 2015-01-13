@@ -5,34 +5,42 @@
     android:id="@+id/startActivity"
     android:background="@color/background_material_dark">
 
-    <ImageView
-        android:id="@+id/top_bar"
-        android:src="@drawable/top_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="75dp"
-        android:background="@color/main_theme_grey">
-    </ImageView>
-
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="75dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/top_bar">
+        android:id="@+id/relativeLayout">
 
         <ImageView
-            android:id="@+id/logo_tagfinder"
-            android:src="@drawable/ic_tagfinder"
-            android:layout_width="200dp"
-            android:layout_height="fill_parent"
+            android:id="@+id/top_bar"
+            android:src="@drawable/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_theme_grey">
+        </ImageView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:layout_toLeftOf="@+id/backButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"/>
+            >
+
+            <ImageView
+                android:id="@+id/logo_tagfinder"
+                android:src="@drawable/ic_tagfinder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp"
+                />
+
+        </LinearLayout>
+
+
+
 
         <ImageButton
             android:id="@+id/backButton"
@@ -54,10 +62,10 @@
         android:id="@+id/radarLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/top_bar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/bottomBarLayout">
+        android:layout_above="@+id/bottomBarLayout"
+        android:layout_below="@+id/relativeLayout">
 
         <ImageView
             android:layout_width="200dp"
@@ -67,16 +75,14 @@
             android:layout_centerVertical="true"
             android:background="@drawable/radar_background"/>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/relativeLayout3"
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-
-        </RelativeLayout>
+            android:background="@drawable/radar_background"/>
 
     </RelativeLayout>
 
@@ -120,7 +126,9 @@
             android:text="@string/tag_name_text"
             android:textColor="@color/main_theme_blue"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
 
         <TextView
             android:id="@+id/tagIdText"
@@ -136,14 +144,16 @@
 
         <TextView
             android:id="@+id/tagId"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/tag_id_text"
             android:textColor="@color/main_theme_blue"
             android:layout_below="@+id/tagName"
             android:layout_toRightOf="@+id/tagNameText"
-            android:layout_toEndOf="@+id/tagNameText" />
+            android:layout_toEndOf="@+id/tagNameText"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
 
         <TextView
             android:id="@+id/tagDateText"
@@ -174,11 +184,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="dsafcasdfsdfgdsfgvsdfwdfsdfsdafddddddddfgasjdbchvasmdbcvmnbdv"
+            android:text="@string/tag_date_text"
             android:textColor="@color/main_theme_blue"
             android:layout_alignTop="@+id/tagDateText"
             android:layout_toRightOf="@+id/tagDateText"
-            android:layout_toEndOf="@+id/tagDateText" />
+            android:layout_toEndOf="@+id/tagDateText"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
 
         <TextView
             android:id="@+id/tagInfo"
@@ -190,6 +202,8 @@
             android:layout_below="@+id/tagDate"
             android:layout_toRightOf="@+id/tagInfoText"
             android:layout_toEndOf="@+id/tagInfoText"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             />
 
 

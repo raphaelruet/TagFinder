@@ -1,4 +1,226 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="com.eseoteam.android.tagfinder.InfoTagActivity" tools:ignore="MergeRootFrame" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".StartActivity"
+    android:id="@+id/startActivity"
+    android:background="@color/background_material_dark">
+
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
+
+        <ImageView
+            android:id="@+id/top_bar"
+            android:src="@drawable/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_theme_grey">
+        </ImageView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@+id/backButton"
+            >
+
+            <ImageView
+                android:id="@+id/logo_tagfinder"
+                android:src="@drawable/ic_tagfinder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp"
+                />
+
+        </LinearLayout>
+
+
+
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/back_button_white"
+            android:background="#00ffffff"
+            android:longClickable="false"
+            android:scaleType="fitEnd"
+            android:layout_alignParentRight="true"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="10dp"
+            tools:ignore="RtlSymmetry" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/relativeLayout2"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tagNameText"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_name_text"
+            android:textColor="@color/main_theme_white"
+            android:gravity="right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tagIdText"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_id_text"
+            android:textColor="@color/main_theme_white"
+            android:gravity="right"
+            android:layout_below="@+id/tagNameText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+
+        <TextView
+            android:id="@+id/tagDateText"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_date_text"
+            android:textColor="@color/main_theme_white"
+            android:gravity="right"
+            android:layout_below="@+id/tagIdText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tagInfoText"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_info_text"
+            android:textColor="@color/main_theme_white"
+            android:gravity="right"
+            android:layout_below="@+id/tagDate"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tagName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_name_text"
+            android:textColor="@color/main_theme_blue"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/tagNameText"
+            android:layout_toEndOf="@+id/tagNameText"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <TextView
+            android:id="@+id/tagId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_id_text"
+            android:textColor="@color/main_theme_blue"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_above="@+id/tagDate"
+            android:layout_toRightOf="@+id/tagIdText"
+            android:layout_toEndOf="@+id/tagIdText" />
+
+        <TextView
+            android:id="@+id/tagDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_date_text"
+            android:textColor="@color/main_theme_blue"
+            android:layout_alignTop="@+id/tagDateText"
+            android:layout_toRightOf="@+id/tagDateText"
+            android:layout_toEndOf="@+id/tagDateText"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <TextView
+            android:id="@+id/tagInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tag_info_text"
+            android:textColor="@color/main_theme_blue"
+            android:layout_below="@+id/tagDate"
+            android:layout_toRightOf="@+id/tagInfoText"
+            android:layout_toEndOf="@+id/tagInfoText"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout2">
+
+        <ImageView
+            android:id="@+id/bottomBar"
+            android:src="@drawable/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_theme_grey"/>
+
+        <View android:id="@+id/fakeView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"/>
+
+
+        <ImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/search_icon_white"
+            android:scaleType="fitCenter"
+            android:background="@color/main_theme_grey"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@id/fakeView"
+            android:padding="15dp"/>
+
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/delete_icon_white"
+            android:scaleType="fitCenter"
+            android:background="@color/main_theme_grey"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@id/fakeView"
+            android:padding="15dp"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

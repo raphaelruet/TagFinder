@@ -75,7 +75,7 @@ public class TagListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String tagInfo = mTagListAdapter.getItem(position);
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                Intent intent = new Intent(getActivity(), InfoTagActivity.class);
                 startActivity(intent);
             }
         });
