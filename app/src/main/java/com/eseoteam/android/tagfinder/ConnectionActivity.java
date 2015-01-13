@@ -115,7 +115,9 @@ public class ConnectionActivity extends ActionBarActivity {
             = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
             startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), REQUEST_ENABLE_WIFI);
+
         }
     };
 
