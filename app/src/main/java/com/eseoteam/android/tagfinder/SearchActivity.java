@@ -2,9 +2,7 @@ package com.eseoteam.android.tagfinder;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Layout;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+
 
 
 public class SearchActivity extends ActionBarActivity {
@@ -18,5 +16,9 @@ public class SearchActivity extends ActionBarActivity {
         radarView.
         addContentView(radarView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT , ViewGroup.LayoutParams.MATCH_PARENT));
         */
+
+
+
+
     }
 }

@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_toLeftOf="@+id/backButton"
+            android:layout_toLeftOf="@+id/addButton"
             >
 
             <ImageView
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:padding="5dp"
+                android:padding="7dp"
                 />
 
         </LinearLayout>
@@ -43,10 +43,10 @@
 
 
         <ImageButton
-            android:id="@+id/backButton"
+            android:id="@+id/addButton"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:src="@drawable/back_button_white"
+            android:src="@drawable/add_icon_white"
             android:background="#00ffffff"
             android:longClickable="false"
             android:scaleType="fitEnd"
@@ -54,6 +54,20 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:paddingRight="10dp"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageButton
+            android:id="@+id/quitButton"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/quit_icon_white"
+            android:background="#00ffffff"
+            android:longClickable="false"
+            android:scaleType="fitStart"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="5dp"
+            android:layout_alignLeft="@id/addButton"
             tools:ignore="RtlSymmetry" />
 
     </RelativeLayout>

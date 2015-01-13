@@ -26,5 +26,6 @@
     <color name="main_theme_grey">#f04f4f4f</color>
     <color name="main_theme_white">#DDDDDD</color>
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
