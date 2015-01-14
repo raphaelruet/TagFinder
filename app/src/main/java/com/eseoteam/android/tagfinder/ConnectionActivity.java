@@ -6,12 +6,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.eseoteam.android.tagfinder.communication.Communication;
+
+import java.math.BigInteger;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.ByteOrder;
 
 
 public class ConnectionActivity extends ActionBarActivity {
@@ -21,6 +32,10 @@ public class ConnectionActivity extends ActionBarActivity {
      * Must be >=0 to be returned.
      */
     private static final int REQUEST_ENABLE_WIFI = 1;
+
+    private static final int CONNECTION_PORT = 12345;
+
+    private Communication communication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +54,9 @@ public class ConnectionActivity extends ActionBarActivity {
         //If the wifi is disabled, ask the user to enable it.
         if (!this.isWifiEnabled()) {
             this.displayWifiAlertDialog();
+        }
+        else {
+            this.initializeCommunication();
         }
     }
 
@@ -73,6 +91,9 @@ public class ConnectionActivity extends ActionBarActivity {
             case REQUEST_ENABLE_WIFI:
                 if (!this.isWifiEnabled()) {
                     this.displayWifiAlertDialog();
+                }
+                else {
+                    this.initializeCommunication();
                 }
                 break;
             default:
@@ -137,4 +158,43 @@ public class ConnectionActivity extends ActionBarActivity {
             finish();
         }
     };
+
+    protected String getWifiIpAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+
+        // Convert little-endian to big-endianif needed
+        if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+            ipAddress = Integer.reverseBytes(ipAddress);
+        }
+
+        byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+
+        String ipAddressString;
+        try {
+            ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+        } catch (UnknownHostException ex) {
+            Log.e("ConnectionActivity:getWifiIpAddress", "Unable to get host address.");
+            ipAddressString = null;
+        }
+
+        return ipAddressString;
+    }
+
+    private void initializeCommunication() {
+        try {
+            final String wifiAddress = this.getWifiIpAddress(getApplicationContext());
+            Log.i("ConnectionActivity","Wifi Address:" + wifiAddress);
+            DatagramSocket socket = new DatagramSocket(CONNECTION_PORT,
+                    InetAddress.getByName(wifiAddress));
+            this.communication = new Communication(socket);
+            this.communication.start();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        catch(UnknownHostException uhe){
+        Log.e("Main","Bad host");
+    }
+
+    }
 }
