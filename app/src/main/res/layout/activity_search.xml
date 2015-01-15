@@ -14,36 +14,33 @@
 
         <ImageView
             android:id="@+id/top_bar"
+            android:contentDescription="@string/top_bar_description"
             android:src="@drawable/top_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/main_theme_grey">
         </ImageView>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_toLeftOf="@+id/backButton"
-            >
+            android:layout_toLeftOf="@+id/backButton">
 
             <ImageView
                 android:id="@+id/logo_tagfinder"
+                android:contentDescription="@string/logo_description"
                 android:src="@drawable/ic_tagfinder"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:padding="5dp"
-                />
+                android:padding="5dp" />
 
         </LinearLayout>
 
-
-
-
         <ImageButton
             android:id="@+id/backButton"
+            android:contentDescription="@string/back_button_description"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:src="@drawable/back_button_white"
@@ -54,35 +51,7 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:paddingRight="10dp"
-            tools:ignore="RtlSymmetry" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/radarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/bottomBarLayout"
-        android:layout_below="@+id/relativeLayout">
-
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:scaleType="fitCenter"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/radar_background"/>
-
-
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:scaleType="fitCenter"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/radar_background"/>
+            android:paddingLeft="0dp"/>
 
     </RelativeLayout>
 
@@ -97,6 +66,7 @@
 
         <ImageView
             android:id="@+id/bottomBar"
+            android:contentDescription="@string/bottom_bar_description"
             android:src="@drawable/top_bar"
             android:layout_width="match_parent"
             android:layout_height="150dp"
@@ -206,8 +176,17 @@
             android:paddingRight="5dp"
             />
 
-
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/piechartLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_above="@+id/bottomBarLayout"
+        android:gravity="center">
+
+    </RelativeLayout>
 
 </RelativeLayout>
