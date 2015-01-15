@@ -26,6 +26,14 @@
     <color name="main_theme_grey">#f04f4f4f</color>
     <color name="main_theme_white">#DDDDDD</color>
 
+    <!-- Content description -->
+    <string name="top_bar_description">The top bar of all UI</string>
+    <string name="bottom_bar_description">The bottom bar of this screen</string>
+    <string name="logo_description">Logo of the application</string>
+    <string name="back_button_description">Button that allow to go back</string>
+
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
