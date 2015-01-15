@@ -22,6 +22,13 @@ public class InfoTagActivity extends ActionBarActivity {
         getSupportActionBar().hide();
 
 
+        findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+            }
+        });
+
         /*
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
