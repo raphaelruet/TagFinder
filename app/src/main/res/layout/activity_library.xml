@@ -17,7 +17,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/listview_tag"
+        android:layout_above="@+id/fragment"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
@@ -59,26 +59,17 @@
             android:src="@drawable/quit_icon_white"
             android:background="#00ffffff"
             android:longClickable="false"
-            android:scaleType="fitCenter"
+            android:scaleType="fitStart"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
-            tools:ignore="RtlSymmetry"
-            android:layout_toRightOf="@+id/logo_tagfinder"
-            android:layout_toEndOf="@+id/logo_tagfinder" />
+            android:paddingLeft="5dp"
+            android:layout_alignLeft="@id/addButton"
+            tools:ignore="RtlSymmetry" />
+
     </RelativeLayout>
 
 
-    <!--fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.eseoteam.android.tagfinder.TagListFragment"
-        android:id="@+id/fragment"
-        android:layout_below="@+id/top_bar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        tools:layout="@layout/fragment_library" /-->
-
+    
     <ListView
         android:id="@id/listview_tag"
         android:layout_width="match_parent"
@@ -95,7 +86,9 @@
         android:layout_marginTop="5dp"
         android:text="Enter Data"
         android:onClick="onClickEnterData"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/fragment_library"
+        android:layout_below="@+id/relativeLayout" />
 
 
 </RelativeLayout>

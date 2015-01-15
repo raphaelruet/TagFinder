@@ -6,8 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_info_tag">InfoTagActivity</string>
 
-
-
     <!-- Label strings -->
     <string name="tag_name_text">Tag name</string>
     <string name="tag_id_text">Tag ID</string>
@@ -20,10 +18,22 @@
     <string name="wifi_dialog_yes">Yes</string>
     <string name="wifi_dialog_no">No</string>
 
+    <!-- Activity result strings -->
+    <string name="result_error">Error unexpected activity result. Exiting.</string>
+
     <!-- Colors -->
     <color name="main_theme_blue">#03A5FF</color>
     <color name="main_theme_grey">#f04f4f4f</color>
     <color name="main_theme_white">#DDDDDD</color>
 
+    <!-- Content description -->
+    <string name="top_bar_description">The top bar of all UI</string>
+    <string name="bottom_bar_description">The bottom bar of this screen</string>
+    <string name="logo_description">Logo of the application</string>
+    <string name="back_button_description">Button that allow to go back</string>
+
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
