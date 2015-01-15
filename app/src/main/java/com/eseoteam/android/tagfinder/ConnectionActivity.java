@@ -25,7 +25,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 
 
-public class ConnectionActivity extends ActionBarActivity {
+public class ConnectionActivity extends ActionBarActivity implements BinderListener{
 
     /**
      * The request code chen user goes to the Wifi settings.
@@ -33,7 +33,12 @@ public class ConnectionActivity extends ActionBarActivity {
      */
     private static final int REQUEST_ENABLE_WIFI = 1;
 
+    /**
+     * The default connection port of the socket.
+     */
     private static final int CONNECTION_PORT = 12345;
+
+    private String wifiAddress;
 
     private Communication communication;
 
@@ -181,13 +186,18 @@ public class ConnectionActivity extends ActionBarActivity {
         return ipAddressString;
     }
 
+    /**
+     * Starts the communication by connecting the socket to the device ip and the specified port.
+     */
     private void initializeCommunication() {
         try {
-            final String wifiAddress = this.getWifiIpAddress(getApplicationContext());
-            Log.i("ConnectionActivity","Wifi Address:" + wifiAddress);
+            this.wifiAddress = this.getWifiIpAddress(getApplicationContext());
+            Log.d("ConnectionActivity","Wifi Address:" + wifiAddress);
             DatagramSocket socket = new DatagramSocket(CONNECTION_PORT,
-                    InetAddress.getByName(wifiAddress));
-            this.communication = new Communication(socket);
+                    InetAddress.getByName(this.wifiAddress));
+            Binder binder = new Binder();
+            binder.addListener(this);
+            this.communication = new Communication(socket,binder);
             this.communication.start();
         } catch (SocketException e) {
             e.printStackTrace();
@@ -196,5 +206,25 @@ public class ConnectionActivity extends ActionBarActivity {
         Log.e("Main","Bad host");
     }
 
+    }
+
+    @Override
+    public void notifyFrameChange(FrameChangedEvent event) {
+        final String address = this.wifiAddress;
+        final int port = this.CONNECTION_PORT;
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                //Notify user he's connected.
+                Toast.makeText(getApplicationContext(),"Connected with IP: " + address
+                        + "\nOn port : " + port,Toast.LENGTH_LONG).show();
+                //Go to library screen
+                startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+            }
+        };
+        this.runOnUiThread(action);
+        //Close the connectionActivity;
+        this.finish();
     }
 }

@@ -22,6 +22,13 @@ public class Connection {
     private final static int FRAME_LENGTH = 128;
 
     /**
+     * Timeout of the socket in milliseconds.
+     * If >0 the receive() method will block during this amount of time.
+     * If = 0 it means that it's an infinite timeout.
+     */
+    private final static int SOCKET_TIMEOUT = 0;
+
+    /**
      * Connection socket.
      */
     private DatagramSocket socket=null;
@@ -31,7 +38,7 @@ public class Connection {
     public Connection(DatagramSocket socket){
         this.socket = socket;
         try{
-            this.socket.setSoTimeout(1000);
+            this.socket.setSoTimeout(SOCKET_TIMEOUT);
         }catch(SocketException e){
             Log.e("Connection:Connection","Problem setting timeout");
         }
@@ -61,7 +68,8 @@ public class Connection {
             this.socket.receive(packet);
             msg = new String(packet.getData(), 0, packet.getLength());
         }catch(IOException e){
-            Log.e("Connection:read","Error while receiving a packet");
+            //TODO
+            //Log.e("Connection:read","Error while receiving a packet");
             throw e;
         }
         return msg;
