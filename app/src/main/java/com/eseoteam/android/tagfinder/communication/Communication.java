@@ -2,6 +2,8 @@ package com.eseoteam.android.tagfinder.communication;
 
 import android.util.Log;
 
+import com.eseoteam.android.tagfinder.Binder;
+
 import java.io.IOException;
 import java.net.DatagramSocket;
 
@@ -28,11 +30,17 @@ public class Communication extends Thread {
      */
     private boolean connected;
 
+    /**
+     * Command to perform actions on receipt.
+     */
+    private Command command;
+
     //Constructors//
-    public Communication(DatagramSocket socket){
+    public Communication(DatagramSocket socket, Binder binder){
 
         this.connection = new Connection(socket);
         this.connected = true;
+        this.command = new ChangeFrameCommand(binder);
     }
 
     //Accessor//
@@ -52,12 +60,13 @@ public class Communication extends Thread {
             try {
                 this.receivedMessage = this.connection.read();
             } catch (IOException e) {
-                Log.e("Communication:run","Error while reading frame");
+                //TODO
+                //Log.e("Communication:run","Error while reading frame");
             }
             if(this.receivedMessage != null){
-                //TODO link with binder.
-                Log.d("Communication", "Message received");
-                //this.command.execute(this.receivedMessage);
+                this.command.execute(this.receivedMessage);
+                //interpretMessage(this.receivedMessage);
+                Log.d("Communication", "Message received" + this.receivedMessage);
             }
         }
         this.closeConnection();
@@ -76,5 +85,14 @@ public class Communication extends Thread {
      */
     private void  closeConnection(){
         this.connection.closeConnection();
+    }
+
+    public void interpretMessage(String frame){
+        final String[] stringStock = frame.split(";");
+        try{
+            this.command.execute(stringStock[7]+","+stringStock[8]);
+        } catch(NumberFormatException e){
+            Log.e("Communication","Number Format exception");
+        }
     }
 }
