@@ -1,19 +1,24 @@
 package com.eseoteam.android.tagfinder;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 
 public class InfoTagActivity extends ActionBarActivity {
+    TextView textTagName;
+    TextView textTagId;
+    TextView textTagData;
+    String tagId;
+    private static final String TAG_NAME = "tag_name";
+    private static final String TAG_MID = "tag_mid";
+    private static final String TAG_DATA = "tag_data";
+    static SQLiteDatabase db = null;
+    private DatabaseHelper databaseHelper;
+    long tag_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,43 +27,53 @@ public class InfoTagActivity extends ActionBarActivity {
         getSupportActionBar().hide();
 
 
-        findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-            }
-        });
+        //String tagName = this.getIntent().getStringExtra(TAG_NAME);
+        databaseHelper = new DatabaseHelper(this);
 
-        /*
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();        getSupportActionBar().hide();
 
-        }*/
+        textTagName = (TextView) findViewById(R.id.tagName);
+        textTagId = (TextView) findViewById(R.id.tagId);
+        textTagData = (TextView) findViewById(R.id.tagInfo);
+
+        Intent intent = getIntent();
+        Cursor cursor = databaseHelper.getAllData();
+
+        if (cursor != null && cursor.moveToFirst()) {
+            String name = cursor.getString(cursor.getColumnIndex("tag_name"));
+            textTagName.append(name);
+            String id = cursor.getString(cursor.getColumnIndex("tag_mid"));
+            textTagId.append(id);
+            String info = cursor.getString(cursor.getColumnIndex("tag_data"));
+            textTagData.append(info);
+        }
+
+    }
+}
+
+        /*textTagName.setText("");
+        textTagId.setText("");
+        textTagData.setText("");
+        //move cursor to first position
+        cursor.moveToFirst();
+        //we use data using column index
+        String name =cursor.getString(cursor.getColumnIndex("tag_name"));
+        String id =cursor.getString(cursor.getColumnIndex("tag_mid"));
+        String info =cursor.getString(cursor.getColumnIndex("tag_data"));
+        //display on text view
+        textTagName.append(name);
+        textTagId.append(id);
+        textTagData.append(info);*/
+
+        /*String tagName = this.getIntent().getStringExtra(TAG_NAME);
+        textTagName = (TextView) findViewById(R.id.tagName);
+
+        databaseHelper = new DatabaseHelper(this);
+        cursor = databaseHelper.getAllData();
+
+        if (tagName != null) {
+            cursor.moveToPosition(2);
+            textTagName.setText(cursor.getString(cursor.getColumnIndex("tag_name")));
+
     }
 
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    /*
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            Intent intent = getActivity().getIntent();
-            View rootView = inflater.inflate(R.layout.fragment_info_tag, container, false);
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
-                String tagStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.info_tag))
-                        .setText(tagStr);
-            }
-            return rootView;
-        }
-    }*/
-}
+}*/

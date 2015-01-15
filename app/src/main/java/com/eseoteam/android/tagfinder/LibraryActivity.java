@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 
@@ -16,6 +17,7 @@ public class LibraryActivity extends Activity {
     private DatabaseHelper databaseHelper;
     private static final int ENTER_DATA_REQUEST_CODE = 1;
     private ListView listView;
+    private ImageButton btnAdd;
 
     private static final String TAG = LibraryActivity.class.getSimpleName();
 
@@ -31,30 +33,39 @@ public class LibraryActivity extends Activity {
 
         listView = (ListView) findViewById(R.id.listview_tag);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "clicked on item: " + position);
+                Log.d("Clicked item id", " "+ id);
+
+                Intent intent = new Intent(LibraryActivity.this, InfoTagActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, id);
+                startActivity(intent);
+            }
+        });
+
+
+        btnAdd = (ImageButton) findViewById(R.id.addButton);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(getApplicationContext(), AddTagActivity.class)
+                        ,ENTER_DATA_REQUEST_CODE);
             }
         });
 
         // Database query can be a time consuming task ..
         // so its safe to call database query in another thread
-        // Handler, will handle this stuff for you <img src="http://s0.wp.com/wp-includes/images/smilies/icon_smile.gif?m=1129645325g" alt=":)" class="wp-smiley">
+        // Handler will handle the call of the database query (consuming task in another thread)
 
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                customAdapter = new CustomCursorAdapter(LibraryActivity.this, databaseHelper.getAllData());
+                customAdapter = new CustomCursorAdapter(LibraryActivity.this,
+                        databaseHelper.getAllData());
                 listView.setAdapter(customAdapter);
             }
         });
-    }
-
-    public void onClickEnterData(View btnAdd) {
-
-        startActivityForResult(new Intent(this, AddTagActivity.class), ENTER_DATA_REQUEST_CODE);
-
     }
 
     @Override
@@ -72,38 +83,3 @@ public class LibraryActivity extends Activity {
         }
     }
 }
-
-
-
-
-
-
-   /* @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_library);
-        getSupportActionBar().hide();
-
-        /*if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.libraryActivity, new TagListFragment())
-                    .commit();
-        }*/
-
-        /*findViewById(R.id.quitButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                System.exit(0);
-            }
-        });
-
-        findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), AddTagActivity.class));
-            }
-        });
-
-    }*/

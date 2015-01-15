@@ -32,7 +32,5 @@ public class CustomCursorAdapter extends CursorAdapter {
         TextView textViewTagName = (TextView) view.findViewById(R.id.tv_tag_name);
         textViewTagName.setText(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
 
-        //TextView textViewPersonPIN = (TextView) view.findViewById(R.id.tv_person_pin);
-        //textViewPersonPIN.setText(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
     }
 }
