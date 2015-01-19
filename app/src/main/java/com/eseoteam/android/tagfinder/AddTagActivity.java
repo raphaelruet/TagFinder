@@ -3,6 +3,7 @@ package com.eseoteam.android.tagfinder;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -31,14 +32,14 @@ public class AddTagActivity extends Activity {
         databaseHelper = new DatabaseHelper(this);
 
         //Sets the listener
-        setButtonListeners();
+        setListeners();
 
     }
 
     /**
      * Calls the differents listener setters
      */
-    private void setButtonListeners() {
+    private void setListeners() {
         //validButton
         ImageButton validButton = (ImageButton) findViewById(R.id.validButton);
         validButton.setOnClickListener(this.validButtonListener);
@@ -46,6 +47,10 @@ public class AddTagActivity extends Activity {
         //backButton
         ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
         backButton.setOnClickListener(this.backButtonListener);
+
+        //scanButton
+        Button scanTagButton = (Button) findViewById(R.id.scanTagButton);
+        scanTagButton.setOnClickListener(this.scanTagButtonListener);
     }
 
     /**
@@ -85,6 +90,25 @@ public class AddTagActivity extends Activity {
             finish();
         }
     };
+
+    /**
+     * Sets the listener on the scanButton to lauch the connection and scan the tag to add
+     */
+    private View.OnClickListener scanTagButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((Button) findViewById(R.id.scanTagButton)).setText(R.string.scanning_tag);
+            //TODO Ouvrir la connection et récupérer le tagID et le foutre dans le tagIdField
+        }
+    };
+
+    /**
+     * Closes the connection anyway
+     */
+    protected void onDestroy() {
+        super.onDestroy();
+        //TODO Clore la connection si elle est active
+    }
 
 }
 
