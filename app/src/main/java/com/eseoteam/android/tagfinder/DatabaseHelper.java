@@ -63,42 +63,6 @@ public class DatabaseHelper {
         return database.rawQuery(buildSQL, null);
     }
 
-
-    public Cursor getSingleName(String name) {
-        return  database.query( TABLE_NAME, new String[] {
-                    TAG_NAME
-                    },
-                    TAG_NAME + "= ?" ,
-                    new String[] { name },
-                    null,
-                    null,
-                    null);
-
-    }
-
-    public Cursor getSingleId(String id) {
-        return  database.query( TABLE_NAME, new String[] {
-                        TAG_MID
-                },
-                TAG_MID + "= ?" ,
-                new String[] { id },
-                null,
-                null,
-                null);
-
-    }
-
-    public Cursor getSingleData(String data) {
-        return  database.query( TABLE_NAME, new String[] {
-                        TAG_DATA
-                },
-                TAG_DATA + "= ?" ,
-                new String[] { data },
-                null,
-                null,
-                null);
-
-    }
     // this DatabaseOpenHelper class will actually be used to perform database related operation
 
     private class DatabaseOpenHelper extends SQLiteOpenHelper {
