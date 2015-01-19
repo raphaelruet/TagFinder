@@ -32,6 +32,10 @@
     <string name="logo_description">Logo of the application</string>
     <string name="back_button_description">Button that allow to go back</string>
 
+    <!-- Button strings -->
+    <string name="scan_tag">scan</string>
+    <string name="scanning_tag">scanning</string>
+
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
