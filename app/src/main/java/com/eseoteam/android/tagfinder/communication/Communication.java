@@ -43,25 +43,13 @@ public class Communication extends Thread {
         this.command = new ChangeFrameCommand(binder);
     }
 
-    //Accessor//
-
-    /**
-     * Gives the received message on the socket.
-     * @return The received message as a String.
-     */
-    /*
-    public String getReceivedMessage(){
-        return this.receivedMessage;
-    }*/
-
     //Methods//
     public void run(){
         while(this.connected){
             try {
                 this.receivedMessage = this.connection.read();
             } catch (IOException e) {
-                //TODO
-                //Log.e("Communication:run","Error while reading frame");
+                Log.e("Communication:run","Error while reading frame");
             }
             if(this.receivedMessage != null){
                 this.command.execute(this.receivedMessage);
@@ -70,15 +58,15 @@ public class Communication extends Thread {
             }
         }
         this.closeConnection();
+        Log.d("Communication:run","Communication successfully closed");
     }
 
     /**
      * Set the connection status to false.
      */
-    /*
     public void disconnect() {
         this.connected = false;
-    }*/
+    }
 
     /**
      * Close the connection.
@@ -87,6 +75,10 @@ public class Communication extends Thread {
         this.connection.closeConnection();
     }
 
+    /**
+     * Interpret the received message keeping only the relevant values.
+     * @param frame Received message.
+     */
     public void interpretMessage(String frame){
         final String[] stringStock = frame.split(";");
         try{

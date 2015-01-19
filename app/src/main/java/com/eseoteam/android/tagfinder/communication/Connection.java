@@ -44,16 +44,6 @@ public class Connection {
         }
     }
 
-    //Accessors//
-
-    /**
-     * Donne la socket de la connexion
-     * @return la socket de la connexion
-     *//*
-    public DatagramSocket getSocket(){
-        return this.socket;
-    }*/
-
     //Methods//
 
     /**
@@ -68,8 +58,7 @@ public class Connection {
             this.socket.receive(packet);
             msg = new String(packet.getData(), 0, packet.getLength());
         }catch(IOException e){
-            //TODO
-            //Log.e("Connection:read","Error while receiving a packet");
+            Log.e("Connection:read","Error while receiving a packet");
             throw e;
         }
         return msg;
