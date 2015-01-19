@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_toLeftOf="@+id/addButton"
+            android:layout_toLeftOf="@+id/addTagButton"
             >
 
             <ImageView
@@ -40,7 +40,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/addButton"
+            android:id="@+id/addTagButton"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:src="@drawable/add_icon_white"
@@ -64,7 +64,7 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:paddingLeft="5dp"
-            android:layout_alignLeft="@id/addButton"
+            android:layout_alignLeft="@id/addTagButton"
             tools:ignore="RtlSymmetry" />
 
     </RelativeLayout>
@@ -78,13 +78,5 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         />
-
-    <!--Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:layout_marginTop="5dp"
-        android:text="Enter Data"
-        android:onClick="onClickEnterData"
-        android:layout_alignParentBottom="true"/-->
 
 </RelativeLayout>
