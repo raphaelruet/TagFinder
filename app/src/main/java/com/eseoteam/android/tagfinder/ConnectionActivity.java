@@ -68,7 +68,9 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        this.communication.disconnect();
+        if(this.communication !=null) {
+            this.communication.disconnect();
+        }
     }
 
     @Override
