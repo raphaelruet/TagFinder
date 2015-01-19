@@ -29,8 +29,8 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
 
     /**
      * The request code chen user goes to the Wifi settings.
-     * Must be >=0 to be returned.
-     */
+    * Must be >=0 to be returned.
+    */
     private static final int REQUEST_ENABLE_WIFI = 1;
 
     /**
@@ -63,6 +63,19 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
         else {
             this.initializeCommunication();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(this.communication !=null) {
+            this.communication.disconnect();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     /**
@@ -211,7 +224,7 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
     @Override
     public void notifyFrameChange(FrameChangedEvent event) {
         final String address = this.wifiAddress;
-        final int port = this.CONNECTION_PORT;
+        final int port = ConnectionActivity.CONNECTION_PORT;
         final Runnable action = new Runnable() {
             @Override
             public void run()

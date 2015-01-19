@@ -130,14 +130,26 @@
 
         <EditText
             android:id="@+id/tagIdField"
-            android:layout_below="@+id/tagIdText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/tagIdText"
             android:layout_marginTop="10dp"
             android:background="@color/main_theme_grey"
             android:minHeight="40dp"
-            android:minWidth="300dp" />
+            android:minWidth="200dp"
+            android:layout_alignLeft="@+id/tagDataField"
+            android:layout_alignStart="@+id/tagDataField" />
+
+        <Button
+            android:id="@+id/scanTagButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignTop="@+id/tagIdField"
+            android:layout_alignRight="@+id/tagDataField"
+            android:layout_alignEnd="@+id/tagDataField"
+            android:background="@color/main_theme_grey"
+            android:text="@string/scan_tag"
+            android:textColor="@color/main_theme_blue" />
 
         <TextView
             android:id="@+id/tagDataText"
@@ -159,7 +171,8 @@
             android:layout_marginTop="10dp"
             android:background="@color/main_theme_grey"
             android:minLines="4"
-            android:minWidth="300dp" />
+            android:minWidth="300dp"
+            android:textAlignment="textStart" />
 
     </RelativeLayout>
 
