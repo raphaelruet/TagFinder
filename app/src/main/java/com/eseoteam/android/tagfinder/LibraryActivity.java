@@ -66,8 +66,9 @@ public class LibraryActivity extends Activity {
                 Log.d(TAG, "clicked on item: " + position);
                 Log.d("Clicked item id", " "+ id);
 
-                Intent intent = new Intent(LibraryActivity.this, InfoTagActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, id);
+                Intent intent = new Intent(LibraryActivity.this, InfoTagActivity.class);
+                intent.putExtra("tag_id_in_db",id);
+                        //.putExtra(Intent.EXTRA_TEXT, id);
                 startActivity(intent);
             }
         });

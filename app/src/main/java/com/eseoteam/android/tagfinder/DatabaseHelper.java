@@ -78,7 +78,7 @@ public class DatabaseHelper {
      * @return cursor
      */
 
-    public Cursor getOneTag(int id) {
+    public Cursor getOneTag(long id) {
 
         String buildSQL = "SELECT * FROM " + TABLE_NAME + " WHERE _id = ?";
 
