@@ -19,7 +19,8 @@ import android.widget.ListView;
 public class LibraryActivity extends Activity {
 
     /**
-     * Creates the inflator to inflate each tag in the single_tag layout.
+     * Creates a CursorAdapter that provide way to scroll through the listView.
+     * Listview is composed by data stored in SQLite database
      */
     private CustomCursorAdapter customAdapter;
 
@@ -55,6 +56,7 @@ public class LibraryActivity extends Activity {
         ImageButton quitButton = (ImageButton)findViewById(R.id.quitButton);
         quitButton.setOnClickListener(this.quitButtonListener);
 
+        //Sets listener on the clicked tag of the listview to access to InfoTagActivity
         databaseHelper = new DatabaseHelper(this);
 
         listView = (ListView) findViewById(R.id.listview_tag);

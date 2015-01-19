@@ -2,7 +2,7 @@ package com.eseoteam.android.tagfinder;
 
 /**
  * Created on 13/01/15.
- *
+ * DatabaseHelper gives methods to manipulate items in the SQLite database
  * @author Charline LEROUGE.
  * @version 0.1.
  */
@@ -11,19 +11,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DatabaseHelper {
 
     private static final String TAG = DatabaseHelper.class.getSimpleName();
 
-    // database configuration
-    // if you want the onUpgrade to run then change the database_version
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "mydatabase.db";
 
-    // table configuration
+
+    /**
+     * Table configuration: columns of the database
+     */
     public static final String TABLE_NAME = "person_table";         // Table name
     private static final String TAG_ID = "_id";     // a column named "_id" is required for cursor
     private static final String TAG_NAME = "tag_name";
@@ -33,18 +31,25 @@ public class DatabaseHelper {
     private DatabaseOpenHelper openHelper;
     private SQLiteDatabase database;
 
-    // this is a wrapper class. that means, from outside world, anyone will communicate with PersonDatabaseHelper,
-    // but under the hood actually DatabaseOpenHelper class will perform database CRUD operations
+
+    /**
+     * Wrapper class: DatabaseHelper will perform database operations
+     * @param aContext is the actual context
+     */
+
     public DatabaseHelper(Context aContext) {
 
         openHelper = new DatabaseOpenHelper(aContext);
         database = openHelper.getWritableDatabase();
+
     }
 
+    /**
+     * Allows to insert data such as the tag name, id, information
+     */
     public void insertData (String aTagName, String aTagId, String aTagData) {
 
-        // we are using ContentValues to avoid sql format errors
-
+        //We are using ContentValues to avoid sql format errors
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(TAG_NAME, aTagName);
@@ -54,6 +59,10 @@ public class DatabaseHelper {
         database.insert(TABLE_NAME, null, contentValues);
     }
 
+    /**
+     * To get all the data from the table
+     * @return Cursor
+     */
     public Cursor getAllData () {
 
         String buildSQL = "SELECT * FROM " + TABLE_NAME;
@@ -63,37 +72,47 @@ public class DatabaseHelper {
         return database.rawQuery(buildSQL, null);
     }
 
-    // this DatabaseOpenHelper class will actually be used to perform database related operation
+    /**
+     * To get the data from one particular item of the SQLite database
+     * @param id of the item
+     * @return cursor
+     */
 
-    private class DatabaseOpenHelper extends SQLiteOpenHelper {
+    public Cursor getOneTag(int id) {
 
-        public DatabaseOpenHelper(Context aContext) {
-            super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
-        }
+        String buildSQL = "SELECT * FROM " + TABLE_NAME + " WHERE _id = ?";
 
-        @Override
-        public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            // Create your tables here
+        Log.d(TAG, "getOneTag SQL: " + buildSQL);
 
-            String buildSQL = "CREATE TABLE " + TABLE_NAME + "( " + TAG_ID + " INTEGER PRIMARY KEY, " +
-                    TAG_NAME + " TEXT, " + TAG_MID + " TEXT, " + TAG_DATA + " TEXT )";
+        return database.rawQuery(buildSQL, new String[] { String.valueOf(id) });
 
-            Log.d(TAG, "onCreate SQL: " + buildSQL);
+        // 1. get reference to readable DB
+       /* SQLiteDatabase db = openHelper.getReadableDatabase();
 
-            sqLiteDatabase.execSQL(buildSQL);
-        }
+        // 2. build query
+        Cursor cursor =
+                db.query(TABLE_NAME, // a. table
+                        COLUMNS,  // b. column names
+                        " _id = ?", // c. selections
+                        new String[] { String.valueOf(id)}, // d. selections args
+                        null, // e. group by
+                        null, // f. having
+                        null, // g. order by
+                        null); // h. limit
 
-        @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-            // Database schema upgrade code goes here
+        // 3. if we got results get the first one
+        if (cursor != null)
+            cursor.moveToFirst();
 
-            String buildSQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        Log.d("getBook("+id+")", "getOneTag SQL :");
 
-            Log.d(TAG, "onUpgrade SQL: " + buildSQL);
-
-            sqLiteDatabase.execSQL(buildSQL);       // drop previous table
-
-            onCreate(sqLiteDatabase);               // create the table from the beginning
-        }
+        // 5. return book
+        return cursor;*/
     }
+
+    public void deleteOneTag(long id){
+        String string =String.valueOf(id);
+        database.execSQL("DELETE FROM TABLE_NAME WHERE _id = '" + string + "'");
+    }
+
 }

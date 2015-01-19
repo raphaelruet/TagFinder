@@ -6,27 +6,40 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * Created on 15/01/15.
+ * Manage the InfoTag Activity
+ * @author Charline LEROUGE.
+ * @version 0.1.
+ */
+
 
 public class InfoTagActivity extends ActionBarActivity {
+
+    //Fields of the textView
     TextView textTagName;
     TextView textTagId;
     TextView textTagData;
-    String tagId;
+
+    //Fields in the database
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
     static SQLiteDatabase db = null;
-    long tag_id;
+    int tag_id;
 
     /**
      * Helper to access the database
      */
     private DatabaseHelper databaseHelper;
 
+    /**
+     * Actions to perform when the activity is created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,23 +52,24 @@ public class InfoTagActivity extends ActionBarActivity {
         //String tagName = this.getIntent().getStringExtra(TAG_NAME);
         databaseHelper = new DatabaseHelper(this);
 
-
+        //Find the fields to fill with information
         textTagName = (TextView) findViewById(R.id.tagName);
         textTagId = (TextView) findViewById(R.id.tagId);
         textTagData = (TextView) findViewById(R.id.tagInfo);
 
+        //Find clicked tag in database
         Intent intent = getIntent();
-        Cursor cursor = databaseHelper.getAllData();
+        Cursor cursor = databaseHelper.getOneTag(tag_id);
 
+        // Fill the empty field with right tag information from database
         if (cursor != null && cursor.moveToFirst()) {
-            String name = cursor.getString(cursor.getColumnIndex("tag_name"));
+            String name = cursor.getString(cursor.getColumnIndex(TAG_NAME));
             textTagName.append(name);
-            String id = cursor.getString(cursor.getColumnIndex("tag_mid"));
+            String id = cursor.getString(cursor.getColumnIndex(TAG_MID));
             textTagId.append(id);
-            String info = cursor.getString(cursor.getColumnIndex("tag_data"));
+            String info = cursor.getString(cursor.getColumnIndex(TAG_DATA));
             textTagData.append(info);
         }
-
     }
 
     /**
@@ -80,12 +94,20 @@ public class InfoTagActivity extends ActionBarActivity {
     };
 
     private View.OnClickListener deleteButtonListener = new View.OnClickListener() {
+       /* Problème: Pas possible d'ajouter un id sur un listener de type View() et non AdapterView
+        AdapterView pour un click sur une listView et non sur un bouton
+       @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            databaseHelper.deleteOneTag(id);//create remove method in database class
+        }*/
         @Override
         public void onClick(View v) {
             //TODO Supprimer le tag tag avec l'id passé
             //TODO Fermer l'activité
         }
     };
+
+
 }
 
         /*textTagName.setText("");
