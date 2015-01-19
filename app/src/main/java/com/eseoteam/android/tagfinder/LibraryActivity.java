@@ -10,15 +10,33 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-
+/**
+ * Manage the tag library
+ * Created on 08/01/2014.
+ * @author Raphael RUET, Charline LEROUGE
+ * @version 0.1.
+ */
 public class LibraryActivity extends Activity {
 
+    /**
+     * Creates the inflator to inflate each tag in the single_tag layout.
+     */
     private CustomCursorAdapter customAdapter;
-    private DatabaseHelper databaseHelper;
-    private static final int ENTER_DATA_REQUEST_CODE = 1;
-    private ListView listView;
-    private ImageButton btnAdd;
 
+
+    /**
+     * Helper for the database
+     */
+    private DatabaseHelper databaseHelper;
+
+    /**
+     * The tag list
+     */
+    private ListView listView;
+
+    /**
+     * Gets the activity name
+     */
     private static final String TAG = LibraryActivity.class.getSimpleName();
 
     /**
@@ -28,6 +46,14 @@ public class LibraryActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
+
+        //Sets the add tag button listener.
+        ImageButton addTagButton = (ImageButton)findViewById(R.id.addTagButton);
+        addTagButton.setOnClickListener(this.addTagButtonListener);
+
+        //Sets the quit button listener.
+        ImageButton quitButton = (ImageButton)findViewById(R.id.quitButton);
+        quitButton.setOnClickListener(this.quitButtonListener);
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -44,20 +70,14 @@ public class LibraryActivity extends Activity {
             }
         });
 
+    }
 
-        btnAdd = (ImageButton) findViewById(R.id.addButton);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getApplicationContext(), AddTagActivity.class)
-                        ,ENTER_DATA_REQUEST_CODE);
-            }
-        });
-
-        // Database query can be a time consuming task ..
-        // so its safe to call database query in another thread
-        // Handler will handle the call of the database query (consuming task in another thread)
-
+    /**
+     * Refreshes the tag list on resume
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -68,18 +88,32 @@ public class LibraryActivity extends Activity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ENTER_DATA_REQUEST_CODE && resultCode == RESULT_OK) {
-
-            databaseHelper.insertData(data.getExtras().getString("tag_name"),
-                    data.getExtras().getString("tag_id"),
-                    data.getExtras().getString("tag_data"));
-
-            customAdapter.changeCursor(databaseHelper.getAllData());
+    /**
+     * Listener on the addButton.
+     * Show the addTag screen when the addTagButton is pressed
+     */
+    private View.OnClickListener addTagButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //Go to the addButton activity.
+            startActivity(new Intent(getApplicationContext(), AddTagActivity.class));
         }
-    }
+
+    };
+
+    /**
+     * Listener on the quitButton.
+     * Closes the activity and the Application
+     */
+    private View.OnClickListener quitButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //Closes the activity
+            finish();
+            //Quits the app
+            System.exit(0);
+        }
+
+    };
+
 }
