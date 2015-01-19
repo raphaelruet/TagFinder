@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -17,8 +20,12 @@ public class InfoTagActivity extends ActionBarActivity {
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
     static SQLiteDatabase db = null;
-    private DatabaseHelper databaseHelper;
     long tag_id;
+
+    /**
+     * Helper to access the database
+     */
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,8 @@ public class InfoTagActivity extends ActionBarActivity {
         setContentView(R.layout.activity_info_tag);
         getSupportActionBar().hide();
 
+        //Sets the listener
+        setListeners();
 
         //String tagName = this.getIntent().getStringExtra(TAG_NAME);
         databaseHelper = new DatabaseHelper(this);
@@ -48,6 +57,35 @@ public class InfoTagActivity extends ActionBarActivity {
         }
 
     }
+
+    /**
+     * Calls the differents listener setters
+     */
+    private void setListeners() {
+        //searchButton
+        ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(this.searchButtonListener);
+
+        //searchButton
+        ImageButton deleteButton = (ImageButton) findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(this.deleteButtonListener);
+    }
+
+    private View.OnClickListener searchButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //TODO Demarrer la recherche pour le tag avec l'id passé
+            startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+        }
+    };
+
+    private View.OnClickListener deleteButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //TODO Supprimer le tag tag avec l'id passé
+            //TODO Fermer l'activité
+        }
+    };
 }
 
         /*textTagName.setText("");
