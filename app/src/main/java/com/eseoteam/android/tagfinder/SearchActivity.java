@@ -32,7 +32,7 @@ public class SearchActivity extends ActionBarActivity {
 
         //Creation of the PieChart of the view
         this.createPieChart();
-
+        refreshPieChart(0,0);
     }
 
     /**
