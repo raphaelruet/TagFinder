@@ -82,6 +82,10 @@ public class InfoTagActivity extends ActionBarActivity {
         //searchButton
         ImageButton deleteButton = (ImageButton) findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(this.deleteButtonListener);
+
+        //backButton
+        ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
+        backButton.setOnClickListener(this.backButtonListener);
     }
 
     private View.OnClickListener searchButtonListener = new View.OnClickListener() {
@@ -98,6 +102,16 @@ public class InfoTagActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             databaseHelper.deleteOneTag(idInDatabase);
+            finish();
+        }
+    };
+
+    /**
+     * Sets the listener on the backButton to return to the LibraryActivity
+     */
+    private View.OnClickListener backButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
             finish();
         }
     };
