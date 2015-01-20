@@ -86,33 +86,20 @@ public class DatabaseHelper {
 
         return database.rawQuery(buildSQL, new String[] { String.valueOf(id) });
 
-        // 1. get reference to readable DB
-       /* SQLiteDatabase db = openHelper.getReadableDatabase();
-
-        // 2. build query
-        Cursor cursor =
-                db.query(TABLE_NAME, // a. table
-                        COLUMNS,  // b. column names
-                        " _id = ?", // c. selections
-                        new String[] { String.valueOf(id)}, // d. selections args
-                        null, // e. group by
-                        null, // f. having
-                        null, // g. order by
-                        null); // h. limit
-
-        // 3. if we got results get the first one
-        if (cursor != null)
-            cursor.moveToFirst();
-
-        Log.d("getBook("+id+")", "getOneTag SQL :");
-
-        // 5. return book
-        return cursor;*/
     }
 
     public void deleteOneTag(long id){
-        String string =String.valueOf(id);
-        database.execSQL("DELETE FROM TABLE_NAME WHERE _id = '" + string + "'");
+
+        String whereClause = "_id" + "=?";
+        String[] whereArgs = new String[] { String.valueOf(id) };
+        database.delete(TABLE_NAME, whereClause, whereArgs);
+
+        //Log.d(TAG, "deleteOneTag SQL: " + buildSQL);
+
+        //database.rawQuery(buildSQL, new String[] { String.valueOf(id) });
+
+        //String string =String.valueOf(id);
+        //database.execSQL("DELETE FROM TABLE_NAME WHERE _id = '" + string + "'");
         //dbHelper.delete(DATABASE_TABLE_2, KEY_NAME + "=?", new String[] { myName })
     }
 

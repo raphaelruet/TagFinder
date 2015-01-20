@@ -31,6 +31,8 @@ public class InfoTagActivity extends ActionBarActivity {
     static SQLiteDatabase db = null;
     int tag_id;
 
+    private long idInDatabase;
+
     /**
      * Helper to access the database
      */
@@ -58,8 +60,8 @@ public class InfoTagActivity extends ActionBarActivity {
         textTagData = (TextView) findViewById(R.id.tagInfo);
 
         //Find clicked tag in database
-        long id_in_db = getIntent().getLongExtra("tag_id_in_db", -1);
-        Cursor cursor = databaseHelper.getOneTag(id_in_db);
+        long idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
+        Cursor cursor = databaseHelper.getOneTag(idInDatabase);
 
         // Fill the empty field with right tag information from database
         if (cursor != null && cursor.moveToFirst()) {
@@ -94,47 +96,14 @@ public class InfoTagActivity extends ActionBarActivity {
     };
 
     private View.OnClickListener deleteButtonListener = new View.OnClickListener() {
-       /* Problème: Pas possible d'ajouter un id sur un listener de type View() et non AdapterView
-        AdapterView pour un click sur une listView et non sur un bouton
-       @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            databaseHelper.deleteOneTag(id);//create remove method in database class
-        }*/
         @Override
         public void onClick(View v) {
-            //TODO Supprimer le tag tag avec l'id passé
-            //TODO Fermer l'activité
-            //finish();
+            databaseHelper.deleteOneTag(idInDatabase);
+            finish();
         }
     };
 
 
 }
 
-        /*textTagName.setText("");
-        textTagId.setText("");
-        textTagData.setText("");
-        //move cursor to first position
-        cursor.moveToFirst();
-        //we use data using column index
-        String name =cursor.getString(cursor.getColumnIndex("tag_name"));
-        String id =cursor.getString(cursor.getColumnIndex("tag_mid"));
-        String info =cursor.getString(cursor.getColumnIndex("tag_data"));
-        //display on text view
-        textTagName.append(name);
-        textTagId.append(id);
-        textTagData.append(info);*/
 
-        /*String tagName = this.getIntent().getStringExtra(TAG_NAME);
-        textTagName = (TextView) findViewById(R.id.tagName);
-
-        databaseHelper = new DatabaseHelper(this);
-        cursor = databaseHelper.getAllData();
-
-        if (tagName != null) {
-            cursor.moveToPosition(2);
-            textTagName.setText(cursor.getString(cursor.getColumnIndex("tag_name")));
-
-    }
-
-}*/
