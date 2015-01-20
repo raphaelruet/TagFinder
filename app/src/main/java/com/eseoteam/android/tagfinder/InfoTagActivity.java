@@ -52,7 +52,7 @@ public class InfoTagActivity extends ActionBarActivity {
         setListeners();
 
         //String tagName = this.getIntent().getStringExtra(TAG_NAME);
-        databaseHelper = new DatabaseHelper(this);
+        this.databaseHelper = new DatabaseHelper(this);
 
         //Find the fields to fill with information
         textTagName = (TextView) findViewById(R.id.tagName);
@@ -60,7 +60,7 @@ public class InfoTagActivity extends ActionBarActivity {
         textTagData = (TextView) findViewById(R.id.tagInfo);
 
         //Find clicked tag in database
-        long idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
+        this.idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
         Cursor cursor = databaseHelper.getOneTag(idInDatabase);
 
         // Fill the empty field with right tag information from database
