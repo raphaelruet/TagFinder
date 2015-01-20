@@ -113,6 +113,7 @@ public class DatabaseHelper {
     public void deleteOneTag(long id){
         String string =String.valueOf(id);
         database.execSQL("DELETE FROM TABLE_NAME WHERE _id = '" + string + "'");
+        //dbHelper.delete(DATABASE_TABLE_2, KEY_NAME + "=?", new String[] { myName })
     }
 
 }

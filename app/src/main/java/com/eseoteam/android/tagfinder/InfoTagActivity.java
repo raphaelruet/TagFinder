@@ -104,6 +104,7 @@ public class InfoTagActivity extends ActionBarActivity {
         public void onClick(View v) {
             //TODO Supprimer le tag tag avec l'id passé
             //TODO Fermer l'activité
+            //finish();
         }
     };
 
