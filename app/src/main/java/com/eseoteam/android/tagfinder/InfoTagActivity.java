@@ -108,6 +108,33 @@ public class InfoTagActivity extends ActionBarActivity {
         }
     };
 
+
 }
 
+        /*textTagName.setText("");
+        textTagId.setText("");
+        textTagData.setText("");
+        //move cursor to first position
+        cursor.moveToFirst();
+        //we use data using column index
+        String name =cursor.getString(cursor.getColumnIndex("tag_name"));
+        String id =cursor.getString(cursor.getColumnIndex("tag_mid"));
+        String info =cursor.getString(cursor.getColumnIndex("tag_data"));
+        //display on text view
+        textTagName.append(name);
+        textTagId.append(id);
+        textTagData.append(info);*/
 
+        /*String tagName = this.getIntent().getStringExtra(TAG_NAME);
+        textTagName = (TextView) findViewById(R.id.tagName);
+
+        databaseHelper = new DatabaseHelper(this);
+        cursor = databaseHelper.getAllData();
+
+        if (tagName != null) {
+            cursor.moveToPosition(2);
+            textTagName.setText(cursor.getString(cursor.getColumnIndex("tag_name")));
+
+    }
+
+}*/
