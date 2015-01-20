@@ -100,6 +100,7 @@ public class AddTagActivity extends Activity {
         public void onClick(View v) {
             ((Button) findViewById(R.id.scanTagButton)).setText(R.string.scanning_tag);
             //TODO Ouvrir la connection et récupérer le tagID et le foutre dans le tagIdField
+            ((EditText) findViewById(R.id.tagIdField)).setText(R.string.fake_tag_id);
         }
     };
 
