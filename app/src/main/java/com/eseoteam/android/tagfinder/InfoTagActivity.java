@@ -58,8 +58,8 @@ public class InfoTagActivity extends ActionBarActivity {
         textTagData = (TextView) findViewById(R.id.tagInfo);
 
         //Find clicked tag in database
-        Intent intent = getIntent();
-        Cursor cursor = databaseHelper.getOneTag(tag_id);
+        long id_in_db = getIntent().getLongExtra("tag_id_in_db", -1);
+        Cursor cursor = databaseHelper.getOneTag(id_in_db);
 
         // Fill the empty field with right tag information from database
         if (cursor != null && cursor.moveToFirst()) {
