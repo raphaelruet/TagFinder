@@ -73,7 +73,7 @@ public class InfoTagActivity extends ActionBarActivity {
     }
 
     /**
-     * Calls the differents listener setters
+     * Sets the different listener
      */
     private void setListeners() {
         //searchButton
@@ -83,8 +83,15 @@ public class InfoTagActivity extends ActionBarActivity {
         //searchButton
         ImageButton deleteButton = (ImageButton) findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(this.deleteButtonListener);
+
+        //backButton
+        ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
+        backButton.setOnClickListener(this.backButtonListener);
     }
 
+    /**
+     * Sets the listener on the searchButton
+     */
     private View.OnClickListener searchButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -93,6 +100,9 @@ public class InfoTagActivity extends ActionBarActivity {
         }
     };
 
+    /**
+     * Sets the listener on the deleteButton
+     */
     private View.OnClickListener deleteButtonListener = new View.OnClickListener() {
        /* Problème: Pas possible d'ajouter un id sur un listener de type View() et non AdapterView
         AdapterView pour un click sur une listView et non sur un bouton
@@ -105,6 +115,16 @@ public class InfoTagActivity extends ActionBarActivity {
             //TODO Supprimer le tag tag avec l'id passé
             //TODO Fermer l'activité
             //finish();
+        }
+    };
+
+    /**
+     * Sets the listener on the backButton
+     */
+    private View.OnClickListener backButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
         }
     };
 
