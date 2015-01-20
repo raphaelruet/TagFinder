@@ -6,12 +6,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 /**
  * Manage the tag adding
  * Created on 08/01/2014.
- * @author Raphael RUET, Charline LEROUGE
- * @version 0.1.
+ * @author Raphael RUET, Charline LEROUGE, Pierre TOUZE
+ * @version 0.3.
  */
 public class AddTagActivity extends Activity {
 
@@ -29,9 +30,9 @@ public class AddTagActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tag);
 
-        databaseHelper = new DatabaseHelper(this);
+        this.databaseHelper = new DatabaseHelper(this);
 
-        //Sets the listener
+        //Sets the button listeners
         setListeners();
 
     }
@@ -54,32 +55,32 @@ public class AddTagActivity extends Activity {
     }
 
     /**
-     * Listener on the valid.
+     * Listener on the validButton.
      * Adds  the activity and the Application
      */
     private View.OnClickListener validButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //TODO Informer l'utilisateur en cas de champs laissés vides
-            storeTagIntoDatabase();
-            finish();
+            //Retrieve the three edit text containing tag info.
+            EditText tagNameField = (EditText) findViewById(R.id.tagNameField);
+            EditText tagIdField = (EditText) findViewById(R.id.tagIdField);
+            EditText tagDataField = (EditText) findViewById(R.id.tagDataField);
+            //Get the string contained in the editTexts.
+            final String tagNameFieldString = tagNameField.getText().toString();
+            final String tagIdFieldString = tagIdField.getText().toString();
+            final String tagDataFieldString = tagDataField.getText().toString();
+
+            //Checks if tagName or tagId are empty
+            if(tagNameFieldString.matches("") || tagIdFieldString.matches("")) {
+                Toast.makeText(getApplicationContext(),
+                        R.string.toast_empty_field, Toast.LENGTH_SHORT).show();
+            }
+            else {
+                databaseHelper.insertData(tagNameFieldString,tagIdFieldString,tagDataFieldString);
+                finish();
+            }
         }
     };
-
-    /**
-     * Used to store tag information into the database
-     */
-    private void storeTagIntoDatabase () {
-        EditText tagNameField = (EditText) findViewById(R.id.tagNameField);
-        EditText tagIdField = (EditText) findViewById(R.id.tagIdField);
-        EditText tagDataField = (EditText) findViewById(R.id.tagDataField);
-
-        databaseHelper.insertData(
-                tagNameField.getText().toString(),
-                tagIdField.getText().toString(),
-                tagDataField.getText().toString());
-
-    }
 
     /**
      * Sets the listener on the backButton to return to the LibraryActivity
@@ -109,7 +110,4 @@ public class AddTagActivity extends Activity {
         super.onDestroy();
         //TODO Clore la connection si elle est active
     }
-
 }
-
-
