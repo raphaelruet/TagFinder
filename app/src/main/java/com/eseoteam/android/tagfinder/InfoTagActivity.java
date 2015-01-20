@@ -2,7 +2,6 @@ package com.eseoteam.android.tagfinder;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.TextView;
  * Created on 15/01/15.
  * Manage the InfoTag Activity
  * @author Charline LEROUGE.
- * @version 0.1.
+ * @version 0.2.
  */
 
 
@@ -28,9 +27,8 @@ public class InfoTagActivity extends ActionBarActivity {
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
-    static SQLiteDatabase db = null;
-    int tag_id;
 
+    //Id in the database
     private long idInDatabase;
 
     /**
@@ -40,7 +38,6 @@ public class InfoTagActivity extends ActionBarActivity {
 
     /**
      * Actions to perform when the activity is created
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +88,9 @@ public class InfoTagActivity extends ActionBarActivity {
         @Override
         public void onClick(View v) {
             //TODO Demarrer la recherche pour le tag avec l'id passé
-            startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+            Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+            intent.putExtra("tag_id_in_db",idInDatabase);
+            startActivity(intent);
         }
     };
 
