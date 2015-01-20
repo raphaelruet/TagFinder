@@ -76,6 +76,7 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
     @Override
     public void onBackPressed() {
 
+
     }
 
     /**

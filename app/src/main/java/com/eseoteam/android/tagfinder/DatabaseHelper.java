@@ -28,7 +28,6 @@ public class DatabaseHelper {
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
 
-    private DatabaseOpenHelper openHelper;
     private SQLiteDatabase database;
 
 
@@ -39,7 +38,7 @@ public class DatabaseHelper {
 
     public DatabaseHelper(Context aContext) {
 
-        openHelper = new DatabaseOpenHelper(aContext);
+        DatabaseOpenHelper openHelper = new DatabaseOpenHelper(aContext);
         database = openHelper.getWritableDatabase();
 
     }
@@ -90,7 +89,7 @@ public class DatabaseHelper {
 
     public void deleteOneTag(long id){
 
-        String whereClause = "_id" + "=?";
+        String whereClause = TAG_ID + "=?";
         String[] whereArgs = new String[] { String.valueOf(id) };
         database.delete(TABLE_NAME, whereClause, whereArgs);
 
