@@ -33,8 +33,8 @@
     <string name="back_button_description">Button that allow to go back</string>
 
     <!-- Button strings -->
-    <string name="scan_tag">scan</string>
-    <string name="scanning_tag">scanning</string>
+    <string name="scan_tag">SCAN</string>
+    <string name="scanning_tag">SCANNING</string>
 
 
 

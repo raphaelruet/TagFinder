@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_toLeftOf="@+id/backButton"
-            >
+            android:id="@+id/linearLayout">
 
             <ImageView
                 android:id="@+id/logo_tagfinder"
@@ -54,127 +54,158 @@
             android:paddingRight="10dp"
             tools:ignore="RtlSymmetry" />
 
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/relativeLayout2">
-
-        <ImageView
-            android:id="@+id/bottomBar"
-            android:src="@drawable/top_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:background="@color/main_theme_grey">
-        </ImageView>
-
         <ImageButton
             android:id="@+id/validButton"
-            android:layout_width="match_parent"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:src="@drawable/valid_icon_white"
             android:background="#00ffffff"
-            android:scaleType="centerInside"
-            android:layout_alignParentRight="true"
-            android:padding="15dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:longClickable="false"
+            android:scaleType="fitStart"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="5dp"
+            tools:ignore="RtlSymmetry"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/linearLayout"
+            android:layout_toEndOf="@+id/linearLayout" />
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
         android:layout_below="@+id/relativeLayout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/relativeLayout2">
+        android:id="@+id/scrollView">
 
-        <TextView
-            android:id="@+id/tagNameText"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/tag_name_text"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/relativeLayout"
-            android:textColor="@color/main_theme_white"
-            android:layout_centerHorizontal="true" />
+            android:paddingBottom="35dp">
 
-        <EditText
-            android:id="@+id/tagNameField"
-            android:layout_below="@+id/tagNameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/main_theme_grey"
-            android:minHeight="40dp"
-            android:minWidth="300dp" />
+            <TextView
+                android:id="@+id/tagNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tag_name_text"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/tagIdLayout"
+                android:textColor="@color/main_theme_white"
+                android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:id="@+id/tagIdText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tagNameField"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/tag_id_text"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/main_theme_white"
-            android:layout_centerHorizontal="true" />
+            <EditText
+                android:id="@+id/tagNameField"
+                android:inputType="text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_theme_white"
+                android:background="@color/main_theme_grey"
+                android:padding="5dp"
+                android:minHeight="40dp"
+                android:minWidth="300dp"
+                android:layout_below="@+id/tagNameText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:singleLine="true"
+                android:imeOptions="actionNext"/>
 
-        <EditText
-            android:id="@+id/tagIdField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tagIdText"
-            android:layout_marginTop="10dp"
-            android:background="@color/main_theme_grey"
-            android:minHeight="40dp"
-            android:minWidth="200dp"
-            android:layout_alignLeft="@+id/tagDataField"
-            android:layout_alignStart="@+id/tagDataField" />
+            <TextView
+                android:id="@+id/tagIdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relativeLayout"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tag_id_text"
+                android:textColor="@color/main_theme_white"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true" />
 
-        <Button
-            android:id="@+id/scanTagButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignTop="@+id/tagIdField"
-            android:layout_alignRight="@+id/tagDataField"
-            android:layout_alignEnd="@+id/tagDataField"
-            android:background="@color/main_theme_grey"
-            android:text="@string/scan_tag"
-            android:textColor="@color/main_theme_blue" />
+            <RelativeLayout
+                android:id="@+id/tagIdLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tagIdText"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:imeOptions="actionNext">
 
-        <TextView
-            android:id="@+id/tagDataText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tagIdField"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/tag_info_text"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/main_theme_white"
-            android:layout_centerHorizontal="true" />
+                <EditText
+                    android:id="@+id/tagIdField"
+                    android:inputType="none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tagIdText"
+                    android:background="@color/main_theme_grey"
+                    android:minHeight="40dp"
+                    android:minWidth="200dp"
+                    android:textColor="@color/main_theme_white"
+                    android:padding="5dp"
+                    android:layout_toLeftOf="@+id/scanTagButton"
+                    android:layout_marginRight="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:singleLine="true"
+                    android:focusable="false"/>
 
-        <EditText
-            android:id="@+id/tagDataField"
-            android:layout_below="@+id/tagDataText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/main_theme_grey"
-            android:minLines="4"
-            android:minWidth="300dp"
-            android:textAlignment="textStart" />
+                <Button
+                    android:id="@+id/scanTagButton"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:textSize="12sp"
+                    android:background="@color/main_theme_grey"
+                    android:text="@string/scan_tag"
+                    android:textColor="@color/main_theme_blue"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
-    </RelativeLayout>
+                </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/tagDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tagNameField"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tag_info_text"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/main_theme_white"
+                android:layout_centerHorizontal="true"
+                />
+
+            <EditText
+                android:id="@+id/tagDataField"
+                android:inputType="textAutoCorrect"
+                android:layout_below="@+id/tagDataText"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/main_theme_grey"
+                android:textColor="@color/main_theme_white"
+                android:minLines="4"
+                android:minWidth="300dp"
+                android:padding="5dp"
+                android:gravity="top"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"/>
+
+        </RelativeLayout>
+    </ScrollView>
 
 
 </RelativeLayout>
