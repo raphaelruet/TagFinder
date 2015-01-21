@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PieChartViewStyle">
+        <attr name="startAngle" format="integer" />
+        <attr name="stopAngle" format="integer" />
+        <attr name="pieChartSize" format="integer" />
+    </declare-styleable>
+</resources>
