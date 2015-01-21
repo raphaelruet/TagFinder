@@ -48,9 +48,6 @@
 
         </LinearLayout>
 
-
-
-
         <ImageButton
             android:id="@+id/backButton"
             android:layout_width="120dp"
@@ -185,18 +182,19 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="105dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/relativeLayout2">
 
         <ImageView
-            android:id="@+id/bottomBar"
-            android:src="@drawable/top_bar"
+            android:id="@+id/bottom_bar_shadow"
+            android:src="@drawable/bottom_bar_shadow"
+            android:layout_below="@id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/main_theme_grey"/>
+            android:layout_height="5dp">
+        </ImageView>
 
         <View android:id="@+id/fakeView"
             android:layout_width="0dp"
@@ -213,6 +211,7 @@
             android:background="@color/main_theme_grey"
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@id/fakeView"
+            android:layout_below="@id/bottom_bar_shadow"
             android:padding="15dp"/>
 
 
@@ -225,6 +224,8 @@
             android:background="@color/main_theme_grey"
             android:layout_alignParentEnd="true"
             android:layout_toRightOf="@id/fakeView"
+            android:layout_below="@id/bottom_bar_shadow"
+
             android:padding="15dp"/>
 
     </RelativeLayout>
