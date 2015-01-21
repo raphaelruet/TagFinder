@@ -20,11 +20,13 @@ public class SearchActivity extends ActionBarActivity {
     //Fields of the textView
     TextView textTagName;
     TextView textTagId;
+    TextView textTimestamp;
     TextView textTagData;
 
     //Fields in the database
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
+    private static final String COLUMN_TIME_STAMP = "timestamp";
     private static final String TAG_DATA = "tag_data";
 
     //Id in the database
@@ -59,7 +61,9 @@ public class SearchActivity extends ActionBarActivity {
         //Find the fields to fill with information
         textTagName = (TextView) findViewById(R.id.tagName);
         textTagId = (TextView) findViewById(R.id.tagId);
+        textTimestamp = (TextView) findViewById(R.id.tagDate);
         textTagData = (TextView) findViewById(R.id.tagInfo);
+
 
         //Find clicked tag in database
         this.idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
@@ -71,6 +75,8 @@ public class SearchActivity extends ActionBarActivity {
             textTagName.append(name);
             String id = cursor.getString(cursor.getColumnIndex(TAG_MID));
             textTagId.append(id);
+            String date = cursor.getString(cursor.getColumnIndex(COLUMN_TIME_STAMP));
+            textTimestamp.append(date);
             String info = cursor.getString(cursor.getColumnIndex(TAG_DATA));
             textTagData.append(info);
         }

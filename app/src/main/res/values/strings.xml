@@ -43,4 +43,10 @@
     <string name="fake_tag_id">Pierre est un con</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Delete AlertDialog strings -->
+    <string name="delete_dialog_title">Confirm Removal</string>
+    <string name="delete_dialog_message">Do you confirm the suppression of the tag ?</string>
+    <string name="delete_dialog_yes">Yes</string>
+    <string name="delete_dialog_no">No</string>
+
 </resources>

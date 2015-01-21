@@ -1,5 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,11 +24,13 @@ public class InfoTagActivity extends ActionBarActivity {
     TextView textTagName;
     TextView textTagId;
     TextView textTagData;
+    TextView textTimestamp;
 
     //Fields in the database
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
+    private static final String COLUMN_TIME_STAMP = "timestamp";
 
     //Id in the database
     private long idInDatabase;
@@ -54,7 +58,10 @@ public class InfoTagActivity extends ActionBarActivity {
         //Find the fields to fill with information
         textTagName = (TextView) findViewById(R.id.tagName);
         textTagId = (TextView) findViewById(R.id.tagId);
+        textTimestamp = (TextView) findViewById(R.id.tagDate);
         textTagData = (TextView) findViewById(R.id.tagInfo);
+
+
 
         //Find clicked tag in database
         this.idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
@@ -66,8 +73,11 @@ public class InfoTagActivity extends ActionBarActivity {
             textTagName.append(name);
             String id = cursor.getString(cursor.getColumnIndex(TAG_MID));
             textTagId.append(id);
+            String date = cursor.getString(cursor.getColumnIndex(COLUMN_TIME_STAMP));
+            textTimestamp.append(date);
             String info = cursor.getString(cursor.getColumnIndex(TAG_DATA));
             textTagData.append(info);
+
         }
     }
 
@@ -88,6 +98,10 @@ public class InfoTagActivity extends ActionBarActivity {
         backButton.setOnClickListener(this.backButtonListener);
     }
 
+    /**
+     * Sets the listener on the searchButton to access to the SearchActivity
+     */
+
     private View.OnClickListener searchButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -98,11 +112,14 @@ public class InfoTagActivity extends ActionBarActivity {
         }
     };
 
+    /**
+     * Sets the listener on the deleteButton to delete a tag from the database
+     */
+
     private View.OnClickListener deleteButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            databaseHelper.deleteOneTag(idInDatabase);
-            finish();
+            displayDeleteAlertDialog();
         }
     };
 
@@ -116,7 +133,54 @@ public class InfoTagActivity extends ActionBarActivity {
         }
     };
 
+    /**
+     * Displays an AlertDialog asking to enable wifi or not.
+     */
+    private void displayDeleteAlertDialog() {
+        //Creates alertDialog
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle(R.string.delete_dialog_title);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(R.string.delete_dialog_message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.delete_dialog_yes,deleteYesListener)
+                .setNegativeButton(R.string.delete_dialog_no, deleteNoListener);
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
+    /**
+     * Listener on the "Yes" button of the delete AlertDialog
+     */
+    private DialogInterface.OnClickListener deleteYesListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            databaseHelper.deleteOneTag(idInDatabase);
+            finish();
+
+        }
+    };
+
+    /**
+     * Listener on the "No" button of the delete AlertDialog.
+     * User finally doesn't want to delete tag.
+     */
+    private DialogInterface.OnClickListener deleteNoListener
+            = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            //Close the dialog.
+            dialog.cancel();
+        }
+    };
 
 }
-
-

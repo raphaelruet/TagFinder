@@ -17,8 +17,6 @@ public class DatabaseHelper {
 
     private static final String TAG = DatabaseHelper.class.getSimpleName();
 
-
-
     /**
      * Table configuration: columns of the database
      */
@@ -27,6 +25,7 @@ public class DatabaseHelper {
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
+    //private static final String KEY_TIMESTAMP = "timestamp";
 
     private SQLiteDatabase database;
 
@@ -46,7 +45,8 @@ public class DatabaseHelper {
     /**
      * Allows to insert data such as the tag name, id, information
      */
-    public void insertData (String aTagName, String aTagId, String aTagData) {
+    public void insertData (String aTagName, String aTagId, String aTagData ) {
+
 
         //We are using ContentValues to avoid sql format errors
         ContentValues contentValues = new ContentValues();
@@ -57,6 +57,7 @@ public class DatabaseHelper {
 
         database.insert(TABLE_NAME, null, contentValues);
     }
+
 
     /**
      * To get all the data from the table
@@ -93,13 +94,7 @@ public class DatabaseHelper {
         String[] whereArgs = new String[] { String.valueOf(id) };
         database.delete(TABLE_NAME, whereClause, whereArgs);
 
-        //Log.d(TAG, "deleteOneTag SQL: " + buildSQL);
-
-        //database.rawQuery(buildSQL, new String[] { String.valueOf(id) });
-
-        //String string =String.valueOf(id);
-        //database.execSQL("DELETE FROM TABLE_NAME WHERE _id = '" + string + "'");
-        //dbHelper.delete(DATABASE_TABLE_2, KEY_NAME + "=?", new String[] { myName })
     }
+
 
 }
