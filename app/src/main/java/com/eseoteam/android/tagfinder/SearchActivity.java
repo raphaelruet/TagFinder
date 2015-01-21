@@ -1,7 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
-import android.app.FragmentTransaction;
 import android.database.Cursor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -14,20 +14,27 @@ import android.widget.TextView;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class SearchActivity extends ActionBarActivity {
+public class SearchActivity extends ActionBarActivity implements CompassListener{
 
     // Attributes //
-    //Fields of the textView
+
+    /**
+     * Fields of the textView
+     */
     TextView textTagName;
     TextView textTagId;
     TextView textTagData;
 
-    //Fields in the database
+    /**
+     * Fields of the database
+     */
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
 
-    //Id in the database
+    /**
+     * Id in the database
+     */
     private long idInDatabase;
 
     /**
@@ -36,11 +43,23 @@ public class SearchActivity extends ActionBarActivity {
     private DatabaseHelper databaseHelper;
 
     /**
+     * The compass used by the SearchActivity
+     */
+    private Compass compass;
+
+    /**
+     * The sensor manager for the Search activity
+     */
+    private SensorManager sensorManager;
+
+
+    /**
      * The PieChart used in the activity_search view
-      */
-    PieChartFragment pieChartFragment;
+     */
+    PieChart pieChart;
 
     // Methods //
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +68,15 @@ public class SearchActivity extends ActionBarActivity {
         getSupportActionBar().hide();
         setListeners();
 
-        //Creation of the PieChart of the view
-        this.createPieChart();
-        refreshPieChart(0,0);
+        // Récupération du PieChart du layout
+        pieChart = (PieChart) findViewById(R.id.pieChart);
 
-        //String tagName = this.getIntent().getStringExtra(TAG_NAME);
+        // Gestion des capteurs
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        this.compass = new Compass(sensorManager);
+        this.compass.addCompassListener(this);
+
+        // Helper pour la base de données
         this.databaseHelper = new DatabaseHelper(this);
 
         //Find the fields to fill with information
@@ -74,6 +97,7 @@ public class SearchActivity extends ActionBarActivity {
             String info = cursor.getString(cursor.getColumnIndex(TAG_DATA));
             textTagData.append(info);
         }
+
     }
 
     /**
@@ -96,27 +120,39 @@ public class SearchActivity extends ActionBarActivity {
     };
 
     /**
-     * Creates the new PieChart and commit it on the view
+     * Called when activity goes to pause state.
+     * Unregister the sensors
      */
-    private void createPieChart(){
-        this.pieChartFragment = new PieChartFragment();
-        this.pieChartFragment.init(getApplicationContext());
-        System.out.println("Commit");
-        getFragmentManager().beginTransaction()
-                .add(R.id.piechartLayout, this.pieChartFragment)
-                .commit();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.compass.unregisterSensors();
     }
 
     /**
-     * Refreshes the PieChart with the chosen angles
-     * @param minAngle the min angle
-     * @param maxAngle the max angle
+     * Called when the activity is resumed
+     * Register the sensors
      */
-    public void refreshPieChart(int minAngle, int maxAngle){
-        this.pieChartFragment.setPieChartAngles(new int[]{minAngle,maxAngle});
-        FragmentTransaction tr = getFragmentManager().beginTransaction();
-        tr.replace(R.id.piechartLayout, this.pieChartFragment);
-        tr.commit();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.compass.registerSensors();
     }
 
+    /**
+     * Sets the angle of the PieChart when the sensors values change
+     * @param event Event of a sensor change.
+     */
+    @Override
+    public void notifyAngleChange(AngleChangedEvent event) {
+        final int angle = event.getAngle();
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                pieChart.setAngles(0,angle);
+            }
+        };
+        this.runOnUiThread(action);
+    }
 }
