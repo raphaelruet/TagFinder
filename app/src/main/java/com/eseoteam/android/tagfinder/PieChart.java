@@ -95,21 +95,27 @@ public class PieChart extends View
      */
     public void setSize(int size) {
         this.piechartSize = size;
+        invalidate();
+        requestLayout();
     }
 
     /**
      * Accessor to set the angles of the Pie Chart
-     * @param angles the angles to set
+     * @param minAngle the min angle of the Pie Chart
+     * @param maxAngle the max angle of the Pie Chart
      */
-    public void setAngles(int[] angles) {
-        this.angles[0] = angles[0];
-        this.angles[1] = angles[1];
+    public void setAngles(int minAngle, int maxAngle) {
+        this.angles[0] = minAngle;
+        this.angles[1] = maxAngle;
         invalidate();
         requestLayout();
     }
 
     // Methods //
 
+    /**
+     * Sets the colors of the PieChart (background and foreground)
+     */
     private void setPieChartPaint() {
         pieChartPaint.setColor(getResources().getColor(R.color.main_theme_blue));
         backgroundPaint.setColor(getResources().getColor(R.color.main_theme_grey));
