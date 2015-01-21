@@ -2,11 +2,14 @@ package com.eseoteam.android.tagfinder;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.eseoteam.android.tagfinder.communication.Communication;
 
 /**
  * Manage the tag adding
@@ -14,12 +17,20 @@ import android.widget.Toast;
  * @author Raphael RUET, Charline LEROUGE, Pierre TOUZE
  * @version 0.3.
  */
-public class AddTagActivity extends Activity {
+public class AddTagActivity extends Activity implements BinderListener {
 
+    /**
+     * The default connection port of the socket.
+     */
+    private static final int CONNECTION_PORT = 12345;
+
+    private static final String LOG_TAG = "AddTagActivity";
     /**
      * Helper to access the database
      */
     private DatabaseHelper databaseHelper;
+    private Communication communication;
+    private Binder binder;
 
     /**
      * Called when the activity is first created.
@@ -99,16 +110,49 @@ public class AddTagActivity extends Activity {
         @Override
         public void onClick(View v) {
             ((Button) findViewById(R.id.scanTagButton)).setText(R.string.scanning_tag);
-            //TODO Ouvrir la connection et récupérer le tagID et le foutre dans le tagIdField
-            ((EditText) findViewById(R.id.tagIdField)).setText(R.string.fake_tag_id);
+            //TODO SECURITE pour l'appui multiple.
+            initializeCommunication();
         }
     };
 
-    /**
-     * Closes the connection anyway
-     */
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        //TODO Clore la connection si elle est active
+        if(this.communication !=null) {
+            this.communication.closeConnection();
+            try {
+                this.communication.join();
+            } catch (InterruptedException e) {
+                Log.e(LOG_TAG,"Join interrupted");
+            }
+        }
+    }
+
+    /**
+     * Starts the communication by connecting the socket to the device ip and the specified port.
+     */
+    private void initializeCommunication() {
+        String wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
+        Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
+
+        this.binder = new Binder();
+        this.binder.addListener(this);
+        this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
+        this.communication.start();
+    }
+
+    @Override
+    public void notifyFrameChange(FrameChangedEvent event) {
+        final String[] stringStock = event.getFrame().split(";");
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                EditText tagIdField = (EditText) findViewById(R.id.tagIdField);
+                tagIdField.setText(stringStock[4]);
+                ((Button) findViewById(R.id.scanTagButton)).setText("DONE");
+            }
+        };
+        this.runOnUiThread(action);
     }
 }
