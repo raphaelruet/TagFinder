@@ -68,7 +68,6 @@ public class LibraryActivity extends Activity {
 
                 Intent intent = new Intent(LibraryActivity.this, InfoTagActivity.class);
                 intent.putExtra("tag_id_in_db",id);
-                //.putExtra(Intent.EXTRA_TEXT, id);
                 startActivity(intent);
             }
         });

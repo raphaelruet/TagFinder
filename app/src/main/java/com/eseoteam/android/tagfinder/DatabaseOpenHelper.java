@@ -20,7 +20,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
      * Database configuration : name & version
      * If configuration of the onUpgrade then change DATABASE_NAME
      */
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "mydatabase.db";
 
     /**
@@ -31,6 +31,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
+    private static final String COLUMN_TIME_STAMP = "timestamp";
 
     public DatabaseOpenHelper(Context aContext) {
         super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,7 +45,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         String buildSQL = "CREATE TABLE " + TABLE_NAME + "( " + TAG_ID + " INTEGER PRIMARY KEY, " +
-                TAG_NAME + " TEXT, " + TAG_MID + " TEXT, " + TAG_DATA + " TEXT )";
+                TAG_NAME + " TEXT, " + TAG_MID + " TEXT, " + TAG_DATA + " TEXT, " +
+                COLUMN_TIME_STAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ");";
 
         Log.d(TAG, "onCreate SQL: " + buildSQL);
         sqLiteDatabase.execSQL(buildSQL);

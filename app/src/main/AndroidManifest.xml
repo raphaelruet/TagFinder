@@ -18,7 +18,8 @@
         <!-- Start activity -->
         <activity
             android:name=".StartActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,26 +28,31 @@
         </activity>
 
         <!-- Connection activity -->
-        <activity android:name=".ConnectionActivity" />
+        <activity android:name=".ConnectionActivity"
+                  android:screenOrientation="portrait"/>
 
         <!-- Library activity -->
-        <activity android:name=".LibraryActivity" />
+        <activity android:name=".LibraryActivity"
+                  android:screenOrientation="portrait"/>
 
         <!-- Info Tag activity -->
         <activity
             android:name=".InfoTagActivity"
             android:label="@string/title_activity_info_tag"
-            android:parentActivityName=".LibraryActivity" >
+            android:parentActivityName=".LibraryActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.eseoteam.android.tagfinder.LibraryActivity" />
         </activity>
 
         <!-- Search activity -->
-        <activity android:name=".SearchActivity"/>
+        <activity android:name=".SearchActivity"
+                  android:screenOrientation="portrait"/>
 
         <!-- Add Tag activity -->
-        <activity android:name=".AddTagActivity"/>
+        <activity android:name=".AddTagActivity"
+                  android:screenOrientation="portrait"/>
 
     </application>
 
