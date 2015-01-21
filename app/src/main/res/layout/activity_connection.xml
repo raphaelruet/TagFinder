@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="75dp"
+        android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/relativeLayout">
@@ -16,8 +16,15 @@
             android:id="@+id/top_bar"
             android:src="@drawable/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="75dp"
             android:background="@color/main_theme_grey">
+        </ImageView>
+        <ImageView
+            android:id="@+id/top_bar_shadow"
+            android:src="@drawable/top_bar_shadow"
+            android:layout_below="@id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="5dp">
         </ImageView>
 
 
@@ -43,7 +50,6 @@
             android:id="@+id/backButton"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:src="@drawable/back_button_white"
             android:background="#00ffffff"
             android:longClickable="false"
             android:scaleType="fitEnd"
