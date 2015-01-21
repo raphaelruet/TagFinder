@@ -51,7 +51,6 @@ public class PieChart extends View
      */
     public PieChart(Context context) {
         super(context);
-        System.err.println("On construit le PieChart");
     }
 
     // Accessor //
@@ -79,7 +78,6 @@ public class PieChart extends View
     public void setAngles(int[] angles) {
         this.angles[0] = angles[0];
         this.angles[1] = angles[1];
-        System.err.println("On set les angles");
     }
 
     // Methods //
