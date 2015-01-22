@@ -6,6 +6,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+
 import java.util.ArrayList;
 
 /**
@@ -48,12 +50,22 @@ public class Compass implements SensorEventListener{
     /**
      * TODO
      */
-    float[] mGravity;
+    private float[] mGravity;
 
     /**
      * TODO
      */
-    float[] mGeomagnetic;
+    private float[] mGeomagnetic;
+
+    /**
+     *
+     */
+    private int calibrationOffset = 0;
+
+    /**
+     *
+     */
+    private boolean calibrationDone = false;
 
     /**
      * The listeners on the Compass
@@ -67,13 +79,13 @@ public class Compass implements SensorEventListener{
      * Constructor for the Compass
      * @param sensorManager
      */
-    public Compass(SensorManager sensorManager){
+    public Compass(SensorManager sensorManager) {
         this.sensorManager = sensorManager;
         this.accelerometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         this.magnetometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         this.orientation = new float[3];
         this.listeners = new ArrayList<>();
-        Log.e("Compass:Compass","Fin du constructeur");
+        Log.e("Compass:Compass", "Fin du constructeur");
     }
 
     // Accessor //
@@ -83,6 +95,10 @@ public class Compass implements SensorEventListener{
     }
 
     // Methods //
+
+    public void calibrateCompass() {
+        this.calibrationOffset = - (this.currentAngle);
+    }
 
     /**
      * Gets the sensors data when they change
@@ -98,9 +114,14 @@ public class Compass implements SensorEventListener{
             float I[] = new float[9];
             if (SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)) {
                 SensorManager.getOrientation(R, this.orientation);
-                System.out.println("X: "+getAzimutInDegrees());
+                this.previousAngle = this.currentAngle;
                 this.currentAngle = getAzimutInDegrees();
                 signalAngleChanged();
+                if (currentAngle == previousAngle){
+                    signalAngleStabilized();
+                }
+
+
             }
         }
     }
@@ -109,8 +130,19 @@ public class Compass implements SensorEventListener{
      * Signals via listeners when the angle has changed
      */
     private void signalAngleChanged(){
+        int angle = this.currentAngle + this.calibrationOffset;
         for (CompassListener listener : this.listeners) {
-            listener.notifyAngleChange(new AngleChangedEvent(this.currentAngle));
+            System.out.println("X_modified: "+ (getAzimutInDegrees() + this.calibrationOffset));
+            listener.notifyAngleChanged(new AngleChangedEvent(angle));
+        }
+    }
+
+    /**
+     * Signals via listeners when the angle has changed
+     */
+    private void signalAngleStabilized(){
+        for (CompassListener listener : this.listeners) {
+            listener.notifyAngleStabilized();
         }
     }
 
