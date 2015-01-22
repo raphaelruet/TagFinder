@@ -24,7 +24,7 @@ public class PieChart extends View
      * The angles of the PieChart
      * (Initialized with default values)
      */
-    private int[] angles = {0,360};
+    private int[] angles = {0,0};
 
     /**
      * The size of the drawn PieChart
@@ -66,6 +66,12 @@ public class PieChart extends View
         setupAttributes(attrs);
     }
 
+    /**
+     * Constructor for the PieChart
+     * @param context the Application Context
+     * @param attrs the Attributes of the PieChart to create
+     * @param defStyle the Style of the PieChart
+     */
     public PieChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setupAttributes(attrs);
@@ -111,14 +117,26 @@ public class PieChart extends View
         requestLayout();
     }
 
+
     // Methods //
 
     /**
      * Sets the colors of the PieChart (background and foreground)
+     * with the default colors
      */
-    private void setPieChartPaint() {
+    private void setPieChartDefaultColor() {
         pieChartPaint.setColor(getResources().getColor(R.color.main_theme_blue));
         backgroundPaint.setColor(getResources().getColor(R.color.main_theme_grey));
+    }
+
+    /**
+     * Sets the PieChart color
+     * @param color the new color to set
+     */
+    public void setPieChartColor(int color) {
+        pieChartPaint.setColor(color);
+        invalidate();
+        requestLayout();
     }
 
     /**
@@ -157,7 +175,7 @@ public class PieChart extends View
         float computedAngles[] = computeAngles();
 
         // Colorization
-        this.setPieChartPaint();
+        this.setPieChartDefaultColor();
 
         // Rectangle creation
         this.rectf.set((getWidth() - piechartSize)/2,
