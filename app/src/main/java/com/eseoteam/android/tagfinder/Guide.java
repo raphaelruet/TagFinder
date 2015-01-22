@@ -73,11 +73,13 @@ public class Guide extends Thread implements BinderListener{
      */
     public Guide(Binder binder) {
         this.binder = binder;
+        this.binder.addListener(this);
         this.listeners = new ArrayList<>();
     }
 
     public Guide(Binder binder, GuideListener listener) {
         this.binder = binder;
+        this.binder.addListener(this);
         this.listeners = new ArrayList<>();
         this.listeners.add(listener);
     }
@@ -134,12 +136,11 @@ public class Guide extends Thread implements BinderListener{
     /**
      * Sets the angle of the PieChart when the sensors values change
      */
-    /*
     @Override
     public void notifyAngleChanged(AngleChangedEvent event) {
         this.currentCompassAngle = event.getAngle();
     }
-    */
+
 
     /**
      * Calibrates the orientation of the phone to zero
