@@ -1,5 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
+
 import android.util.Log;
 
 import java.util.ArrayList;
