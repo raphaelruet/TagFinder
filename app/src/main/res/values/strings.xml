@@ -37,10 +37,12 @@
     <!-- Button strings -->
     <string name="scan_tag">SCAN</string>
     <string name="scanning_tag">SCANNING</string>
+    <string name="done_scanning_tag">DONE</string>
 
     <!-- AddtagActivty strings -->
     <string name="toast_empty_field">Please fill Tag name and Tag ID</string>
 
+    <string name="toast_no_wifi">Wifi is not enabled. You can\'t add a tag.</string>
 
     <string name="fake_tag_id">Pierre est un con</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

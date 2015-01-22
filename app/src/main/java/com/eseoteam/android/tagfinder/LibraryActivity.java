@@ -1,7 +1,10 @@
 package com.eseoteam.android.tagfinder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Manage the tag library
@@ -97,8 +101,15 @@ public class LibraryActivity extends Activity {
     private View.OnClickListener addTagButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //Go to the addButton activity.
-            startActivity(new Intent(getApplicationContext(), AddTagActivity.class));
+            if(isWifiEnabled()) {
+                //Go to the addButton activity.
+                startActivity(new Intent(getApplicationContext(), AddTagActivity.class));
+            }
+            else {
+                //Notify user that the wifi isn't enabled.
+                Toast.makeText(getApplicationContext(),
+                        R.string.toast_no_wifi,Toast.LENGTH_SHORT).show();
+            }
         }
 
     };
@@ -129,6 +140,18 @@ public class LibraryActivity extends Activity {
         //Quits the app
         System.exit(0);
 
+    }
+
+    /**
+     * Checks if the Wifi is enabled
+     * @return True if the Wifi is enabled else false.
+     */
+    private boolean isWifiEnabled() {
+        //Retrieve the network state.
+        ConnectivityManager connManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return mWifi.isConnected();
     }
 
 }

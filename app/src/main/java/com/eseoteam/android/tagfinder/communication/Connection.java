@@ -5,7 +5,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 /**
  * UDP Connection.
@@ -29,23 +31,35 @@ public class Connection {
     private final static int SOCKET_TIMEOUT = 0;
 
     /**
+     * Header to print a log message
+     */
+    private final static String LOG_TAG = "communication.Connection";
+
+    /**
      * Connection socket.
      */
-    private DatagramSocket socket=null;
+    private DatagramSocket socket;
 
     //Constructor//
 
-    public Connection(DatagramSocket socket){
-        this.socket = socket;
-        try{
-            this.socket.setSoTimeout(SOCKET_TIMEOUT);
-        }catch(SocketException e){
-            Log.e("Connection:Connection","Problem setting timeout");
+    public Connection(String ip, int port) throws UnknownHostException, SocketException {
+        try {
+        InetAddress wifiAddress = InetAddress.getByName(ip);
+        this.socket = new DatagramSocket(port, wifiAddress);
+        this.socket.setSoTimeout(SOCKET_TIMEOUT);
         }
+        catch(SocketException e){
+            Log.e(LOG_TAG,"Error creating socket");
+            throw e;
+        }
+        catch(UnknownHostException uhe) {
+            Log.e(LOG_TAG,"Bad host");
+            throw uhe;
+        }
+        Log.i(LOG_TAG,"Connection Created");
     }
 
     //Methods//
-
     /**
      * Read a message on the socket.
      * @return The received message.
@@ -58,7 +72,7 @@ public class Connection {
             this.socket.receive(packet);
             msg = new String(packet.getData(), 0, packet.getLength());
         }catch(IOException e){
-            Log.e("Connection:read","Error while receiving a packet");
+            Log.e(LOG_TAG,"Error while receiving a packet");
             throw e;
         }
         return msg;

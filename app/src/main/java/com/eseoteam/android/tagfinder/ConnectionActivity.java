@@ -1,14 +1,13 @@
 package com.eseoteam.android.tagfinder;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,15 +16,8 @@ import android.widget.Toast;
 
 import com.eseoteam.android.tagfinder.communication.Communication;
 
-import java.math.BigInteger;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.nio.ByteOrder;
 
-
-public class ConnectionActivity extends ActionBarActivity implements BinderListener{
+public class ConnectionActivity extends Activity implements BinderListener{
 
     /**
      * The request code chen user goes to the Wifi settings.
@@ -38,19 +30,26 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
      */
     private static final int CONNECTION_PORT = 12345;
 
+    /**
+     * Header to print a log message
+     */
+    private static final String LOG_TAG = "ConnectionActivity";
+
     private String wifiAddress;
 
     private Communication communication;
+
+    private Binder binder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection);
-        //Hide the top action bar.
-        getSupportActionBar().hide();
+
         //Set the skip checking connection button.
         Button skipButton = (Button)findViewById(R.id.skipButton);
         skipButton.setOnClickListener(this.skipButtonListener);
+
     }
 
     @Override
@@ -65,18 +64,29 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
         }
     }
 
+    /**
+     * Called when finish() is used.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if(this.communication !=null) {
-            this.communication.disconnect();
+            this.communication.closeConnection();
+            try {
+                this.communication.join();
+            } catch (InterruptedException e) {
+                Log.e(LOG_TAG,"Join interrupted");
+            }
         }
     }
 
+    /**
+     * Called when the "physical" back button is pressed
+     */
     @Override
     public void onBackPressed() {
-
-
+        //Do nothing when back button is pressed.
+        //i.e. disable the back button.
     }
 
     /**
@@ -103,17 +113,19 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
         alertDialog.show();
     }
 
+    /**
+     * Called when the user come back after the wifi settings.
+     * @param requestCode The request code given when the settings when first called.
+     *                    if the code is the same it means that everything went right
+     * @param resultCode The result code fro the activity.
+     * @param data The intent from the activity that can contain data.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //If the wifi is disabled, ask the user to enable it.
         switch (requestCode) {
             case REQUEST_ENABLE_WIFI:
-                if (!this.isWifiEnabled()) {
-                    this.displayWifiAlertDialog();
-                }
-                else {
-                    this.initializeCommunication();
-                }
+                Log.i(LOG_TAG, "Everything is ok");
                 break;
             default:
                 Toast.makeText(getApplicationContext(),
@@ -178,61 +190,28 @@ public class ConnectionActivity extends ActionBarActivity implements BinderListe
         }
     };
 
-    protected String getWifiIpAddress(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-
-        // Convert little-endian to big-endianif needed
-        if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
-            ipAddress = Integer.reverseBytes(ipAddress);
-        }
-
-        byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
-
-        String ipAddressString;
-        try {
-            ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
-        } catch (UnknownHostException ex) {
-            Log.e("ConnectionActivity:getWifiIpAddress", "Unable to get host address.");
-            ipAddressString = null;
-        }
-
-        return ipAddressString;
-    }
-
     /**
      * Starts the communication by connecting the socket to the device ip and the specified port.
      */
     private void initializeCommunication() {
-        try {
-            this.wifiAddress = this.getWifiIpAddress(getApplicationContext());
-            Log.d("ConnectionActivity","Wifi Address:" + wifiAddress);
-            DatagramSocket socket = new DatagramSocket(CONNECTION_PORT,
-                    InetAddress.getByName(this.wifiAddress));
-            Binder binder = new Binder();
-            binder.addListener(this);
-            this.communication = new Communication(socket,binder);
-            this.communication.start();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        catch(UnknownHostException uhe){
-        Log.e("Main","Bad host");
-    }
+            this.wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
+            Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
 
+            this.binder = new Binder();
+            this.binder.addListener(this);
+            this.communication = new Communication(this.wifiAddress, CONNECTION_PORT, binder);
+            this.communication.start();
     }
 
     @Override
     public void notifyFrameChange(FrameChangedEvent event) {
-        final String address = this.wifiAddress;
-        final int port = ConnectionActivity.CONNECTION_PORT;
         final Runnable action = new Runnable() {
             @Override
             public void run()
             {
                 //Notify user he's connected.
-                Toast.makeText(getApplicationContext(),"Connected with IP: " + address
-                        + "\nOn port : " + port,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Connected with IP: " + wifiAddress
+                        + "\nOn port : " + CONNECTION_PORT,Toast.LENGTH_LONG).show();
                 //Go to library screen
                 startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
             }
