@@ -1,5 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
+
 /**
  * Listener on the Binder class events.
  * Created on 15/01/2015.
