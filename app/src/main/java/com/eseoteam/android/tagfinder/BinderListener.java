@@ -1,5 +1,6 @@
 package com.eseoteam.android.tagfinder;
 
+import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
 import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
 
 /**
@@ -15,4 +16,7 @@ public interface BinderListener {
      * @param event Event of a frame change.
      */
     public void notifyFrameChange(FrameChangedEvent event);
+
+
+    public void notifyAngleChanged(AngleChangedEvent event);
 }
