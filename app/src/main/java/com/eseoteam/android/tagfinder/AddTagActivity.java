@@ -82,7 +82,8 @@ public class AddTagActivity extends Activity implements BinderListener {
             final String tagDataFieldString = tagDataField.getText().toString();
 
             //Checks if tagName or tagId are empty
-            if(tagNameFieldString.matches("") || tagIdFieldString.matches("")) {
+            //TODO Put the security for empty tag field over.
+            if(tagNameFieldString.matches("")/* || tagIdFieldString.matches("")*/) {
                 Toast.makeText(getApplicationContext(),
                         R.string.toast_empty_field, Toast.LENGTH_SHORT).show();
             }
@@ -109,9 +110,10 @@ public class AddTagActivity extends Activity implements BinderListener {
     private View.OnClickListener scanTagButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ((Button) findViewById(R.id.scanTagButton)).setText(R.string.scanning_tag);
-            //TODO SECURITE pour l'appui multiple.
-            initializeCommunication();
+            if(communication == null) {
+                ((Button) findViewById(R.id.scanTagButton)).setText(R.string.scanning_tag);
+                initializeCommunication();
+            }
         }
     };
 
@@ -150,7 +152,7 @@ public class AddTagActivity extends Activity implements BinderListener {
             {
                 EditText tagIdField = (EditText) findViewById(R.id.tagIdField);
                 tagIdField.setText(stringStock[4]);
-                ((Button) findViewById(R.id.scanTagButton)).setText("DONE");
+                ((Button) findViewById(R.id.scanTagButton)).setText(R.string.done_scanning_tag);
             }
         };
         this.runOnUiThread(action);
