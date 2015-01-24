@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.eseoteam.android.tagfinder.communication.Communication;
+import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
 
 /**
  * Manage the tag adding
@@ -156,5 +158,10 @@ public class AddTagActivity extends Activity implements BinderListener {
             }
         };
         this.runOnUiThread(action);
+    }
+
+    @Override
+    public void notifyAngleChanged(AngleChangedEvent event) {
+        //Nothing to be done here
     }
 }
