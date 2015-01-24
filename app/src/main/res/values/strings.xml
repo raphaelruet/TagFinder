@@ -25,6 +25,8 @@
     <color name="main_theme_blue">#03A5FF</color>
     <color name="main_theme_grey">#f04f4f4f</color>
     <color name="main_theme_white">#DDDDDD</color>
+    <color name="main_theme_green">#20B2AA</color>
+
 
     <!-- Content description -->
     <string name="top_bar_description">The top bar of all UI</string>

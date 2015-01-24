@@ -5,6 +5,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import android.widget.TextView;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class SearchActivity extends ActionBarActivity implements CompassListener{
+public class SearchActivity extends ActionBarActivity implements GuideListener{
 
     // Attributes //
 
@@ -45,20 +46,18 @@ public class SearchActivity extends ActionBarActivity implements CompassListener
     private DatabaseHelper databaseHelper;
 
     /**
-     * The compass used by the SearchActivity
-     */
-    private Compass compass;
-
-    /**
      * The sensor manager for the Search activity
      */
     private SensorManager sensorManager;
 
+    private Guide guide;
 
     /**
      * The PieChart used in the activity_search view
      */
     PieChart pieChart;
+
+    private Binder binder;
 
     // Methods //
 
@@ -68,15 +67,18 @@ public class SearchActivity extends ActionBarActivity implements CompassListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getSupportActionBar().hide();
+
+        //Ajout des listeners sur les boutons
         setListeners();
 
         // Récupération du PieChart du layout
         pieChart = (PieChart) findViewById(R.id.pieChart);
 
-        // Gestion des capteurs
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        this.compass = new Compass(sensorManager);
-        this.compass.addCompassListener(this);
+        //Création du Binder
+        this.binder = new Binder();
+
+        //Création du guide
+        this.guide = new Guide(this.binder);
 
         // Helper pour la base de données
         this.databaseHelper = new DatabaseHelper(this);
@@ -113,7 +115,25 @@ public class SearchActivity extends ActionBarActivity implements CompassListener
         //backButton
         ImageButton backButton = (ImageButton) findViewById(R.id.backButton);
         backButton.setOnClickListener(this.backButtonListener);
+
+        //calibrateButton
+        Button calibrateButton = (Button)findViewById(R.id.calibrationButton);
+        calibrateButton.setOnClickListener(this.calibrateButtonListener);
     }
+
+    /**
+     * Sets a listener on the calibrateButton
+     */
+    private View.OnClickListener calibrateButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            guide.goToCalibration();
+            Button calibrationButton = (Button)findViewById(R.id.calibrationButton);
+            calibrationButton.setVisibility(View.GONE);
+            TextView holdStillText = (TextView)findViewById(R.id.holdStillText);
+            holdStillText.setVisibility(View.VISIBLE);
+        }
+    };
 
     /**
      * Sets a listener on the backButton
@@ -132,7 +152,6 @@ public class SearchActivity extends ActionBarActivity implements CompassListener
     @Override
     protected void onPause() {
         super.onPause();
-        this.compass.unregisterSensors();
     }
 
     /**
@@ -142,23 +161,36 @@ public class SearchActivity extends ActionBarActivity implements CompassListener
     @Override
     protected void onResume() {
         super.onResume();
-        this.compass.registerSensors();
     }
 
     /**
-     * Sets the angle of the PieChart when the sensors values change
-     * @param event Event of a sensor change.
+     * Asks the user to do the calibration
      */
     @Override
-    public void notifyAngleChange(AngleChangedEvent event) {
-        final int angle = event.getAngle();
+    public void notifyCalibrationAsked() {
+
         final Runnable action = new Runnable() {
             @Override
             public void run()
             {
-                pieChart.setAngles(0,angle);
+                PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
+                pieChart.setAngles(0,360);
+                pieChart.setPieChartColor(getResources().getColor(R.color.main_theme_green));
+                Button calibrationButton = (Button)findViewById(R.id.calibrationButton);
+                calibrationButton.setVisibility(View.VISIBLE);
             }
         };
         this.runOnUiThread(action);
+    }
+
+    @Override
+    public void notifyScanAsked() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.guide.stopGuide();
     }
 }

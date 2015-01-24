@@ -1,4 +1,4 @@
-package com.eseoteam.android.tagfinder;
+package com.eseoteam.android.tagfinder.events;
 
 /**
  * Created on 15/01/2015.

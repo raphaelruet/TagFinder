@@ -1,5 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+
 /**
  * Listener on the Binder class events.
  * Created on 19/01/2015.
@@ -9,8 +11,13 @@ package com.eseoteam.android.tagfinder;
 public interface CompassListener {
 
     /**
-     * Notify that a new frame has been received.
-     * @param event Event of a frame change.
+     * Notify that a new angle has been received.
+     * @param event Event of a angle change.
      */
-    public void notifyAngleChange(AngleChangedEvent event);
+    public void notifyAngleChanged(AngleChangedEvent event);
+
+    /**
+     * Notify that the angle of the phone is stabilized.
+     */
+    public void notifyAngleStabilized();
 }
