@@ -116,12 +116,12 @@ public class Compass implements SensorEventListener{
                 SensorManager.getOrientation(R, this.orientation);
                 this.previousAngle = this.currentAngle;
                 this.currentAngle = getAzimutInDegrees();
-                signalAngleChanged();
+                if (this.currentAngle != this.previousAngle){
+                    signalAngleChanged();
+                }
                 if (currentAngle == previousAngle){
                     signalAngleStabilized();
                 }
-
-
             }
         }
     }
