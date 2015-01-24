@@ -85,6 +85,10 @@ public class Binder implements CompassListener {
 
     //Accessor//
 
+    public Compass getCompass(){
+        return this.compass;
+    }
+
     //Methods//
     /**
      * Change the current frame by a new one.
@@ -236,6 +240,10 @@ public class Binder implements CompassListener {
 
     @Override
     public void notifyAngleStabilized() {
-
+        for (BinderListener listener: this.listeners) {
+            listener.notifyAngleStabilized();
+        }
     }
+
+
 }
