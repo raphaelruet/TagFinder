@@ -1,6 +1,6 @@
 package com.eseoteam.android.tagfinder;
 
-import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
 /**
  * Listener on the Binder class events.
@@ -19,4 +19,10 @@ public interface GuideListener {
      * Notify that a scan is needed
      */
     public void notifyScanAsked();
+
+    /**
+     * Notify that the PieChart angles has changed
+     * @param event the angles
+     */
+    public void notifyPieChartChanged(PieChartChangedEvent event);
 }
