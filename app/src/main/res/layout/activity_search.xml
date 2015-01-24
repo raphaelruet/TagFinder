@@ -207,26 +207,8 @@
             android:id="@+id/pieChart"
             android:layout_centerHorizontal="true"
             app:startAngle="0"
-            app:stopAngle="0"/>
-
-        <Button
-            android:id="@+id/calibrationButton"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tap to calibrate"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
-
-        <TextView
-            android:id="@+id/holdStillText"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="HOLD STILL"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            app:stopAngle="360"
+            android:clickable="true"/>
 
     </RelativeLayout>
 
