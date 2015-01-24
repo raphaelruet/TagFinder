@@ -4,10 +4,17 @@ import android.database.Cursor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Manage the research process
@@ -18,6 +25,11 @@ import android.widget.TextView;
 public class SearchActivity extends ActionBarActivity implements GuideListener{
 
     // Attributes //
+
+    /**
+     * Header to print a log message
+     */
+    private static final String LOG_TAG = SearchActivity.class.getSimpleName();
 
     /**
      * Fields of the textView
@@ -46,18 +58,19 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     private DatabaseHelper databaseHelper;
 
     /**
-     * The sensor manager for the Search activity
+     * The Guide
      */
-    private SensorManager sensorManager;
-
     private Guide guide;
 
     /**
-     * The PieChart used in the activity_search view
+     * The Binder
      */
-    PieChart pieChart;
-
     private Binder binder;
+
+    /**
+     * The PieChart
+     */
+    private PieChart pieChart;
 
     // Methods //
 
@@ -71,14 +84,17 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         //Ajout des listeners sur les boutons
         setListeners();
 
-        // Récupération du PieChart du layout
-        pieChart = (PieChart) findViewById(R.id.pieChart);
+        Compass compass = new Compass((SensorManager) getSystemService(SENSOR_SERVICE));
+
+        //Récupération du pieChart du layout
+        this.pieChart = (PieChart)findViewById(R.id.pieChart);
 
         //Création du Binder
-        this.binder = new Binder();
+        this.binder = new Binder(Binder.Mode.SEARCH, compass);
 
         //Création du guide
-        this.guide = new Guide(this.binder);
+        this.guide = new Guide(this.binder,this);
+        this.guide.start();
 
         // Helper pour la base de données
         this.databaseHelper = new DatabaseHelper(this);
@@ -117,23 +133,9 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         backButton.setOnClickListener(this.backButtonListener);
 
         //calibrateButton
-        Button calibrateButton = (Button)findViewById(R.id.calibrationButton);
-        calibrateButton.setOnClickListener(this.calibrateButtonListener);
+        PieChart pieChart = (PieChart)findViewById(R.id.pieChart);
+        pieChart.setOnClickListener(this.calibrateButtonListener);
     }
-
-    /**
-     * Sets a listener on the calibrateButton
-     */
-    private View.OnClickListener calibrateButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            guide.goToCalibration();
-            Button calibrationButton = (Button)findViewById(R.id.calibrationButton);
-            calibrationButton.setVisibility(View.GONE);
-            TextView holdStillText = (TextView)findViewById(R.id.holdStillText);
-            holdStillText.setVisibility(View.VISIBLE);
-        }
-    };
 
     /**
      * Sets a listener on the backButton
@@ -146,46 +148,75 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     };
 
     /**
-     * Called when activity goes to pause state.
-     * Unregister the sensors
+     * Sets a listener on the calibrateButton
      */
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    /**
-     * Called when the activity is resumed
-     * Register the sensors
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    private View.OnClickListener calibrateButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            pieChart.setClickable(false);
+            guide.setState(Guide.State.CALIBRATION);
+        }
+    };
 
     /**
      * Asks the user to do the calibration
      */
     @Override
     public void notifyCalibrationAsked() {
-
         final Runnable action = new Runnable() {
             @Override
             public void run()
             {
-                PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
-                pieChart.setAngles(0,360);
-                pieChart.setPieChartColor(getResources().getColor(R.color.main_theme_green));
-                Button calibrationButton = (Button)findViewById(R.id.calibrationButton);
-                calibrationButton.setVisibility(View.VISIBLE);
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Please keep the phone still and horizontal, then tap the blue radar",
+                        Toast.LENGTH_LONG
+                ).show();
             }
         };
         this.runOnUiThread(action);
+        Log.e(LOG_TAG,"User as been asked to calibrate");
     }
 
+    /**
+     * Asks the user to scan the environment
+     */
     @Override
     public void notifyScanAsked() {
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Calibration complete",
+                        Toast.LENGTH_SHORT
+                ).show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Keep the phone horizontal and slowly make a 360 degree turn",
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+        };
+        this.runOnUiThread(action);
+        Log.e(LOG_TAG,"User as been asked to scan");
+    }
 
+    /**
+     * Asks the SearchActivity to refresh the PieChart with the given values
+     * @param event the event containing the new angles.
+     */
+    @Override
+    public void notifyPieChartChanged(final PieChartChangedEvent event) {
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                pieChart.setAngles(event.getAngles()[0], event.getAngles()[1]);
+            }
+        };
+        this.runOnUiThread(action);
     }
 
     @Override
