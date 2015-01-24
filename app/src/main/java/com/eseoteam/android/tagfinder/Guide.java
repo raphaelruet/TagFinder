@@ -26,7 +26,8 @@ public class Guide extends Thread implements BinderListener{
         ASK_FOR_CALIBRATION,
         CALIBRATION,
         SCAN,
-        GUIDE
+        GUIDE,
+        DEBUG
     }
 
     /**
@@ -100,17 +101,16 @@ public class Guide extends Thread implements BinderListener{
                     this.currentState = State.IDLE;
                     break;
                 case CALIBRATION:
-                    calibrateCompass();
-                    this.currentState = State.SCAN;
-                    askForScan();
+                    // Wait for compass to be stabilized
                     break;
                 case SCAN:
                     //TODO Informer Mathematician
-                    if (this.currentCompassAngle != this.previousCompassAngle){
-                        updatePieChart(new int[]{-currentCompassAngle,0});
-                    }
+                    updatePieChart(new int[]{-currentCompassAngle,0});
                     break;
                 case GUIDE:
+                    break;
+                case DEBUG:
+                    updatePieChart(new int[]{currentCompassAngle, currentCompassAngle+5});
                     break;
                 default:
                     break;
@@ -168,6 +168,14 @@ public class Guide extends Thread implements BinderListener{
     public void notifyAngleChanged(AngleChangedEvent event) {
         this.previousCompassAngle = this.currentCompassAngle;
         this.currentCompassAngle = event.getAngle();
+    }
+
+    @Override
+    public void notifyAngleStabilized() {
+        if (this.currentState == State.CALIBRATION){
+            this.binder.getCompass().calibrateCompass();
+            this.currentState = State.SCAN;
+        }
     }
 
     /**
