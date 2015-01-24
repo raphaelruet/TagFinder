@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.eseoteam.android.tagfinder.communication.Communication;
+import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
 
 /**
  * Manage the tag adding
@@ -26,12 +26,23 @@ public class AddTagActivity extends Activity implements BinderListener {
      */
     private static final int CONNECTION_PORT = 12345;
 
+    /**
+     * Header to print a log message
+     */
     private static final String LOG_TAG = "AddTagActivity";
     /**
      * Helper to access the database
      */
     private DatabaseHelper databaseHelper;
+
+    /**
+     * Communication with the UDP client
+     */
     private Communication communication;
+
+    /**
+     * Binder to retrieve incoming tag data and link them with angles.
+     */
     private Binder binder;
 
     /**
@@ -139,21 +150,26 @@ public class AddTagActivity extends Activity implements BinderListener {
         String wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
         Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
 
-        this.binder = new Binder();
+        this.binder = new Binder(Binder.Mode.ADD_TAG);
         this.binder.addListener(this);
         this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
         this.communication.start();
     }
 
     @Override
-    public void notifyFrameChange(FrameChangedEvent event) {
-        final String[] stringStock = event.getFrame().split(";");
+    public void notifyAngleChanged(AngleChangedEvent event) {
+        //Nothing to be done here
+    }
+
+    @Override
+    public void notifyTagToAddFound(AddTagEvent event) {
+        final String id = event.getId();
         final Runnable action = new Runnable() {
             @Override
             public void run()
             {
                 EditText tagIdField = (EditText) findViewById(R.id.tagIdField);
-                tagIdField.setText(stringStock[4]);
+                tagIdField.setText(id);
                 ((Button) findViewById(R.id.scanTagButton)).setText(R.string.done_scanning_tag);
             }
         };
@@ -161,7 +177,7 @@ public class AddTagActivity extends Activity implements BinderListener {
     }
 
     @Override
-    public void notifyAngleChanged(AngleChangedEvent event) {
-        //Nothing to be done here
+    public void notifyFrameReceived() {
+        //Nothing to be done here.
     }
 }

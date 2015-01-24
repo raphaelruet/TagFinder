@@ -24,6 +24,7 @@ public class Communication extends Thread {
     //Attributes//
 
     private static final String FRAME_FIELD_SEPARATOR = ";";
+
     /**
      * Header to print a log message
      */
@@ -42,7 +43,7 @@ public class Communication extends Thread {
     //Constructors//
 
     /**
-     * Constructor of a UDP cmmunication
+     * Constructor of a UDP communication
      * @param ip Ip of the device
      * @param port The port to which the socket is bound.
      * @param binder Binder which will receive the frames.
@@ -69,6 +70,7 @@ public class Communication extends Thread {
         try {
             while (true) {
                 receivedMessage  = this.connection.read();
+                Log.e(LOG_TAG, "Message: " + receivedMessage);
                 if (receivedMessage != null) {
                     this.interpretMessage(receivedMessage);
                 }
@@ -100,16 +102,16 @@ public class Communication extends Thread {
     private void interpretMessage(String frame){
         final String[] stringStock = frame.split(FRAME_FIELD_SEPARATOR);
         try{
-            //New frame: date;hour;epc;rssi;phase
-            this.command.execute(stringStock[1]
-            + FRAME_FIELD_SEPARATOR
-            + stringStock[2]
-            + FRAME_FIELD_SEPARATOR
-            + stringStock[4]
+            //New frame: id;rssi;phase;date;time
+            this.command.execute(stringStock[4]
             + FRAME_FIELD_SEPARATOR
             + stringStock[7]
             + FRAME_FIELD_SEPARATOR
-            + stringStock[8]);
+            + stringStock[8]
+            + FRAME_FIELD_SEPARATOR
+            + stringStock[1]
+            + FRAME_FIELD_SEPARATOR
+            + stringStock[2]);
         } catch(NumberFormatException e){
             Log.e(LOG_TAG,"Number Format exception");
         }

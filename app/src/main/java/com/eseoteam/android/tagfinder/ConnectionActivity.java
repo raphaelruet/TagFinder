@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.eseoteam.android.tagfinder.communication.Communication;
+import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
 
 
 public class ConnectionActivity extends Activity implements BinderListener{
@@ -215,7 +215,17 @@ public class ConnectionActivity extends Activity implements BinderListener{
     }
 
     @Override
-    public void notifyFrameChange(FrameChangedEvent event) {
+    public void notifyAngleChanged(AngleChangedEvent event) {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyTagToAddFound(AddTagEvent event) {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyFrameReceived() {
         final Runnable action = new Runnable() {
             @Override
             public void run()
@@ -230,10 +240,5 @@ public class ConnectionActivity extends Activity implements BinderListener{
         this.runOnUiThread(action);
         //Close the connectionActivity;
         this.finish();
-    }
-
-    @Override
-    public void notifyAngleChanged(AngleChangedEvent event) {
-        //Nothing to be done here.
     }
 }

@@ -1,7 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
 
 /**
  * Listener on the Binder class events.
@@ -11,12 +11,17 @@ import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
  */
 public interface BinderListener {
 
-    /**
-     * Notify that a new frame has been received.
-     * @param event Event of a frame change.
-     */
-    public void notifyFrameChange(FrameChangedEvent event);
-
-
     public void notifyAngleChanged(AngleChangedEvent event);
+
+    /**
+     * Notify that the tag to add has been found.
+     * @param event Event containing the id of th tag to add.
+     */
+    public void notifyTagToAddFound(AddTagEvent event);
+
+    /**
+     * Notify that a frame has been received.
+     * Used to check the connection.
+     */
+    public void notifyFrameReceived();
 }
