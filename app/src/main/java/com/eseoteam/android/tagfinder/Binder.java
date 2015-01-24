@@ -1,7 +1,9 @@
 package com.eseoteam.android.tagfinder;
 
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
+import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
 
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.Map;
  * @author Pierre TOUZE.
  * @version 0.1.
  */
-public class Binder {
+public class Binder implements CompassListener {
     //Attributes//
     /**
      * The number of times a tag must have been counted to be selected as the right tag to add.
@@ -46,6 +48,8 @@ public class Binder {
      */
     private Mode operatingMode;
 
+    private Compass compass;
+
     /**
      * Used to know whether the notify has been performed or not.
      */
@@ -62,6 +66,22 @@ public class Binder {
         this.tags = new Hashtable<>();
         this.notifyPerformed = false;
     }
+
+    /**
+     * Constructor of a new Binder which initialize attributes.
+     */
+    Binder(Mode mode, Compass compass) {
+        this.frame = null;
+        this.operatingMode = mode;
+        this.listeners = new ArrayList<>();
+        this.tags = new Hashtable<>();
+        this.notifyPerformed = false;
+        this.compass = compass;
+        this.compass.registerSensors();
+        this.compass.addCompassListener(this);
+    }
+
+
 
     //Accessor//
 
@@ -205,5 +225,17 @@ public class Binder {
      */
     public void removeListener(BinderListener listener) {
         this.listeners.remove(listener);
+    }
+
+    @Override
+    public void notifyAngleChanged(AngleChangedEvent event) {
+        for (BinderListener listener: this.listeners) {
+            listener.notifyAngleChanged(new AngleChangedEvent(event.getAngle()));
+        }
+    }
+
+    @Override
+    public void notifyAngleStabilized() {
+
     }
 }
