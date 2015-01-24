@@ -22,10 +22,12 @@ import java.nio.ByteOrder;
 public class Communication extends Thread {
 
     //Attributes//
+
+    private static final String FRAME_FIELD_SEPARATOR = ";";
     /**
      * Header to print a log message
      */
-    private static final String LOG_TAG = "Communication";
+    private static final String LOG_TAG = Communication.class.getSimpleName();
 
     /**
      * UDP connection.
@@ -63,14 +65,12 @@ public class Communication extends Thread {
      */
     public void run(){
         Log.i(LOG_TAG,"Run Starts");
-        String receivedMessage = null;
+        String receivedMessage;
         try {
             while (true) {
                 receivedMessage  = this.connection.read();
                 if (receivedMessage != null) {
-                    this.command.execute(receivedMessage);
-                    //interpretMessage(this.receivedMessage);
-                    Log.i(LOG_TAG, "Message received" + receivedMessage);
+                    this.interpretMessage(receivedMessage);
                 }
                 else {
                     break;
@@ -97,10 +97,19 @@ public class Communication extends Thread {
      * Interpret the received message keeping only the relevant values.
      * @param frame Received message.
      */
-    public void interpretMessage(String frame){
-        final String[] stringStock = frame.split(";");
+    private void interpretMessage(String frame){
+        final String[] stringStock = frame.split(FRAME_FIELD_SEPARATOR);
         try{
-            this.command.execute(stringStock[7] + "," + stringStock[8]);
+            //New frame: date;hour;epc;rssi;phase
+            this.command.execute(stringStock[1]
+            + FRAME_FIELD_SEPARATOR
+            + stringStock[2]
+            + FRAME_FIELD_SEPARATOR
+            + stringStock[4]
+            + FRAME_FIELD_SEPARATOR
+            + stringStock[7]
+            + FRAME_FIELD_SEPARATOR
+            + stringStock[8]);
         } catch(NumberFormatException e){
             Log.e(LOG_TAG,"Number Format exception");
         }

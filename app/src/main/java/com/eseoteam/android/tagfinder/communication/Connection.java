@@ -33,7 +33,7 @@ public class Connection {
     /**
      * Header to print a log message
      */
-    private final static String LOG_TAG = "communication.Connection";
+    private final static String LOG_TAG = Connection.class.getSimpleName();
 
     /**
      * Connection socket.

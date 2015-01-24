@@ -22,6 +22,11 @@ import com.eseoteam.android.tagfinder.events.FrameChangedEvent;
 public class ConnectionActivity extends Activity implements BinderListener{
 
     /**
+     * Header to print a log message
+     */
+    private static final String LOG_TAG = ConnectionActivity.class.getSimpleName();
+
+    /**
      * The request code chen user goes to the Wifi settings.
     * Must be >=0 to be returned.
     */
@@ -33,14 +38,18 @@ public class ConnectionActivity extends Activity implements BinderListener{
     private static final int CONNECTION_PORT = 12345;
 
     /**
-     * Header to print a log message
+     * Ip address of the device.
      */
-    private static final String LOG_TAG = "ConnectionActivity";
-
     private String wifiAddress;
 
+    /**
+     * Communication with the UDP client
+     */
     private Communication communication;
 
+    /**
+     * Binder to retrieve incoming tag data and link them with angles.
+     */
     private Binder binder;
 
     @Override
@@ -199,7 +208,7 @@ public class ConnectionActivity extends Activity implements BinderListener{
             this.wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
             Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
 
-            this.binder = new Binder();
+            this.binder = new Binder(Binder.Mode.CHECK_CONNECTION);
             this.binder.addListener(this);
             this.communication = new Communication(this.wifiAddress, CONNECTION_PORT, binder);
             this.communication.start();
