@@ -91,7 +91,7 @@ public class Compass implements SensorEventListener{
     // Accessor //
 
     public int getAzimutInDegrees(){
-        return (int)convertFromRadiansToDegrees(this.orientation[0]);
+        return (int)(convertFromRadiansToDegrees(this.orientation[0])+180);
     }
 
     // Methods //
@@ -132,7 +132,7 @@ public class Compass implements SensorEventListener{
     private void signalAngleChanged(){
         int angle = this.currentAngle + this.calibrationOffset;
         for (CompassListener listener : this.listeners) {
-            System.out.println("X_modified: "+ (getAzimutInDegrees() + this.calibrationOffset));
+            Log.e("Compass","X_modified: "+ (getAzimutInDegrees() + this.calibrationOffset));
             listener.notifyAngleChanged(new AngleChangedEvent(angle));
         }
     }
