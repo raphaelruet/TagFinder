@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.eseoteam.android.tagfinder.communication.Communication;
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
 
 
 public class ConnectionActivity extends Activity implements BinderListener{
@@ -227,6 +228,11 @@ public class ConnectionActivity extends Activity implements BinderListener{
     @Override
     public void notifyTagToAddFound(AddTagEvent event) {
         //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyFrameBinded(FrameBindedEvent event) {
+        // Nothing to be done here
     }
 
     @Override
