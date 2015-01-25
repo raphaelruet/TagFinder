@@ -26,6 +26,8 @@
     <color name="main_theme_grey">#f04f4f4f</color>
     <color name="main_theme_white">#DDDDDD</color>
     <color name="main_theme_green">#20B2AA</color>
+    <color name="main_theme_dark_grey">#303030</color>
+
 
 
     <!-- Content description -->
