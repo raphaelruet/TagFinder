@@ -220,6 +220,11 @@ public class ConnectionActivity extends Activity implements BinderListener{
     }
 
     @Override
+    public void notifyAngleStabilized() {
+        //Nothing to be done here
+    }
+
+    @Override
     public void notifyTagToAddFound(AddTagEvent event) {
         //Nothing to be done here.
     }
