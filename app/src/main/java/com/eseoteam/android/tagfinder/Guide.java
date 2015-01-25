@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class Guide extends Thread implements BinderListener{
+public class Guide extends Thread implements CompassListener{
 
     // Attributes //
 
@@ -73,16 +73,7 @@ public class Guide extends Thread implements BinderListener{
 
     public Guide(Binder binder) {
         this.binder = binder;
-        this.binder.addListener(this);
         this.listeners = new ArrayList<>();
-        this.currentState = State.ASK_FOR_CALIBRATION;
-    }
-
-    public Guide(Binder binder, GuideListener listener) {
-        this.binder = binder;
-        this.binder.addListener(this);
-        this.listeners = new ArrayList<>();
-        this.listeners.add(listener);
         this.currentState = State.ASK_FOR_CALIBRATION;
     }
 
@@ -130,14 +121,6 @@ public class Guide extends Thread implements BinderListener{
     }
 
     /**
-     * Calibrates the orientation of the phone to zero
-     */
-    private void calibrateCompass() {
-        //TODO ajout la methode de binder permettant la calibration du compass
-        //this.calibrationDone = true;
-    }
-
-    /**
      * Adds a listener to Guide listeners
      * @param listener the listener to add
      */
@@ -173,26 +156,8 @@ public class Guide extends Thread implements BinderListener{
     @Override
     public void notifyAngleStabilized() {
         if (this.currentState == State.CALIBRATION){
-            this.binder.getCompass().calibrateCompass();
             this.currentState = State.SCAN;
         }
-    }
-
-    /**
-     * Nothing to be done here
-     * @param event Event containing the id of th tag to add.
-     */
-    @Override
-    public void notifyTagToAddFound(AddTagEvent event) {
-        //Nothing to be done here
-    }
-
-    /**
-     * Nothing to be done here
-     */
-    @Override
-    public void notifyFrameReceived() {
-        //Nothing to be done here
     }
 
     /**
