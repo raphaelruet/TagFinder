@@ -2,8 +2,8 @@ package com.eseoteam.android.tagfinder;
 
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
 
-import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -48,45 +48,24 @@ public class Binder implements CompassListener {
      */
     private Mode operatingMode;
 
-    private Compass compass;
-
     /**
      * Used to know whether the notify has been performed or not.
      */
     private boolean notifyPerformed;
 
+    private String tagTofind;
+
     //Constructor//
     /**
      * Constructor of a new Binder which initialize attributes.
      */
-    Binder(Mode mode) {
+    Binder(Mode mode, String id) {
         this.frame = null;
+        this.tagTofind = id;
         this.operatingMode = mode;
         this.listeners = new ArrayList<>();
         this.tags = new Hashtable<>();
         this.notifyPerformed = false;
-    }
-
-    /**
-     * Constructor of a new Binder which initialize attributes.
-     */
-    Binder(Mode mode, Compass compass) {
-        this.frame = null;
-        this.operatingMode = mode;
-        this.listeners = new ArrayList<>();
-        this.tags = new Hashtable<>();
-        this.notifyPerformed = false;
-        this.compass = compass;
-        this.compass.registerSensors();
-        this.compass.addCompassListener(this);
-    }
-
-
-
-    //Accessor//
-
-    public Compass getCompass(){
-        return this.compass;
     }
 
     //Methods//
@@ -215,6 +194,15 @@ public class Binder implements CompassListener {
         }
     }
 
+    private void signalFrameBinded(int angle) {
+        for (BinderListener listener: this.listeners) {
+            listener.notifyFrameBinded(new FrameBindedEvent(
+                    this.tags.get(this.tagTofind).getRssi(),
+                    this.tags.get(this.tagTofind).getPhase(),
+                    angle));
+        }
+    }
+
     /**
      * Add a listener to the list.
      * @param listener The listener to add.
@@ -233,9 +221,7 @@ public class Binder implements CompassListener {
 
     @Override
     public void notifyAngleChanged(AngleChangedEvent event) {
-        for (BinderListener listener: this.listeners) {
-            listener.notifyAngleChanged(new AngleChangedEvent(event.getAngle()));
-        }
+        this.signalFrameBinded(event.getAngle());
     }
 
     @Override
