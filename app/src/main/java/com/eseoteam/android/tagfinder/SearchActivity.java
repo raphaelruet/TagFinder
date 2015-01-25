@@ -1,13 +1,18 @@
 package com.eseoteam.android.tagfinder;
 
 import android.database.Cursor;
+import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,10 +89,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         //Ajout des listeners sur les boutons
         setListeners();
 
-
-        //Récupération du pieChart du layout
+        // Récupération du pieChart du Layout
         this.pieChart = (PieChart)findViewById(R.id.pieChart);
-        this.pieChart.setSize(100);
 
         //Récupération des informations du tag
         getTagInformation();
@@ -186,11 +189,11 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             @Override
             public void run()
             {
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Please keep the phone still and horizontal, then tap the blue radar",
-                        Toast.LENGTH_LONG
-                ).show();
+//                Toast.makeText(
+//                        getApplicationContext(),
+//                        "Please keep the phone still and horizontal, then tap the blue radar",
+//                        Toast.LENGTH_LONG
+//                ).show();
             }
         };
         this.runOnUiThread(action);
@@ -206,16 +209,16 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             @Override
             public void run()
             {
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Calibration complete",
-                        Toast.LENGTH_SHORT
-                ).show();
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Keep the phone horizontal and slowly make a 360 degree turn",
-                        Toast.LENGTH_LONG
-                ).show();
+//                Toast.makeText(
+//                        getApplicationContext(),
+//                        "Calibration complete",
+//                        Toast.LENGTH_SHORT
+//                ).show();
+//                Toast.makeText(
+//                        getApplicationContext(),
+//                        "Keep the phone horizontal and slowly make a 360 degree turn",
+//                        Toast.LENGTH_LONG
+//                ).show();
             }
         };
         this.runOnUiThread(action);
