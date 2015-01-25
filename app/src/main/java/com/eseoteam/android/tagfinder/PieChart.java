@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import java.util.Map;
@@ -27,15 +28,14 @@ public class PieChart extends View
     private int[] angles = {0,0};
 
     /**
-     * The size of the drawn PieChart
-     * (Initialized with default values)
-     */
-    private int piechartSize = 400;
-
-    /**
      * The rectF used to create the PieChart
      */
     private RectF rectf = new RectF();
+
+    /**
+     * The size of the pieChart
+     */
+    private int piechartSize;
 
     /**
      * The paint used to set the color of the PieChart
@@ -55,6 +55,7 @@ public class PieChart extends View
      */
     public PieChart(Context context) {
         super(context);
+        piechartSize = 0;
     }
 
     /**
@@ -64,6 +65,7 @@ public class PieChart extends View
     public PieChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupAttributes(attrs);
+        piechartSize = 0;
     }
 
     /**
@@ -155,11 +157,21 @@ public class PieChart extends View
         try {
             angles[0] = a.getInteger(R.styleable.PieChartViewStyle_startAngle, 0);
             angles[1] = a.getInteger(R.styleable.PieChartViewStyle_stopAngle, 90);
-            piechartSize = a.getInteger(R.styleable.PieChartViewStyle_pieChartSize, 400);
         } finally {
             // TypedArray objects are shared and must be recycled.
             a.recycle();
         }
+    }
+
+    /**
+     * Computes the piechart size from the screen dimension
+     */
+    private void computePieChartSize(){
+        int occupiedSpace = 235;
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+       this.piechartSize = (int)((displayMetrics.heightPixels -
+               (int)(occupiedSpace*displayMetrics.density))*0.7);
+
     }
 
     /**
@@ -177,11 +189,16 @@ public class PieChart extends View
         // Colorization
         this.setPieChartDefaultColor();
 
+        //Compute PieChartSize from screen dimensions
+        if (piechartSize == 0){
+            computePieChartSize();
+        }
+
         // Rectangle creation
-        this.rectf.set((getWidth() - piechartSize)/2,
-                (getHeight() - piechartSize)/2,
-                (getWidth() + piechartSize)/2,
-                (getHeight() + piechartSize)/2);
+        this.rectf.set((getWidth() - this.piechartSize)/2,
+                (getHeight() - this.piechartSize)/2,
+                (getWidth() + this.piechartSize)/2,
+                (getHeight() + this.piechartSize)/2);
 
         // PieChart creation
         canvas.drawArc(rectf, 0, 360, true, backgroundPaint);
