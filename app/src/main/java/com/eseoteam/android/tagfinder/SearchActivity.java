@@ -244,6 +244,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
      */
     @Override
     protected void onPause(){
+        super.onPause();
         // Suppression du listener du guide sur le compass
         this.compass.removeCompassListener(this.guide);
         // Suppression du listener du binder sur le compass
@@ -260,6 +261,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
      */
     @Override
     protected void onResume(){
+        super.onResume();
         // Ré-ajout du listener du guide sur le compass
         this.compass.addCompassListener(this.guide);
         // Ré-ajout du listener du binder sur le compass
