@@ -97,7 +97,7 @@ public class Compass implements SensorEventListener{
     // Methods //
 
     public void calibrateCompass() {
-        this.calibrationOffset = - (this.currentAngle);
+        this.calibrationOffset = this.currentAngle;
     }
 
     /**
@@ -116,10 +116,10 @@ public class Compass implements SensorEventListener{
                 SensorManager.getOrientation(R, this.orientation);
                 this.previousAngle = this.currentAngle;
                 this.currentAngle = (int)convertFromRadiansToDegrees(this.orientation[0]) + 180;
-                Log.e("Compass", "CurentAngle" +currentAngle);
-                if (this.currentAngle >= 360 - this.calibrationOffset){
-                    this.currentAngle = 360-this.currentAngle;
+                if (this.currentAngle < this.calibrationOffset){
+                    this.currentAngle = 360 + this.currentAngle;
                 }
+                this.currentAngle -= this.calibrationOffset;
                 if (this.currentAngle != this.previousAngle){
                     signalAngleChanged();
                 }
@@ -134,10 +134,8 @@ public class Compass implements SensorEventListener{
      * Signals via listeners when the angle has changed
      */
     private void signalAngleChanged(){
-        int angle = this.currentAngle + this.calibrationOffset;
         for (CompassListener listener : this.listeners) {
-            Log.e("Compass","CurrentAngle+Offset: "+ angle);
-            listener.notifyAngleChanged(new AngleChangedEvent(angle));
+            listener.notifyAngleChanged(new AngleChangedEvent(this.currentAngle));
         }
     }
 
