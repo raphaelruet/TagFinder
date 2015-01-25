@@ -48,16 +48,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     private static final String TAG_DATA = "tag_data";
 
     /**
-     * Id in the database
-     */
-    private long idInDatabase;
-
-    /**
-     * Helper to access the database
-     */
-    private DatabaseHelper databaseHelper;
-
-    /**
      * The Guide
      */
     private Guide guide;
@@ -72,6 +62,16 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
      */
     private PieChart pieChart;
 
+    /**
+     * The compass
+     */
+    private Compass compass;
+
+    /**
+     * The id of the searched tag
+     */
+    private String tag_id;
+
     // Methods //
 
 
@@ -84,44 +84,34 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         //Ajout des listeners sur les boutons
         setListeners();
 
-        Compass compass = new Compass((SensorManager) getSystemService(SENSOR_SERVICE));
 
         //Récupération du pieChart du layout
         this.pieChart = (PieChart)findViewById(R.id.pieChart);
+        this.pieChart.setSize(100);
 
-        //Création du Binder
-        this.binder = new Binder(Binder.Mode.SEARCH, compass);
+        //Récupération des informations du tag
+        getTagInformation();
 
-        //Création du guide
-        this.guide = new Guide(this.binder,this);
-        this.guide.start();
+        //On vérifie que l'id du tag existe, sinon on finish
+        if (this.tag_id != null){
+            compass = new Compass((SensorManager) getSystemService(SENSOR_SERVICE));
+            compass.registerSensors();
 
-        // Helper pour la base de données
-        this.databaseHelper = new DatabaseHelper(this);
+            //Création du Binder
+            binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
+            compass.addCompassListener(this.binder);
 
-        //Find the fields to fill with information
-        textTagName = (TextView) findViewById(R.id.tagName);
-        textTagId = (TextView) findViewById(R.id.tagId);
-        textTimestamp = (TextView) findViewById(R.id.tagDate);
-        textTagData = (TextView) findViewById(R.id.tagInfo);
+            //Création du guide
+            this.guide = new Guide(this.binder);
+                //Ajout au guide d'un listener sur le compass
+            compass.addCompassListener(this.guide);
+                //Ajout à la SearchActivity d'un listener sur le guide
+            this.guide.addGuideListener(this);
 
-
-        //Find clicked tag in database
-        this.idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
-        Cursor cursor = databaseHelper.getOneTag(idInDatabase);
-
-        // Fill the empty field with right tag information from database
-        if (cursor != null && cursor.moveToFirst()) {
-            String name = cursor.getString(cursor.getColumnIndex(TAG_NAME));
-            textTagName.append(name);
-            String id = cursor.getString(cursor.getColumnIndex(TAG_MID));
-            textTagId.append(id);
-            String date = cursor.getString(cursor.getColumnIndex(COLUMN_TIME_STAMP));
-            textTimestamp.append(date);
-            String info = cursor.getString(cursor.getColumnIndex(TAG_DATA));
-            textTagData.append(info);
+            this.guide.start();
+        }else{
+            this.finish();
         }
-
     }
 
     /**
@@ -157,6 +147,35 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             guide.setState(Guide.State.CALIBRATION);
         }
     };
+
+
+    private void getTagInformation(){
+
+        // Helper pour la base de données
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+
+        //Récupération des TextView du layout
+        textTagName = (TextView) findViewById(R.id.tagName);
+        textTagId = (TextView) findViewById(R.id.tagId);
+        textTimestamp = (TextView) findViewById(R.id.tagDate);
+        textTagData = (TextView) findViewById(R.id.tagInfo);
+
+        //Recherche du tag choisi dan sla BDD
+        long idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
+        Cursor cursor = databaseHelper.getOneTag(idInDatabase);
+
+        // Remplissage des textView du layout avec les infos récupérées
+        if (cursor != null && cursor.moveToFirst()) {
+            String name = cursor.getString(cursor.getColumnIndex(TAG_NAME));
+            textTagName.append(name);
+            this.tag_id = cursor.getString(cursor.getColumnIndex(TAG_MID));
+            textTagId.append(this.tag_id);
+            String date = cursor.getString(cursor.getColumnIndex(COLUMN_TIME_STAMP));
+            textTimestamp.append(date);
+            String info = cursor.getString(cursor.getColumnIndex(TAG_DATA));
+            textTagData.append(info);
+        }
+    }
 
     /**
      * Asks the user to do the calibration
@@ -219,9 +238,60 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         this.runOnUiThread(action);
     }
 
+    /**
+     * Unregister the sensors
+     * Remove all the listeners
+     */
+    @Override
+    protected void onPause(){
+        // Suppression du listener du guide sur le compass
+        this.compass.removeCompassListener(this.guide);
+        // Suppression du listener du binder sur le compass
+        this.compass.removeCompassListener(this.binder);
+        // Désenregistrement des capteurs du compass
+        this.compass.unregisterSensors();
+        // Suppression du listener de la SearchActivity sur le Guide
+        this.guide.removeGuideListener(this);
+    }
+
+    /**
+     * Re-register the sensors
+     * Re-add all the listeners
+     */
+    @Override
+    protected void onResume(){
+        // Ré-ajout du listener du guide sur le compass
+        this.compass.addCompassListener(this.guide);
+        // Ré-ajout du listener du binder sur le compass
+        this.compass.addCompassListener(this.binder);
+        // Ré-enregistrement des capteurs du compass
+        this.compass.registerSensors();
+        // Ré-ajout du listener de la SearchActivity sur le Guide
+        this.guide.addGuideListener(this);
+    }
+
+    /**
+     * Unregister the sensors
+     * Remove all the listeners
+     * Stops the Guide
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // Suppression du listener du guide sur le compass
+        this.compass.removeCompassListener(this.guide);
+        // Suppression du listener du binder sur le compass
+        this.compass.removeCompassListener(this.binder);
+        // Désenregistrement des capteurs du compass
+        this.compass.unregisterSensors();
+        // Suppression du listener de la SearchActivity sur le Guide
+        this.guide.removeGuideListener(this);
+        // Arrêt du guide
         this.guide.stopGuide();
+        try {
+            this.guide.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
