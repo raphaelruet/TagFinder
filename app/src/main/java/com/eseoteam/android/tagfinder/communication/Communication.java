@@ -70,7 +70,6 @@ public class Communication extends Thread {
         try {
             while (true) {
                 receivedMessage  = this.connection.read();
-                Log.e(LOG_TAG, "Message: " + receivedMessage);
                 if (receivedMessage != null) {
                     this.interpretMessage(receivedMessage);
                 }
