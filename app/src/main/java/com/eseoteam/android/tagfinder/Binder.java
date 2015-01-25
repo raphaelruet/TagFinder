@@ -59,6 +59,17 @@ public class Binder implements CompassListener {
     /**
      * Constructor of a new Binder which initialize attributes.
      */
+    Binder(Mode mode) {
+        this.frame = null;
+        this.operatingMode = mode;
+        this.listeners = new ArrayList<>();
+        this.tags = new Hashtable<>();
+        this.notifyPerformed = false;
+    }
+
+    /**
+     * Constructor of a new Binder which initialize attributes.
+     */
     Binder(Mode mode, String id) {
         this.frame = null;
         this.tagTofind = id;
