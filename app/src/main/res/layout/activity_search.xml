@@ -246,6 +246,15 @@
             app:stopAngle="360"
             android:clickable="true"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/main_theme_white"
+            android:id="@+id/angleText"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
 </RelativeLayout>
