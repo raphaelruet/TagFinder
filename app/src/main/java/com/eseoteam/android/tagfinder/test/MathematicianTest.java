@@ -63,29 +63,28 @@ public class MathematicianTest extends InstrumentationTestCase {
 
         //Fill the matrix with different RSSI values
         for (angle = 0; angle <20; angle ++){
-            math.addData(angle,0,1);
+            math.addData(angle,-80,1);
         }
         for(angle=20; angle<50; angle++){
-            math.addData(angle,20,1);
+            math.addData(angle,-60,1);
         }
         for(angle=50; angle<100; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,-80,1);
         }
         for(angle=100; angle<150; angle++){
-            math.addData(angle,60,1);
+            math.addData(angle,-20,1);
         }
         for(angle=150; angle<200; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,-80,1);
         }
         for(angle=200; angle<280; angle++){
-            math.addData(angle,50,1);
+            math.addData(angle,-30,1);
         }
         for(angle=280; angle<360; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,-80,1);
         }
 
         math.medianAlgorithm();
-
 
         assertEquals("testMedianAlgorithm - Test1 - equals",0,math.getRssi(30) );
         assertEquals("testMedianAlgorithm - Test2 - equals",30,math.getRssi(120));
@@ -105,19 +104,19 @@ public class MathematicianTest extends InstrumentationTestCase {
             math.addData(angle,0,1);
         }
         for(angle=20; angle<50; angle++){
-            math.addData(angle,20,1);
+            math.addData(angle,0,1);
         }
         for(angle=50; angle<100; angle++){
             math.addData(angle,0,1);
         }
         for(angle=100; angle<150; angle++){
-            math.addData(angle,60,1);
+            math.addData(angle,30,1);
         }
         for(angle=150; angle<200; angle++){
             math.addData(angle,0,1);
         }
         for(angle=200; angle<280; angle++){
-            math.addData(angle,50,1);
+            math.addData(angle,20,1);
         }
         for(angle=280; angle<360; angle++){
             math.addData(angle,0,1);
