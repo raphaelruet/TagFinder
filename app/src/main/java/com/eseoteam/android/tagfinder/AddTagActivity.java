@@ -142,6 +142,7 @@ public class AddTagActivity extends Activity implements BinderListener {
                 Log.e(LOG_TAG,"Join interrupted");
             }
         }
+        this.binder.removeListener(this);
     }
 
     /**
