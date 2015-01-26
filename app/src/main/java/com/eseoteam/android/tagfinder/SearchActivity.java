@@ -69,6 +69,12 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
      */
     private String tag_id;
 
+    /**
+     * DEBUG MODE
+     * Should be set as false for the custommer version
+     */
+    private static final boolean DEBUG = false;
+
     // Methods //
 
 
@@ -229,6 +235,12 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             public void run()
             {
                 pieChart.setAngles(event.getAngles()[0], event.getAngles()[1]);
+                if (DEBUG){
+                    TextView angleText = (TextView)findViewById(R.id.angleText);
+                    angleText.setText("Start : " +event.getAngles()[0]
+                            +" , Stop : " +event.getAngles()[1]);
+                }
+
             }
         };
         this.runOnUiThread(action);
