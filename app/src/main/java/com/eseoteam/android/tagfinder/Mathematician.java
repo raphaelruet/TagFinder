@@ -24,7 +24,7 @@ public class Mathematician {
      * Three rows.
      */
     public Mathematician() {
-        int angle = 0;
+        int angle ;
         angleTable = new int[ROW][ANGLE];
 
         for (angle = 0; angle <ANGLE; angle ++){
@@ -78,7 +78,7 @@ public class Mathematician {
         int median = ((maxRSSI + minRSSI) / 2);
         for(angle = 0; angle < ANGLE; angle++) {
             if (angleTable[1][angle] > median){
-                angleTable[1][angle] = angleTable[1][angle] - median;
+                angleTable[1][angle] = angleTable[1][angle] + median;
             }else{
                 angleTable[1][angle] = 0;
             }
@@ -90,9 +90,9 @@ public class Mathematician {
      */
     public int maxRSSI(){
         int angle;
-        int maxRSSI = 0;
+        int maxRSSI = angleTable[1][0];
 
-        for(angle = 0; angle < ANGLE; angle++){
+        for(angle = 1; angle < ANGLE; angle++){
             if (angleTable[1][angle]> maxRSSI){
                 maxRSSI = angleTable[1][angle];
             }
@@ -146,7 +146,6 @@ public class Mathematician {
         int currentAngle;
         int angleStart = 0 ;
         int angleStop = 0;
-        int angleSize = 0;
 
         // Determine angleStart and angleStop of each zone
         for (currentAngle = 0; currentAngle < ANGLE; currentAngle++){
@@ -165,11 +164,8 @@ public class Mathematician {
 
             // Create zone anf put them in an ArrayList
             if(angleStart!= 0 && angleStop!=0) {
-                Zone zone = new Zone(angleStart, angleStop, angleSize) ;
+                Zone zone = new Zone(angleStart, angleStop, angleStop - angleStart) ;
 
-                zone.angleStart = angleStart;
-                zone.angleStop = angleStop;
-                zone.angleSize = angleStop - angleStart;
                 zoneList.add(zone);
 
                 angleStart = 0;
