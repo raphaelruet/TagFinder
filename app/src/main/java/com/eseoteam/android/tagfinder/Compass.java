@@ -50,7 +50,7 @@ public class Compass implements SensorEventListener{
     /**
      * TODO
      */
-    private int[] previousAngles = {0,0,0,0,0,0,0};
+    private int[] previousAngles = {0,0,0};
 
     /**
      * TODO
@@ -119,28 +119,28 @@ public class Compass implements SensorEventListener{
             float I[] = new float[9];
             if (SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)) {
                 SensorManager.getOrientation(R, this.orientation);
-                Log.e("Compass : ", ""+(int)convertFromRadiansToDegrees(this.orientation[0]) );
                 this.currentAngle = (int)convertFromRadiansToDegrees(this.orientation[0]) + 180;
                 if (this.currentAngle < this.calibrationOffset){
-                    this.currentAngle = 360 + this.currentAngle;
+                    this.currentAngle = 359 + this.currentAngle;
                 }
                 this.currentAngle -= this.calibrationOffset;
                 computeAngles();
                 signalAngleChanged();
                 signalAngleStabilized();
+
             }
         }
     }
 
     private void computeAngles(){
-        for (int i = 6; i >= 1; i--){
-            this.previousAngles[i]=this.previousAngles[i-1];
-        }
-        this.previousAngles[0]=this.currentAngle;
-        for (int i = 0; i < 7 ; i++){
+        this.computedAngle=0;
+        previousAngles[2]=previousAngles[1];
+        previousAngles[1]=previousAngles[0];
+        previousAngles[0]=this.currentAngle;
+        for (int i = 0; i < 3 ; i++){
             this.computedAngle += this.previousAngles[i];
         }
-        this.computedAngle = this.computedAngle/7;
+        this.computedAngle = this.computedAngle/3;
     }
 
     /**
@@ -163,8 +163,6 @@ public class Compass implements SensorEventListener{
 
     /**
      * Not used here
-     * @param sensor
-     * @param accuracy
      */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -183,14 +181,14 @@ public class Compass implements SensorEventListener{
      * Register the sensors
      */
     public void registerSensors(){
-        this.sensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_UI);
-        this.sensorManager.registerListener(this, this.magnetometer, SensorManager.SENSOR_DELAY_UI);
+        this.sensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        this.sensorManager.registerListener(this, this.magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     /**
      * Converts the radian angle into degree angle
-     * @param angleToConvert
-     * @return
+     * @param angleToConvert the angle to convert
+     * @return the angle converted
      */
     public double convertFromRadiansToDegrees(float angleToConvert){
         return angleToConvert*180/Math.PI;
