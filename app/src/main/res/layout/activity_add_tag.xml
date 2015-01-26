@@ -193,7 +193,7 @@
 
             <EditText
                 android:id="@+id/tagDataField"
-                android:inputType="textAutoCorrect"
+                android:inputType="textMultiLine|textAutoCorrect"
                 android:layout_below="@+id/tagDataText"
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
