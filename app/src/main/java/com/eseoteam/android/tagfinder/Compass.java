@@ -38,14 +38,19 @@ public class Compass implements SensorEventListener{
     private float[] orientation;
 
     /**
+     * The previous angle of the phone
+     */
+    private int computedAngle = 0;
+
+    /**
      * The current angle of the phone
      */
     private int currentAngle = 0;
 
     /**
-     * The previous angle of the phone
+     * TODO
      */
-    private int previousAngle = 0;
+    private int[] previousAngles = {0,0,0,0,0,0,0};
 
     /**
      * TODO
@@ -114,20 +119,28 @@ public class Compass implements SensorEventListener{
             float I[] = new float[9];
             if (SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)) {
                 SensorManager.getOrientation(R, this.orientation);
-                this.previousAngle = this.currentAngle;
+                Log.e("Compass : ", ""+(int)convertFromRadiansToDegrees(this.orientation[0]) );
                 this.currentAngle = (int)convertFromRadiansToDegrees(this.orientation[0]) + 180;
                 if (this.currentAngle < this.calibrationOffset){
                     this.currentAngle = 360 + this.currentAngle;
                 }
                 this.currentAngle -= this.calibrationOffset;
-                if (this.currentAngle != this.previousAngle){
-                    signalAngleChanged();
-                }
-                if (currentAngle == previousAngle){
-                    signalAngleStabilized();
-                }
+                computeAngles();
+                signalAngleChanged();
+                signalAngleStabilized();
             }
         }
+    }
+
+    private void computeAngles(){
+        for (int i = 6; i >= 1; i--){
+            this.previousAngles[i]=this.previousAngles[i-1];
+        }
+        this.previousAngles[0]=this.currentAngle;
+        for (int i = 0; i < 7 ; i++){
+            this.computedAngle += this.previousAngles[i];
+        }
+        this.computedAngle = this.computedAngle/7;
     }
 
     /**
@@ -135,7 +148,7 @@ public class Compass implements SensorEventListener{
      */
     private void signalAngleChanged(){
         for (CompassListener listener : this.listeners) {
-            listener.notifyAngleChanged(new AngleChangedEvent(this.currentAngle));
+            listener.notifyAngleChanged(new AngleChangedEvent(this.computedAngle));
         }
     }
 
