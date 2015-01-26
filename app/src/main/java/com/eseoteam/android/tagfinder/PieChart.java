@@ -27,6 +27,8 @@ public class PieChart extends View
      */
     private int[] angles = {0,0};
 
+    private boolean pieChartInitialized;
+
     /**
      * The rectF used to create the PieChart
      */
@@ -55,7 +57,7 @@ public class PieChart extends View
      */
     public PieChart(Context context) {
         super(context);
-        piechartSize = 0;
+        this.pieChartInitialized = false;
     }
 
     /**
@@ -65,7 +67,7 @@ public class PieChart extends View
     public PieChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupAttributes(attrs);
-        piechartSize = 0;
+        this.pieChartInitialized = false;
     }
 
     /**
@@ -80,32 +82,6 @@ public class PieChart extends View
     }
 
     // Accessor //
-
-    /**
-     * Accessor to the angles array of the Pie Chart
-     * @return the angles of the Pie Chart
-     */
-    public int[] getAngles() {
-        return this.angles;
-    }
-
-    /**
-     * Accessor to the size of the Pie Chart
-     * @return the size of the Pie Chart
-     */
-    public int[] getSize() {
-        return this.angles;
-    }
-
-    /**
-     * Accesssor to set the size of the PieChart
-     * @param size the new size of the PieChart
-     */
-    public void setSize(int size) {
-        this.piechartSize = size;
-        invalidate();
-        requestLayout();
-    }
 
     /**
      * Accessor to set the angles of the Pie Chart
@@ -129,16 +105,6 @@ public class PieChart extends View
     private void setPieChartDefaultColor() {
         pieChartPaint.setColor(getResources().getColor(R.color.main_theme_blue));
         backgroundPaint.setColor(getResources().getColor(R.color.main_theme_grey));
-    }
-
-    /**
-     * Sets the PieChart color
-     * @param color the new color to set
-     */
-    public void setPieChartColor(int color) {
-        pieChartPaint.setColor(color);
-        invalidate();
-        requestLayout();
     }
 
     /**
@@ -186,19 +152,18 @@ public class PieChart extends View
         // Angles calculation
         float computedAngles[] = computeAngles();
 
-        // Colorization
-        this.setPieChartDefaultColor();
-
         //Compute PieChartSize from screen dimensions
-        if (piechartSize == 0){
+        if (!this.pieChartInitialized){
+            // Colorization
+            this.setPieChartDefaultColor();
+            //Compute pieChart size
             computePieChartSize();
+            // Rectangle creation
+            this.rectf.set((getWidth() - this.piechartSize)/2,
+                    (getHeight() - this.piechartSize)/2,
+                    (getWidth() + this.piechartSize)/2,
+                    (getHeight() + this.piechartSize)/2);
         }
-
-        // Rectangle creation
-        this.rectf.set((getWidth() - this.piechartSize)/2,
-                (getHeight() - this.piechartSize)/2,
-                (getWidth() + this.piechartSize)/2,
-                (getHeight() + this.piechartSize)/2);
 
         // PieChart creation
         canvas.drawArc(rectf, 0, 360, true, backgroundPaint);
