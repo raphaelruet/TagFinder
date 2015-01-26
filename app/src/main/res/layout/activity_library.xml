@@ -65,7 +65,7 @@
             android:id="@+id/quitButton"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:src="@drawable/quit_icon_white"
+            android:src="@drawable/quit_button_white"
             android:background="#00ffffff"
             android:longClickable="false"
             android:scaleType="fitStart"
