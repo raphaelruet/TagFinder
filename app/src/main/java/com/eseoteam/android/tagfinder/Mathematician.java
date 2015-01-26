@@ -78,7 +78,7 @@ public class Mathematician {
         int median = ((maxRSSI + minRSSI) / 2);
         for(angle = 0; angle < ANGLE; angle++) {
             if (angleTable[1][angle] > median){
-                angleTable[1][angle] = angleTable[1][angle] + median;
+                angleTable[1][angle] = angleTable[1][angle] - median;
             }else{
                 angleTable[1][angle] = 0;
             }
@@ -109,7 +109,7 @@ public class Mathematician {
         int minRSSI = angleTable[1][0];
 
         for(angle = 1; angle < ANGLE; angle++){
-            if (angleTable[1][angle]< angleTable[1][angle-1]){
+            if (angleTable[1][angle]< minRSSI){
                 minRSSI = angleTable[1][angle];
             }
         }
@@ -148,22 +148,24 @@ public class Mathematician {
         int angleStop = 0;
 
         // Determine angleStart and angleStop of each zone
-        for (currentAngle = 0; currentAngle < ANGLE; currentAngle++){
+        for (currentAngle = 0; currentAngle < ANGLE; currentAngle++) {
             if (currentAngle == 0 && angleTable[1][currentAngle] != 0) {
                 angleStart = currentAngle;
-            }
-            if ((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle-1]==0)){
-                angleStart = currentAngle;
-            }
-            if((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle+1]==0)) {
+            } else if (currentAngle == ANGLE - 1 && angleTable[1][currentAngle] != 0) {
                 angleStop = currentAngle;
-            }
-            if(currentAngle == ANGLE-1 && angleTable[1][currentAngle] != 0) {
-                angleStop = currentAngle;
+            } else {
+                if ((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle - 1] == 0)) {
+                    angleStart = currentAngle;
+                }
+                if ((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle + 1] == 0)) {
+                    angleStop = currentAngle;
+                }
             }
 
-            // Create zone anf put them in an ArrayList
-            if(angleStart!= 0 && angleStop!=0) {
+            // Create zone and put them in an ArrayList
+
+            if(angleStart!= angleStop && angleStop!=0) {
+
                 Zone zone = new Zone(angleStart, angleStop, angleStop - angleStart) ;
 
                 zoneList.add(zone);
@@ -171,6 +173,7 @@ public class Mathematician {
                 angleStart = 0;
                 angleStop = 0;
             }
+
         }
 
     }
@@ -192,7 +195,7 @@ public class Mathematician {
                 sumRssi += angleTable[1][j];
             }
             
-            if (sumRssi*zoneList.get(indexOfZone).getAngleSize() > biggestArea){
+            if (sumRssi*zoneList.get(indexOfZone).getAngleSize() < biggestArea){
                 biggestArea = sumRssi*zoneList.get(indexOfZone).getAngleSize();
                 indexZone = indexOfZone;
             }
