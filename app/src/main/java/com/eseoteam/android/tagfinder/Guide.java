@@ -173,6 +173,7 @@ public class Guide extends Thread implements CompassListener{
      */
     private void askForCalibration() {
         for (GuideListener listener : this.listeners) {
+            Log.e(LOG_TAG,"User as been asked to calibrate");
             listener.notifyCalibrationAsked();
         }
     }
