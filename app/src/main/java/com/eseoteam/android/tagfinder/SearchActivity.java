@@ -1,25 +1,17 @@
 package com.eseoteam.android.tagfinder;
 
 import android.database.Cursor;
-import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Manage the research process
@@ -95,23 +87,17 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         //Récupération des informations du tag
         getTagInformation();
 
-        //On vérifie que l'id du tag existe, sinon on finish
+        //On vérifie que l'id du tag existe, sinon on finish l'activity
         if (this.tag_id != null){
-            compass = new Compass((SensorManager) getSystemService(SENSOR_SERVICE));
-            compass.registerSensors();
+            this.compass = new Compass((SensorManager) getSystemService(SENSOR_SERVICE));
+            //compass.registerSensors();
 
             //Création du Binder
-            binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
-            compass.addCompassListener(this.binder);
+            this.binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
+           // compass.addCompassListener(this.binder);
 
             //Création du guide
             this.guide = new Guide(this.binder);
-                //Ajout au guide d'un listener sur le compass
-            compass.addCompassListener(this.guide);
-                //Ajout à la SearchActivity d'un listener sur le guide
-            this.guide.addGuideListener(this);
-
-            this.guide.start();
         }else{
             this.finish();
         }
@@ -148,6 +134,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         public void onClick(View v) {
             pieChart.setClickable(false);
             guide.setState(Guide.State.CALIBRATION);
+            compass.calibrateCompass();
         }
     };
 
@@ -189,11 +176,13 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             @Override
             public void run()
             {
-//                Toast.makeText(
-//                        getApplicationContext(),
-//                        "Please keep the phone still and horizontal, then tap the blue radar",
-//                        Toast.LENGTH_LONG
-//                ).show();
+                Toast toast = Toast.makeText(
+                        getApplicationContext(),
+                        "Please keep the phone still and horizontal, then tap the blue radar",
+                        Toast.LENGTH_SHORT
+                );
+                toast.setGravity(Gravity.TOP,0,150);
+                toast.show();
             }
         };
         this.runOnUiThread(action);
@@ -209,16 +198,20 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             @Override
             public void run()
             {
-//                Toast.makeText(
-//                        getApplicationContext(),
-//                        "Calibration complete",
-//                        Toast.LENGTH_SHORT
-//                ).show();
-//                Toast.makeText(
-//                        getApplicationContext(),
-//                        "Keep the phone horizontal and slowly make a 360 degree turn",
-//                        Toast.LENGTH_LONG
-//                ).show();
+                Toast toastCalibration = Toast.makeText(
+                        getApplicationContext(),
+                        "Calibration complete",
+                        Toast.LENGTH_SHORT
+                );
+                toastCalibration.setGravity(Gravity.TOP,0,200);
+                toastCalibration.show();
+                Toast toastScan = Toast.makeText(
+                        getApplicationContext(),
+                        "Keep the phone horizontal and slowly make a 360 degrees turn",
+                        Toast.LENGTH_LONG
+                );
+                toastScan.setGravity(Gravity.TOP,0,200);
+                toastScan.show();
             }
         };
         this.runOnUiThread(action);
@@ -248,14 +241,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     @Override
     protected void onPause(){
         super.onPause();
-        // Suppression du listener du guide sur le compass
-        this.compass.removeCompassListener(this.guide);
-        // Suppression du listener du binder sur le compass
-        this.compass.removeCompassListener(this.binder);
-        // Désenregistrement des capteurs du compass
-        this.compass.unregisterSensors();
-        // Suppression du listener de la SearchActivity sur le Guide
-        this.guide.removeGuideListener(this);
+        this.finish();
+
     }
 
     /**
@@ -265,14 +252,20 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     @Override
     protected void onResume(){
         super.onResume();
-        // Ré-ajout du listener du guide sur le compass
-        this.compass.addCompassListener(this.guide);
-        // Ré-ajout du listener du binder sur le compass
-        this.compass.addCompassListener(this.binder);
-        // Ré-enregistrement des capteurs du compass
-        this.compass.registerSensors();
-        // Ré-ajout du listener de la SearchActivity sur le Guide
+        // Ajout du listener de la SearchActivity sur le Guide
         this.guide.addGuideListener(this);
+        Log.i(LOG_TAG,"onResume : Le listener de la SearchActivity sur le Guide a bien été ajouté");
+        // Ajout du listener du guide sur le compass
+        this.compass.addCompassListener(this.guide);
+        Log.i(LOG_TAG,"onResume : Le listener du Guide sur le Compass a bien été ajouté");
+        // Ajout du listener du binder sur le compass
+        this.compass.addCompassListener(this.binder);
+        Log.i(LOG_TAG,"onResume : Le listener du Binder sur le Compass a bien été ajouté");
+        // Enregistrement des capteurs du compass
+        this.compass.registerSensors();
+        Log.i(LOG_TAG,"onResume : Les capteurs du compass sont bien enregistrés");
+        //Démarrage du guide
+        this.guide.start();
     }
 
     /**
@@ -285,12 +278,16 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         super.onDestroy();
         // Suppression du listener du guide sur le compass
         this.compass.removeCompassListener(this.guide);
+        Log.i(LOG_TAG,"onDestroy : Le listener du Guide sur le Compass a bien été supprimé");
         // Suppression du listener du binder sur le compass
         this.compass.removeCompassListener(this.binder);
+        Log.i(LOG_TAG,"onDestroy : Le listener du Binder sur le Compass a bien été supprimé");
         // Désenregistrement des capteurs du compass
         this.compass.unregisterSensors();
+        Log.i(LOG_TAG,"onDestroy : Les capteurs du compass sont bien désenregistrés");
         // Suppression du listener de la SearchActivity sur le Guide
         this.guide.removeGuideListener(this);
+        Log.i(LOG_TAG,"onDestroy : Le listener de la SearchActivity sur le Guide a bien été supprimé");
         // Arrêt du guide
         this.guide.stopGuide();
         try {
