@@ -101,7 +101,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
 
             //Création du Binder
             this.binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
-           // compass.addCompassListener(this.binder);
+            // compass.addCompassListener(this.binder);
 
             //Création du guide
             this.guide = new Guide(this.binder);
@@ -122,10 +122,12 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         PieChart pieChart = (PieChart)findViewById(R.id.pieChart);
         pieChart.setOnClickListener(this.calibrateButtonListener);
 
-        //calibrateButton
-        Button guideButton = (Button)findViewById(R.id.guideButton);
-        guideButton.setOnClickListener(this.guideButtonListener);
-
+//        if (DEBUG){
+//            //calibrateButton
+//            Button guideButton = (Button)findViewById(R.id.guideButton);
+//            guideButton.setVisibility(View.VISIBLE);
+//            guideButton.setOnClickListener(this.guideButtonListener);
+//        }
     }
 
     /**
@@ -145,8 +147,9 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         @Override
         public void onClick(View v) {
             pieChart.setClickable(false);
-            guide.setState(Guide.State.CALIBRATION);
+            guide.setState(Guide.State.SCAN);
             compass.calibrateCompass();
+            Log.e(LOG_TAG, "On est passé");
         }
     };
 
@@ -230,6 +233,32 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
                 Toast toastScan = Toast.makeText(
                         getApplicationContext(),
                         "Keep the phone horizontal and slowly make a 360 degrees turn",
+                        Toast.LENGTH_LONG
+                );
+                toastScan.setGravity(Gravity.TOP,0,200);
+                toastScan.show();
+            }
+        };
+        this.runOnUiThread(action);
+        Log.e(LOG_TAG,"User as been asked to scan");
+    }
+
+    @Override
+    public void notifyUserScanFinished() {
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                Toast toastCalibration = Toast.makeText(
+                        getApplicationContext(),
+                        "Scan finished",
+                        Toast.LENGTH_SHORT
+                );
+                toastCalibration.setGravity(Gravity.TOP,0,200);
+                toastCalibration.show();
+                Toast toastScan = Toast.makeText(
+                        getApplicationContext(),
+                        "Follow given directions and sweep the targetted direction",
                         Toast.LENGTH_LONG
                 );
                 toastScan.setGravity(Gravity.TOP,0,200);

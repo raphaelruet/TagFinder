@@ -25,7 +25,6 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     public static enum State {
         IDLE,
         ASK_FOR_CALIBRATION,
-        CALIBRATION,
         SCAN,
         GUIDE,
         DEBUG
@@ -106,18 +105,20 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     askForCalibration();
                     this.currentState = State.IDLE;
                     break;
-                case CALIBRATION:
-                    // Wait for compass to be stabilized
-                    break;
                 case SCAN:
-                    this.mathematician.addData(this.currentCompassAngle,
-                            this.currentRssi,this.currentReadCount);
-                    updatePieChart(-currentCompassAngle, 0);
+                    //this.mathematician.addData(this.currentCompassAngle,
+                    //        this.currentRssi,this.currentReadCount);
+                    updatePieChart(-this.currentCompassAngle, 0);
+                    if (this.currentCompassAngle > 355){
+                        notifyUserScanFinished();
+                        this.setState(State.GUIDE);
+                    }
                     break;
                 case GUIDE:
-                    int angles[] = this.mathematician.bestZoneSelection();
-                    updatePieChart(angles[0], angles[1]);
-                    this.stopGuide();
+                    //int angles[] = this.mathematician.bestZoneSelection();
+                    //updatePieChart(angles[0], angles[1]);
+                    updatePieChart(-this.currentCompassAngle, 30-currentCompassAngle);
+                    //this.stopGuide();
                     break;
                 case DEBUG:
                     updatePieChart(currentCompassAngle, currentCompassAngle+5);
@@ -175,8 +176,13 @@ public class Guide extends Thread implements CompassListener, BinderListener{
 
     @Override
     public void notifyAngleStabilized() {
-        if (this.currentState == State.CALIBRATION){
-            this.currentState = State.SCAN;
+        //Nothing to be done here.
+    }
+
+
+    public void notifyUserScanFinished() {
+        for (GuideListener listener : this.listeners) {
+            listener.notifyUserScanFinished();
         }
     }
 
