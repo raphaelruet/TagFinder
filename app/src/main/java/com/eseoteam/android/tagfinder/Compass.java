@@ -5,6 +5,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
 
@@ -18,146 +20,104 @@ public class Compass implements SensorEventListener{
 
     // Attributes //
     /**
+     * Header to print a log message
+     */
+    private static final String LOG_TAG = Compass.class.getSimpleName();
+
+    /**
      * The sensor manager used by the Compass
      */
     private SensorManager sensorManager;
 
     /**
-     * The accelerometer sensor of the Compass
+     * The current angle of the phone
      */
-    private Sensor accelerometer;
-
-    /**
-     * The magnetometer sensor of the Compass
-     */
-    private Sensor magnetometer;
-
-    /**
-     * The data of the different captors
-     */
-    private float[] orientation;
-
-    /**
-     * The previous angle of the phone
-     */
-    private int computedAngle = 0;
+    private float currentAngle;
 
     /**
      * The current angle of the phone
      */
-    private int currentAngle = 0;
-
-    /**
-     * TODO
-     */
-    private int[] previousAngles = {0,0,0};
-
-    /**
-     * TODO
-     */
-    private float[] mGravity;
-
-    /**
-     * TODO
-     */
-    private float[] mGeomagnetic;
-
-    /**
-     *
-     */
-    private int calibrationOffset = 0;
-
-    /**
-     *
-     */
-    private boolean calibrationDone = false;
+    private float compassOffset;
 
     /**
      * The listeners on the Compass
      */
     private ArrayList<CompassListener> listeners;
 
+    /**
+     * The acknoledgment of the beginning of the scan
+     */
+    private boolean startScanAcknoledgment;
 
     // Constructor //
 
     /**
      * Constructor for the Compass
-     * @param sensorManager
      */
     public Compass(SensorManager sensorManager) {
         this.sensorManager = sensorManager;
-        this.accelerometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        this.magnetometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        this.orientation = new float[3];
         this.listeners = new ArrayList<>();
-        Log.e("Compass:Compass", "Fin du constructeur");
+        this.currentAngle = 0;
+        this.compassOffset = 0;
+        this.startScanAcknoledgment = false;
+        Log.i("Compass:Compass", "Fin du constructeur");
     }
 
     // Accessor //
-
-    public int getAzimutInDegrees(){
-        return (int)convertFromRadiansToDegrees(this.orientation[0]);
-    }
-
-    // Methods //
-
-    public void calibrateCompass() {
-        this.calibrationOffset = this.currentAngle;
-    }
 
     /**
      * Gets the sensors data when they change
      * @param event the event of the sensors
      */
+    @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            if (SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)) {
-                SensorManager.getOrientation(R, this.orientation);
-                this.currentAngle = (int)convertFromRadiansToDegrees(this.orientation[0]) + 180;
-                if (this.currentAngle < this.calibrationOffset){
-                    this.currentAngle = 359 + this.currentAngle;
-                }
-                this.currentAngle -= this.calibrationOffset;
-                computeAngles();
-                signalAngleChanged();
-                signalAngleStabilized();
 
-            }
+        // get the angle around the z-axis rotated
+        float degree = Math.round(event.values[0]);
+        // create a rotation animation (reverse turn degree degrees)
+        RotateAnimation ra = new RotateAnimation(
+                currentAngle,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(0);
+
+        // set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+        // Start the animation
+        currentAngle = degree;
+        if (this.currentAngle < this.compassOffset){
+            this.currentAngle = 359 + this.currentAngle;
         }
+        this.currentAngle -= this.compassOffset;
+        signalAngleChanged();
     }
 
-    private void computeAngles(){
-        this.computedAngle=0;
-        previousAngles[2]=previousAngles[1];
-        previousAngles[1]=previousAngles[0];
-        previousAngles[0]=this.currentAngle;
-        for (int i = 0; i < 3 ; i++){
-            this.computedAngle += this.previousAngles[i];
-        }
-        this.computedAngle = this.computedAngle/3;
+    /**
+     * Allow to calibrate the compass
+     */
+    public void calibrateCompass(){
+        this.compassOffset = this.currentAngle;
     }
 
     /**
      * Signals via listeners when the angle has changed
      */
     private void signalAngleChanged(){
-        for (CompassListener listener : this.listeners) {
-            listener.notifyAngleChanged(new AngleChangedEvent(this.computedAngle));
-        }
-    }
 
-    /**
-     * Signals via listeners when the angle has changed
-     */
-    private void signalAngleStabilized(){
+        if (!this.startScanAcknoledgment){
+            if (this.currentAngle > 300 || this.currentAngle < 5){
+                this.currentAngle = 5;
+            }
+            if (90 < this.currentAngle && this.currentAngle < 100){
+                this.startScanAcknoledgment = true;
+            }
+        }
         for (CompassListener listener : this.listeners) {
-            listener.notifyAngleStabilized();
+            listener.notifyAngleChanged(new AngleChangedEvent((int)this.currentAngle));
         }
     }
 
@@ -173,25 +133,15 @@ public class Compass implements SensorEventListener{
      * Unregister the sensors
      */
     public void unregisterSensors(){
-        this.sensorManager.unregisterListener(this, this.accelerometer);
-        this.sensorManager.unregisterListener(this, this.magnetometer);
+        this.sensorManager.unregisterListener(this);
     }
 
     /**
      * Register the sensors
      */
     public void registerSensors(){
-        this.sensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        this.sensorManager.registerListener(this, this.magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    /**
-     * Converts the radian angle into degree angle
-     * @param angleToConvert the angle to convert
-     * @return the angle converted
-     */
-    public double convertFromRadiansToDegrees(float angleToConvert){
-        return angleToConvert*180/Math.PI;
+        this.sensorManager.registerListener(this, this.sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     /**
