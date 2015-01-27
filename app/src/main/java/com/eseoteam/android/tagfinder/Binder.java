@@ -210,6 +210,7 @@ public class Binder implements CompassListener {
             listener.notifyFrameBinded(new FrameBindedEvent(
                     this.tags.get(this.tagTofind).getRssi(),
                     this.tags.get(this.tagTofind).getPhase(),
+                    this.tags.get(this.tagTofind).getReadCount(),
                     angle));
         }
     }

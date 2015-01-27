@@ -88,7 +88,7 @@ public class Mathematician {
     /**
      * Calculation of the maximum RSSI value
      */
-    public int maxRSSI(){
+    private int maxRSSI(){
         int angle;
         int maxRSSI = angleTable[1][0];
 
@@ -103,7 +103,7 @@ public class Mathematician {
     /**
      * Calculation of the minimum RSSI value
      */
-    public int minRSSI(){
+    private int minRSSI(){
 
         int angle;
         int minRSSI = angleTable[1][0];
@@ -123,7 +123,7 @@ public class Mathematician {
      * @return tab with angles values of the searched tag
      */
     public int[] bestZoneSelection(){
-
+        this.medianAlgorithm();
         int [] angleDirection = new int [2];
         
         splitInZone();
@@ -141,7 +141,7 @@ public class Mathematician {
     /**
      * Add Zone in ArrayList when RSSI value is positive
      */
-    public void splitInZone(){
+    private void splitInZone(){
 
         int currentAngle;
         int angleStart = 0 ;
@@ -182,7 +182,7 @@ public class Mathematician {
     /**
      * Determination of the zone with the biggest area
      */
-    public int tagZoneSelection(){
+    private int tagZoneSelection(){
         int sumRssi =0;
         int biggestArea =0;
         int indexZone =0;

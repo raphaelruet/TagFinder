@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class Guide extends Thread implements CompassListener{
+public class Guide extends Thread implements CompassListener, BinderListener{
 
     // Attributes //
 
@@ -65,6 +66,14 @@ public class Guide extends Thread implements CompassListener{
      */
     private int previousCompassAngle;
 
+    private Mathematician mathematician;
+
+    private int currentRssi;
+
+    private int currentPhase;
+
+    private int currentReadCount;
+
     // Constructors //
 
     /**
@@ -75,6 +84,12 @@ public class Guide extends Thread implements CompassListener{
         this.binder = binder;
         this.listeners = new ArrayList<>();
         this.currentState = State.ASK_FOR_CALIBRATION;
+
+        this.currentCompassAngle = 0;
+        this.currentRssi = 0;
+        this.currentPhase = 0;
+        this.currentReadCount = 0;
+        this.mathematician = new Mathematician();
     }
 
     // Accessor //
@@ -95,13 +110,17 @@ public class Guide extends Thread implements CompassListener{
                     // Wait for compass to be stabilized
                     break;
                 case SCAN:
-                    //TODO Informer Mathematician
-                    updatePieChart(new int[]{-currentCompassAngle,0});
+                    this.mathematician.addData(this.currentCompassAngle,
+                            this.currentRssi,this.currentReadCount);
+                    updatePieChart(-currentCompassAngle, 0);
                     break;
                 case GUIDE:
+                    int angles[] = this.mathematician.bestZoneSelection();
+                    updatePieChart(angles[0], angles[1]);
+                    this.stopGuide();
                     break;
                 case DEBUG:
-                    updatePieChart(new int[]{currentCompassAngle, currentCompassAngle+5});
+                    updatePieChart(currentCompassAngle, currentCompassAngle+5);
                     break;
                 default:
                     break;
@@ -110,11 +129,12 @@ public class Guide extends Thread implements CompassListener{
     }
 
     /**
-     * Asks the SearchActivity to update the pieChart with the given angles
-     * @param angles the angles of the pieChart
+     * Asks the SearchActivity to update the pieChart with the given angles.
+     * @param angleStart Angle of the beginning of the pieChart.
+     * @param angleStop Angle of the end of the pieChart.
      */
-    private void updatePieChart(int[] angles){
-        PieChartChangedEvent pieChartChangedEvent = new PieChartChangedEvent(angles);
+    private void updatePieChart(int angleStart, int angleStop){
+        PieChartChangedEvent pieChartChangedEvent = new PieChartChangedEvent(angleStart, angleStop);
         for (GuideListener listener : this.listeners){
             listener.notifyPieChartChanged(pieChartChangedEvent);
         }
@@ -158,6 +178,24 @@ public class Guide extends Thread implements CompassListener{
         if (this.currentState == State.CALIBRATION){
             this.currentState = State.SCAN;
         }
+    }
+
+    @Override
+    public void notifyTagToAddFound(AddTagEvent event) {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyFrameBinded(FrameBindedEvent event) {
+        this.currentRssi = event.getRssi();
+        this.currentPhase = event.getPhase();
+        this.currentReadCount = event.getReadCount();
+        this.currentCompassAngle = event.getAngle();
+    }
+
+    @Override
+    public void notifyFrameReceived() {
+        //Nothing to be done here.
     }
 
     /**

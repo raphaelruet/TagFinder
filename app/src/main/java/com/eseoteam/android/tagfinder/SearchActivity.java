@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,6 +121,11 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         //calibrateButton
         PieChart pieChart = (PieChart)findViewById(R.id.pieChart);
         pieChart.setOnClickListener(this.calibrateButtonListener);
+
+        //calibrateButton
+        Button guideButton = (Button)findViewById(R.id.guideButton);
+        guideButton.setOnClickListener(this.guideButtonListener);
+
     }
 
     /**
@@ -141,6 +147,16 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             pieChart.setClickable(false);
             guide.setState(Guide.State.CALIBRATION);
             compass.calibrateCompass();
+        }
+    };
+
+    /**
+     * Sets a listener on the calibrateButton
+     */
+    private View.OnClickListener guideButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            guide.setState(Guide.State.GUIDE);
         }
     };
 

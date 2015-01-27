@@ -12,9 +12,11 @@ public class FrameBindedEvent {
 
     private int phase;
 
+    private int readCount;
+
     private int angle;
 
-    public FrameBindedEvent(int rssi, int phase, int angle) {
+    public FrameBindedEvent(int rssi, int phase,int readCount, int angle) {
         this.rssi = rssi;
         this.phase = phase;
         this.angle = angle;
@@ -26,6 +28,10 @@ public class FrameBindedEvent {
 
     public int getPhase(){
         return this.phase;
+    }
+
+    public int getReadCount(){
+        return this.readCount;
     }
 
     public int getAngle(){
