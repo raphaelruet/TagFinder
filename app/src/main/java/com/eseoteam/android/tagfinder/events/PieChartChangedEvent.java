@@ -9,17 +9,39 @@ package com.eseoteam.android.tagfinder.events;
 public class PieChartChangedEvent {
 
     /**
-     * The frame to change.
+     * The start angle of the PieChart
      */
-    private int[] angles = new int[2];
+    private int startAngle;
 
+    /**
+     * The stop angle of the PieChart
+     */
+    private int stopAngle;
 
-    public PieChartChangedEvent(int[] angles) {
-        this.angles = angles;
+    /**
+     * Constructor of the event
+     * @param startAngle the start angle of the PieChart
+     * @param stopAngle the stop angle of the PieChart
+     */
+    public PieChartChangedEvent(int startAngle, int stopAngle) {
+        this.startAngle = startAngle;
+        this.stopAngle = stopAngle;
     }
 
-    public int[] getAngles() {
-        return this.angles;
+    /**
+     * Accessor to the start angle
+     * @return the start angle
+     */
+    public int getStartAngle() {
+        return this.startAngle;
+    }
+
+    /**
+     * Accessor to the stop angle
+     * @return the stop angle
+     */
+    public int getStopAngle() {
+        return this.stopAngle;
     }
 
 }
