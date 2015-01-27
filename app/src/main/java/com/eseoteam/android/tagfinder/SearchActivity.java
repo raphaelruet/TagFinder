@@ -234,13 +234,12 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             @Override
             public void run()
             {
-                pieChart.setAngles(event.getAngles()[0], event.getAngles()[1]);
+                pieChart.setAngles(event.getStartAngle(), event.getStopAngle());
                 if (DEBUG){
                     TextView angleText = (TextView)findViewById(R.id.angleText);
-                    angleText.setText("Start : " +event.getAngles()[0]
-                            +" , Stop : " +event.getAngles()[1]);
+                    angleText.setText("Start : " +event.getStartAngle()
+                            +" , Stop : " +event.getStopAngle());
                 }
-
             }
         };
         this.runOnUiThread(action);
