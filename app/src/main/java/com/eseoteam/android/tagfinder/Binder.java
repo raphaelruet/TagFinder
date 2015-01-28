@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Pierre TOUZE.
  * @version 0.1.
  */
-public class Binder implements CompassListener {
+public class Binder {
     //Attributes//
     /**
      * The number of times a tag must have been counted to be selected as the right tag to add.
@@ -205,16 +205,6 @@ public class Binder implements CompassListener {
         }
     }
 
-    private void signalFrameBinded(int angle) {
-        for (BinderListener listener: this.listeners) {
-            listener.notifyFrameBinded(new FrameBindedEvent(
-                    this.tags.get(this.tagTofind).getRssi(),
-                    this.tags.get(this.tagTofind).getPhase(),
-                    this.tags.get(this.tagTofind).getReadCount(),
-                    angle));
-        }
-    }
-
     /**
      * Add a listener to the list.
      * @param listener The listener to add.
@@ -231,16 +221,8 @@ public class Binder implements CompassListener {
         this.listeners.remove(listener);
     }
 
-    @Override
-    public void notifyAngleChanged(AngleChangedEvent event) {
-        this.signalFrameBinded(event.getAngle());
-    }
-
-    @Override
-    public void notifyAngleStabilized() {
-        for (BinderListener listener: this.listeners) {
-            listener.notifyAngleStabilized();
-        }
+    public Tag getWantedTag() {
+        return this.tags.get(this.tagTofind);
     }
 
 

@@ -92,4 +92,16 @@ public class Tag {
     public String getTime() {
         return this.time;
     }
+
+    public void setRssi(int rssi){
+        this.rssi = rssi;
+    }
+
+    public void setPhase(int phase) {
+        this.phase = phase;
+    }
+
+    public void setReadCount(int readCount) {
+        this.readCount = readCount;
+    }
 }
