@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.eseoteam.android.tagfinder.communication.Communication;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
 
@@ -25,6 +27,12 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
 
     // Attributes //
 
+    /**
+     * The default connection port of the socket.
+     */
+    private static final int CONNECTION_PORT = 12345;
+
+    private Communication communication;
     /**
      * Header to print a log message
      */
@@ -113,7 +121,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             //Création du Binder
             this.binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
             // compass.addCompassListener(this.binder);
-
+            this.initializeCommunication();
             //Création du guide
             this.guide = new Guide(this.binder);
         }else{
@@ -278,7 +286,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             }
         };
         this.runOnUiThread(action);
-        Log.e(LOG_TAG,"User as been asked to scan");
+        Log.e(LOG_TAG, "User as been asked to scan");
     }
 
     /**
@@ -303,17 +311,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     }
 
     /**
-     * Unregister the sensors
-     * Remove all the listeners
-     */
-    @Override
-    protected void onPause(){
-        super.onPause();
-        this.finish();
-
-    }
-
-    /**
      * Re-register the sensors
      * Re-add all the listeners
      */
@@ -322,18 +319,45 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         super.onResume();
         // Ajout du listener de la SearchActivity sur le Guide
         this.guide.addGuideListener(this);
-        Log.i(LOG_TAG,"onResume : Le listener de la SearchActivity sur le Guide a bien été ajouté");
+        Log.i(LOG_TAG, "onResume : Le listener de la SearchActivity sur le Guide a bien été ajouté");
         // Ajout du listener du guide sur le compass
         this.compass.addCompassListener(this.guide);
-        Log.i(LOG_TAG,"onResume : Le listener du Guide sur le Compass a bien été ajouté");
-        // Ajout du listener du binder sur le compass
-        this.compass.addCompassListener(this.binder);
-        Log.i(LOG_TAG,"onResume : Le listener du Binder sur le Compass a bien été ajouté");
+        Log.i(LOG_TAG, "onResume : Le listener du Guide sur le Compass a bien été ajouté");
         // Enregistrement des capteurs du compass
         this.compass.registerSensors();
-        Log.i(LOG_TAG,"onResume : Les capteurs du compass sont bien enregistrés");
+        Log.i(LOG_TAG, "onResume : Les capteurs du compass sont bien enregistrés");
         //Démarrage du guide
         this.guide.start();
+    }
+
+
+    /**
+     * Unregister the sensors
+     * Remove all the listeners
+     */
+    @Override
+    protected void onPause(){
+        super.onPause();
+        // Désenregistrement des capteurs du compass
+        this.compass.unregisterSensors();
+        // Suppression du listener du guide sur le compass
+        this.compass.removeCompassListener(this.guide);
+        Log.i(LOG_TAG,"onDestroy : Le listener du Guide sur le Compass a bien été supprimé");
+        Log.e("Search","On call le finish");
+        // Arrêt du guide
+        this.guide.stopGuide();
+        try {
+            this.guide.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        this.finish();
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.e("Search","onStop");
     }
 
     /**
@@ -343,26 +367,33 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
      */
     @Override
     protected void onDestroy() {
+        Log.e("Search","Début du onDestroy");
         super.onDestroy();
-        // Suppression du listener du guide sur le compass
-        this.compass.removeCompassListener(this.guide);
-        Log.i(LOG_TAG,"onDestroy : Le listener du Guide sur le Compass a bien été supprimé");
-        // Suppression du listener du binder sur le compass
-        this.compass.removeCompassListener(this.binder);
-        Log.i(LOG_TAG,"onDestroy : Le listener du Binder sur le Compass a bien été supprimé");
-        // Désenregistrement des capteurs du compass
-        this.compass.unregisterSensors();
+        if(this.communication !=null) {
+            this.communication.closeConnection();
+            try {
+                this.communication.join();
+            } catch (InterruptedException e) {
+                Log.e(LOG_TAG,"Join interrupted");
+            }
+        }
+
+
         Log.i(LOG_TAG,"onDestroy : Les capteurs du compass sont bien désenregistrés");
         // Suppression du listener de la SearchActivity sur le Guide
         this.guide.removeGuideListener(this);
         Log.i(LOG_TAG,"onDestroy : Le listener de la SearchActivity sur le Guide a bien été supprimé");
-        // Arrêt du guide
-        this.guide.stopGuide();
-        try {
-            this.guide.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+    }
+
+    /**
+     * Starts the communication by connecting the socket to the device ip and the specified port.
+     */
+    private void initializeCommunication() {
+        String wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
+        Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
+        this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
+        this.communication.start();
     }
 
 

@@ -159,16 +159,6 @@ public class AddTagActivity extends Activity implements BinderListener {
     }
 
     @Override
-    public void notifyAngleChanged(AngleChangedEvent event) {
-        //Nothing to be done here
-    }
-
-    @Override
-    public void notifyAngleStabilized() {
-        // Nothing to be done here
-    }
-
-    @Override
     public void notifyTagToAddFound(AddTagEvent event) {
         final String id = event.getId();
         final Runnable action = new Runnable() {
@@ -181,11 +171,6 @@ public class AddTagActivity extends Activity implements BinderListener {
             }
         };
         this.runOnUiThread(action);
-    }
-
-    @Override
-    public void notifyFrameBinded(FrameBindedEvent event) {
-        //Nothing to be done here
     }
 
     @Override

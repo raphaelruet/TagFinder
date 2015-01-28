@@ -12,17 +12,11 @@ import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
  */
 public interface BinderListener {
 
-    public void notifyAngleChanged(AngleChangedEvent event);
-
-    public void notifyAngleStabilized();
-
     /**
      * Notify that the tag to add has been found.
      * @param event Event containing the id of th tag to add.
      */
     public void notifyTagToAddFound(AddTagEvent event);
-
-    public void notifyFrameBinded(FrameBindedEvent event);
 
     /**
      * Notify that a frame has been received.

@@ -67,11 +67,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
 
     private Mathematician mathematician;
 
-    private int currentRssi;
-
-    private int currentPhase;
-
-    private int currentReadCount;
+    private Tag wantedTag;
 
     // Constructors //
 
@@ -85,9 +81,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
         this.currentState = State.ASK_FOR_CALIBRATION;
 
         this.currentCompassAngle = 0;
-        this.currentRssi = 0;
-        this.currentPhase = 0;
-        this.currentReadCount = 0;
+        this.wantedTag = new Tag(0,0,0,"","");
         this.mathematician = new Mathematician();
     }
 
@@ -172,6 +166,12 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     public void notifyAngleChanged(AngleChangedEvent event) {
         this.previousCompassAngle = this.currentCompassAngle;
         this.currentCompassAngle = event.getAngle();
+        if(this.binder.getWantedTag() != null) {
+            this.wantedTag.setRssi(this.binder.getWantedTag().getRssi());
+            this.wantedTag.setPhase(this.binder.getWantedTag().getPhase());
+            this.wantedTag.setReadCount(this.binder.getWantedTag().getReadCount());
+            //Log.e("Guide","Rssi " + this.wantedTag.getRssi());
+        }
     }
 
     @Override
@@ -189,14 +189,6 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     @Override
     public void notifyTagToAddFound(AddTagEvent event) {
         //Nothing to be done here.
-    }
-
-    @Override
-    public void notifyFrameBinded(FrameBindedEvent event) {
-        this.currentRssi = event.getRssi();
-        this.currentPhase = event.getPhase();
-        this.currentReadCount = event.getReadCount();
-        this.currentCompassAngle = event.getAngle();
     }
 
     @Override
