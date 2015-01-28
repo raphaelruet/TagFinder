@@ -1,4 +1,4 @@
-package com.eseoteam.android.tagfinder.test;
+package com.eseoteam.android.tagfinder;
 
 import android.test.InstrumentationTestCase;
 
