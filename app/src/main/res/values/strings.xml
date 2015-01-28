@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_info_tag">InfoTagActivity</string>
+    <string name="copyright">  Copyright &#169; ESEO &amp; Tagsys RFID - All rights reserved.</string>
 
     <!-- Label strings -->
     <string name="tag_name_text">Tag name</string>

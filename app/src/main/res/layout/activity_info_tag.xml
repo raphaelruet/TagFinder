@@ -50,7 +50,7 @@
 
         <ImageButton
             android:id="@+id/backButton"
-            android:layout_width="120dp"
+            android:layout_width="130dp"
             android:layout_height="match_parent"
             android:src="@drawable/back_button_white"
             android:background="#00ffffff"
