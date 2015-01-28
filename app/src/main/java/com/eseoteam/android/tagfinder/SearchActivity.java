@@ -168,6 +168,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         public void onClick(View v) {
             pieChart.setClickable(false);
             guide.setState(Guide.State.SCAN);
+            guide.askForScan();
             compass.calibrateCompass();
             Log.e(LOG_TAG, "On est passé");
         }
