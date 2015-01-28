@@ -46,6 +46,7 @@
     <string name="toast_empty_field">Please fill Tag name and Tag ID</string>
 
     <string name="toast_no_wifi">Wifi is not enabled. You can\'t add a tag.</string>
+    <string name="toast_no_wifi2">Wifi is not enabled. You can\'t search a tag.</string>
 
     <string name="fake_tag_id">Pierre est un con</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
