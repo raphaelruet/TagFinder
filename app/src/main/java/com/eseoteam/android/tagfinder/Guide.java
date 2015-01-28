@@ -110,7 +110,9 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     break;
                 case GUIDE:
                     int angles[] = this.mathematician.bestZoneSelection();
-                    updatePieChart(angles[0], angles[1]);
+                    Log.i(LOG_TAG,"Angles : " +angles[0] +" " +angles[1]);
+                    updatePieChart(angles[0]-this.currentCompassAngle,
+                            angles[1]-this.currentCompassAngle);
                     //updatePieChart(-this.currentCompassAngle, 30-currentCompassAngle);
                     //this.stopGuide();
                     break;
@@ -217,7 +219,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     /**
      * Asks the SearchActivity to inform the user of the scanning process
      */
-    private void askForScan() {
+    public void askForScan() {
         for (GuideListener listener : this.listeners) {
             listener.notifyScanAsked();
         }
