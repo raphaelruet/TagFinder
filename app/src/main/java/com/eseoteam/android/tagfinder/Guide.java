@@ -100,8 +100,8 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     this.currentState = State.IDLE;
                     break;
                 case SCAN:
-                    //this.mathematician.addData(this.currentCompassAngle,
-                    //        this.currentRssi,this.currentReadCount);
+                    this.mathematician.addData(this.currentCompassAngle,
+                            this.wantedTag.getRssi(),this.wantedTag.getReadCount());
                     updatePieChart(-this.currentCompassAngle, 0);
                     if (this.currentCompassAngle > 355){
                         notifyUserScanFinished();
@@ -109,9 +109,9 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     }
                     break;
                 case GUIDE:
-                    //int angles[] = this.mathematician.bestZoneSelection();
-                    //updatePieChart(angles[0], angles[1]);
-                    updatePieChart(-this.currentCompassAngle, 30-currentCompassAngle);
+                    int angles[] = this.mathematician.bestZoneSelection();
+                    updatePieChart(angles[0], angles[1]);
+                    //updatePieChart(-this.currentCompassAngle, 30-currentCompassAngle);
                     //this.stopGuide();
                     break;
                 case DEBUG:
