@@ -1,5 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -15,6 +17,8 @@ public class Mathematician {
     private static final int ANGLE = 360;
     private static final int ROW = 3;
 
+    private static final int MIN_RSSI = -80;
+
     private int[][] angleTable;
 
     private ArrayList<Zone> zoneList = new ArrayList<>();
@@ -29,7 +33,7 @@ public class Mathematician {
 
         for (angle = 0; angle <ANGLE; angle ++){
             this.angleTable[0][angle] = angle ;
-            this.angleTable[1][angle] = 0 ;
+            this.angleTable[1][angle] = MIN_RSSI;
             this.angleTable[2][angle] = 0;
         }
     }
@@ -41,7 +45,7 @@ public class Mathematician {
      * @param nbPassage third row
      */
     public void addData (int angle, int rawRssi, int nbPassage){
-
+        /*
         int rssi;
         int processedRssi = 0;
 
@@ -52,9 +56,8 @@ public class Mathematician {
             processedRssi = ( (processedRssi * (nbPassage - 1 ) + rawRssi) /nbPassage );
             rssi = processedRssi ;
             nbPassage ++;
-        }
-
-        this.angleTable[1][angle] = rssi ;
+        }*/
+        this.angleTable[1][angle] = rawRssi ;
         this.angleTable[2][angle] = nbPassage;
     }
 
@@ -75,7 +78,8 @@ public class Mathematician {
         int maxRSSI = maxRSSI();
         int minRSSI = minRSSI();
 
-        int median = ((maxRSSI + minRSSI) / 2);
+        int median = (int)Math.floor((maxRSSI + minRSSI) / 2);
+        Log.e("Math","Min" + minRSSI + " Max " + maxRSSI + " Median "+median);
         for(angle = 0; angle < ANGLE; angle++) {
             if (angleTable[1][angle] > median){
                 angleTable[1][angle] = angleTable[1][angle] - median;
@@ -90,9 +94,9 @@ public class Mathematician {
      */
     private int maxRSSI(){
         int angle;
-        int maxRSSI = angleTable[1][0];
+        int maxRSSI = -80;
 
-        for(angle = 1; angle < ANGLE; angle++){
+        for(angle = 0; angle < ANGLE; angle++){
             if (angleTable[1][angle]> maxRSSI){
                 maxRSSI = angleTable[1][angle];
             }
@@ -106,10 +110,10 @@ public class Mathematician {
     private int minRSSI(){
 
         int angle;
-        int minRSSI = angleTable[1][0];
+        int minRSSI = 0;
 
-        for(angle = 1; angle < ANGLE; angle++){
-            if (angleTable[1][angle]< minRSSI){
+        for(angle = 0; angle < ANGLE; angle++){
+            if (angleTable[1][angle]< minRSSI && angleTable[1][angle] != MIN_RSSI){
                 minRSSI = angleTable[1][angle];
             }
         }
@@ -149,15 +153,20 @@ public class Mathematician {
 
         // Determine angleStart and angleStop of each zone
         for (currentAngle = 0; currentAngle < ANGLE; currentAngle++) {
-            if (currentAngle == 0 && angleTable[1][currentAngle] != 0) {
-                angleStart = currentAngle;
-            } else if (currentAngle == ANGLE - 1 && angleTable[1][currentAngle] != 0) {
-                angleStop = currentAngle;
+            //Log.e("Math","Angle: " + currentAngle + "Rssi: "+ angleTable[1][currentAngle]);
+            if (currentAngle == 0) {
+                if (angleTable[1][currentAngle] != 0) {
+                    angleStart = currentAngle;
+                }
+            } else if (currentAngle == ANGLE - 1) {
+                 if(angleTable[1][currentAngle] != 0) {
+                     angleStop = currentAngle;
+                 }
             } else {
                 if ((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle - 1] == 0)) {
                     angleStart = currentAngle;
                 }
-                if ((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle + 1] == 0)) {
+                if ((angleTable[1][currentAngle - 1] != 0) && (angleTable[1][currentAngle] == 0)) {
                     angleStop = currentAngle;
                 }
             }
@@ -167,7 +176,7 @@ public class Mathematician {
             if(angleStart!= angleStop && angleStop!=0) {
 
                 Zone zone = new Zone(angleStart, angleStop, angleStop - angleStart) ;
-
+                Log.e("Math","Start "+ angleStart + " End "+angleStop);
                 zoneList.add(zone);
 
                 angleStart = 0;

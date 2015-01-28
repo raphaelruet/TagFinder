@@ -161,7 +161,6 @@ public class Binder {
      */
     private void updateTagTable() {
         String[] stringStock = this.frame.split(";");
-
         //If the Id is already existing.
         if(tags.containsKey(stringStock[0])) {
             //Update current tag
@@ -223,6 +222,17 @@ public class Binder {
 
     public Tag getWantedTag() {
         return this.tags.get(this.tagTofind);
+    }
+
+    public void acknowledgeFrameTaken(){
+        final String date = tags.get(this.tagTofind).getDate();
+        final String time = tags.get(this.tagTofind).getTime();
+        final int readCount = tags.get(this.tagTofind).getReadCount();
+        tags.put(this.tagTofind, new Tag(-80,0,
+                readCount,
+                date,
+                time
+        ));
     }
 
 

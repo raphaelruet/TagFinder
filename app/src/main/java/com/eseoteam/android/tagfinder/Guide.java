@@ -81,7 +81,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
         this.currentState = State.ASK_FOR_CALIBRATION;
 
         this.currentCompassAngle = 0;
-        this.wantedTag = new Tag(0,0,0,"","");
+        this.wantedTag = new Tag(-80,0,0,"","");
         this.mathematician = new Mathematician();
     }
 
@@ -90,6 +90,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     // Methods //
 
     public void run() {
+        int angles[] = new int[2];
         while (!(this.stop)){
             switch (currentState){
                 case IDLE:
@@ -106,11 +107,12 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     if (this.currentCompassAngle > 355){
                         notifyUserScanFinished();
                         this.setState(State.GUIDE);
+                        angles = this.mathematician.bestZoneSelection();
                     }
                     break;
                 case GUIDE:
-                    int angles[] = this.mathematician.bestZoneSelection();
-                    Log.i(LOG_TAG,"Angles : " +angles[0] +" " +angles[1]);
+
+                    //Log.e(LOG_TAG,"Angles : " +angles[0] +" " +angles[1]);
                     updatePieChart(angles[0]-this.currentCompassAngle,
                             angles[1]-this.currentCompassAngle);
                     //updatePieChart(-this.currentCompassAngle, 30-currentCompassAngle);
@@ -172,7 +174,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
             this.wantedTag.setRssi(this.binder.getWantedTag().getRssi());
             this.wantedTag.setPhase(this.binder.getWantedTag().getPhase());
             this.wantedTag.setReadCount(this.binder.getWantedTag().getReadCount());
-            //Log.e("Guide","Rssi " + this.wantedTag.getRssi());
+            //this.binder.acknowledgeFrameTaken();
         }
     }
 
