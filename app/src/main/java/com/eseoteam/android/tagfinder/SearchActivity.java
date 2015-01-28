@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -71,8 +72,13 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     private String tag_id;
 
     /**
+     * The X position of the toasts from the top of the screen
+     */
+    private int toastYPosition;
+
+    /**
      * DEBUG MODE
-     * Should be set as false for the custommer version
+     * Should be set as 'false' for the custommer version
      */
     private static final boolean DEBUG = false;
 
@@ -84,6 +90,11 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getSupportActionBar().hide();
+
+        // Récupération des dimensions de l 'écran afin de régler la position des toasts
+        DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+        toastYPosition = (displayMetrics.heightPixels/2);
+
 
         //Ajout des listeners sur les boutons
         setListeners();
@@ -108,6 +119,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         }else{
             this.finish();
         }
+
     }
 
     /**
@@ -206,7 +218,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
                         "Please keep the phone still and horizontal, then tap the blue radar",
                         Toast.LENGTH_SHORT
                 );
-                toast.setGravity(Gravity.TOP,0,150);
+                toast.setGravity(Gravity.TOP,0,toastYPosition);
                 toast.show();
             }
         };
@@ -228,14 +240,14 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
                         "Calibration complete",
                         Toast.LENGTH_SHORT
                 );
-                toastCalibration.setGravity(Gravity.TOP,0,200);
+                toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
                 toastCalibration.show();
                 Toast toastScan = Toast.makeText(
                         getApplicationContext(),
                         "Keep the phone horizontal and slowly make a 360 degrees turn",
                         Toast.LENGTH_LONG
                 );
-                toastScan.setGravity(Gravity.TOP,0,200);
+                toastScan.setGravity(Gravity.TOP,0,toastYPosition);
                 toastScan.show();
             }
         };
@@ -254,14 +266,14 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
                         "Scan finished",
                         Toast.LENGTH_SHORT
                 );
-                toastCalibration.setGravity(Gravity.TOP,0,200);
+                toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
                 toastCalibration.show();
                 Toast toastScan = Toast.makeText(
                         getApplicationContext(),
                         "Follow given directions and sweep the targetted direction",
                         Toast.LENGTH_LONG
                 );
-                toastScan.setGravity(Gravity.TOP,0,200);
+                toastScan.setGravity(Gravity.TOP,0,toastYPosition);
                 toastScan.show();
             }
         };
@@ -352,4 +364,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             e.printStackTrace();
         }
     }
+
+
 }
