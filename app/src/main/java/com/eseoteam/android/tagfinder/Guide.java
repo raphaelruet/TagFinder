@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
 import java.util.ArrayList;
@@ -61,12 +60,13 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     private int currentCompassAngle;
 
     /**
-     * Current compass angle
+     * The mathematician used to compute the data
      */
-    private int previousCompassAngle;
-
     private Mathematician mathematician;
 
+    /**
+     * The wanted tag
+     */
     private Tag wantedTag;
 
     // Constructors //
@@ -168,7 +168,6 @@ public class Guide extends Thread implements CompassListener, BinderListener{
      */
     @Override
     public void notifyAngleChanged(AngleChangedEvent event) {
-        this.previousCompassAngle = this.currentCompassAngle;
         this.currentCompassAngle = event.getAngle();
         if(this.binder.getWantedTag() != null) {
             this.wantedTag.setRssi(this.binder.getWantedTag().getRssi());
