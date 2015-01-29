@@ -101,6 +101,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
      */
     private TextView slowDownMessage;
 
+
+
     /**
      * The animation of the slowDownMessage
      */
@@ -214,7 +216,9 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         }
     };
 
-
+    /**
+     * Gets the tag informations from the database
+     */
     private void getTagInformation(){
 
         // Helper pour la base de données
@@ -293,6 +297,9 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         this.runOnUiThread(action);
     }
 
+    /**
+     * Notifies the User that the scan has failed
+     */
     @Override
     public void notifyUserScanFailed() {
         final Runnable action = new Runnable() {
@@ -312,6 +319,9 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         this.finish();
     }
 
+    /**
+     * Notifies the user that the guiding has begun
+     */
     @Override
     public void notifyUserGuidingStart() {
         final Runnable action = new Runnable() {
