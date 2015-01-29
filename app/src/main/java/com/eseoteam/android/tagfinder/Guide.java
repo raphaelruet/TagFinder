@@ -111,12 +111,13 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     }
                     break;
                 case GUIDE:
-
-                    //Log.e(LOG_TAG,"Angles : " +angles[0] +" " +angles[1]);
-                    updatePieChart(angles[0]-this.currentCompassAngle,
-                            angles[1]-this.currentCompassAngle);
-                    //updatePieChart(-this.currentCompassAngle, 30-currentCompassAngle);
-                    //this.stopGuide();
+                    if ( angles[0] != -1 && angles[1] != -1 ) {
+                        updatePieChart(angles[0]-this.currentCompassAngle,
+                                angles[1]-this.currentCompassAngle);
+                    } else {
+                        notifyScanFailed();
+                        this.setState(State.ASK_FOR_CALIBRATION);
+                    }
                     break;
                 case DEBUG:
                     updatePieChart(currentCompassAngle, currentCompassAngle+5);
@@ -186,6 +187,12 @@ public class Guide extends Thread implements CompassListener, BinderListener{
     public void notifyUserScanFinished() {
         for (GuideListener listener : this.listeners) {
             listener.notifyUserScanFinished();
+        }
+    }
+
+    public void notifyScanFailed() {
+        for (GuideListener listener : this.listeners) {
+            listener.notifyScanFailed();
         }
     }
 
