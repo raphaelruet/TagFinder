@@ -21,11 +21,6 @@ public interface GuideListener {
     public void notifyScanAsked();
 
     /**
-     * Notify the SearchActivity that the scan is finished
-     */
-    public void notifyUserScanFinished();
-
-    /**
      * Notify the SearchActivity that the scan has failded
      */
     public void notifyUserScanFailed();
