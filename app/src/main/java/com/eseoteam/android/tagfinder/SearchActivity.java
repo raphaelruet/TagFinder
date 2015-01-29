@@ -320,6 +320,25 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         Log.e(LOG_TAG, "User as been asked to scan");
     }
 
+    @Override
+    public void notifyScanFailed() {
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                Toast toastCalibration = Toast.makeText(
+                        getApplicationContext(),
+                        R.string.scan_failed,
+                        Toast.LENGTH_LONG
+                );
+                toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
+                toastCalibration.show();
+            }
+        };
+        this.runOnUiThread(action);
+        Log.e(LOG_TAG, "User as been asked to scan");
+    }
+
     /**
      * Asks the SearchActivity to refresh the PieChart with the given values
      * @param event the event containing the new angles.
