@@ -56,22 +56,19 @@ public class Mathematician {
      * Calculation of the average RSSI for each angle
      * @param angle first row
      * @param rawRssi second row
-     * @param nbPassage third row
      */
-    public void addData (int angle, int rawRssi, int nbPassage){
-        /*
+    public void addData (int angle, int rawRssi){
+
         int rssi;
-        int processedRssi = 0;
+        int nbPassage = this.angleTable[2][angle];
 
         if(nbPassage == 0){
             rssi = rawRssi;
-            nbPassage = 1;
         }else{
-            processedRssi = ( (processedRssi * (nbPassage - 1 ) + rawRssi) /nbPassage );
-            rssi = processedRssi ;
-            nbPassage ++;
-        }*/
-        this.angleTable[1][angle] = rawRssi ;
+            rssi = (this.angleTable[1][angle]*nbPassage + rawRssi) / (nbPassage + 1 );
+        }
+        nbPassage ++;
+        this.angleTable[1][angle] = rssi ;
         this.angleTable[2][angle] = nbPassage;
     }
 

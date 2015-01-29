@@ -40,12 +40,11 @@ public class MathematicianTest extends InstrumentationTestCase {
 
         int angle = 36;
         int rawRssi = 52;
-        int nbPassage = 1;
 
-        math.addData(angle, rawRssi, nbPassage);
-
+        math.addData(angle, rawRssi);
+        math.addData(36,48);
         table[0][1] = 36;
-        table[1][1] = 52;
+        table[1][1] = 50;
         table[2][1] = 2;
 
         // Comparison between values add to mathematician and known value in the table
@@ -63,25 +62,25 @@ public class MathematicianTest extends InstrumentationTestCase {
 
         //Fill the matrix with different RSSI values
         for (angle = 0; angle <20; angle ++){
-            math.addData(angle,-80,1);
+            math.addData(angle,-80);
         }
         for(angle=20; angle<50; angle++){
-            math.addData(angle,-60,1);
+            math.addData(angle,-60);
         }
         for(angle=50; angle<100; angle++){
-            math.addData(angle,-80,1);
+            math.addData(angle,-80);
         }
         for(angle=100; angle<150; angle++){
-            math.addData(angle,-20,1);
+            math.addData(angle,-20);
         }
         for(angle=150; angle<200; angle++){
-            math.addData(angle,-80,1);
+            math.addData(angle,-80);
         }
         for(angle=200; angle<280; angle++){
-            math.addData(angle,-30,1);
+            math.addData(angle,-30);
         }
         for(angle=280; angle<360; angle++){
-            math.addData(angle,-80,1);
+            math.addData(angle,-80);
         }
 
         math.medianAlgorithm();
@@ -101,25 +100,25 @@ public class MathematicianTest extends InstrumentationTestCase {
 
         //Fill the matrix with different RSSI values
         for (angle = 0; angle <20; angle ++){
-            math.addData(angle,0,1);
+            math.addData(angle,0);
         }
         for(angle=20; angle<50; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,0);
         }
         for(angle=50; angle<100; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,0);
         }
         for(angle=100; angle<150; angle++){
-            math.addData(angle,30,1);
+            math.addData(angle,30);
         }
         for(angle=150; angle<200; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,0);
         }
         for(angle=200; angle<280; angle++){
-            math.addData(angle,20,1);
+            math.addData(angle,20);
         }
         for(angle=280; angle<360; angle++){
-            math.addData(angle,0,1);
+            math.addData(angle,0);
         }
 
         int[] finalTab = math.bestZoneSelection();
