@@ -8,11 +8,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.eseoteam.android.tagfinder.communication.Communication;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
@@ -23,7 +24,7 @@ import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class SearchActivity extends ActionBarActivity implements GuideListener{
+public class SearchActivity extends ActionBarActivity implements GuideListener, CruiseControlListener{
 
     // Attributes //
 
@@ -60,6 +61,11 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
     private Guide guide;
 
     /**
+     * The cruise control
+     */
+    private CruiseControl cruiseControl;
+
+    /**
      * The Binder
      */
     private Binder binder;
@@ -90,9 +96,23 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
      */
     private static final boolean DEBUG = false;
 
+    /**
+     * The 'Slow down' message shown when the speed is too high
+     */
+    private TextView slowDownMessage;
+
+    /**
+     * The animation of the slowDownMessage
+     */
+    private Animation anim;
+
+
     // Methods //
 
-
+    /**
+     * The onCreate Method
+     * @param savedInstanceState the saved instance
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +122,13 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         // Récupération des dimensions de l 'écran afin de régler la position des toasts
         DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
         toastYPosition = (displayMetrics.heightPixels/2);
+
+        this.slowDownMessage = (TextView)findViewById(R.id.speedText);
+
+        anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(200);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
 
 
         //Ajout des listeners sur les boutons
@@ -115,7 +142,10 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
 
         //On vérifie que l'id du tag existe, sinon on finish l'activity
         if (this.tag_id != null){
-            this.compass = new Compass((SensorManager) getSystemService(SENSOR_SERVICE));
+            SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+            this.compass = new Compass(sensorManager);
+            this.cruiseControl = new CruiseControl(sensorManager);
+
             //compass.registerSensors();
 
             //Création du Binder
@@ -142,12 +172,12 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         PieChart pieChart = (PieChart)findViewById(R.id.pieChart);
         pieChart.setOnClickListener(this.calibrateButtonListener);
 
-//        if (DEBUG){
-//            //calibrateButton
-//            Button guideButton = (Button)findViewById(R.id.guideButton);
-//            guideButton.setVisibility(View.VISIBLE);
-//            guideButton.setOnClickListener(this.guideButtonListener);
-//        }
+        if (DEBUG){
+            //calibrateButton
+            Button guideButton = (Button)findViewById(R.id.guideButton);
+            guideButton.setVisibility(View.VISIBLE);
+            guideButton.setOnClickListener(this.guideButtonListener);
+        }
     }
 
     /**
@@ -224,7 +254,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             {
                 Toast toast = Toast.makeText(
                         getApplicationContext(),
-                        "Please keep the phone still and horizontal, then tap the blue radar",
+                        R.string.calibration_information,
                         Toast.LENGTH_SHORT
                 );
                 toast.setGravity(Gravity.TOP,0,toastYPosition);
@@ -246,14 +276,14 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             {
                 Toast toastCalibration = Toast.makeText(
                         getApplicationContext(),
-                        "Calibration complete",
+                        R.string.calibration_finished,
                         Toast.LENGTH_SHORT
                 );
                 toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
                 toastCalibration.show();
                 Toast toastScan = Toast.makeText(
                         getApplicationContext(),
-                        "Keep the phone horizontal and slowly make a 360 degrees turn",
+                        R.string.scan_information,
                         Toast.LENGTH_LONG
                 );
                 toastScan.setGravity(Gravity.TOP,0,toastYPosition);
@@ -261,7 +291,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             }
         };
         this.runOnUiThread(action);
-        Log.e(LOG_TAG,"User as been asked to scan");
+        Log.e(LOG_TAG, "User as been asked to scan");
     }
 
     @Override
@@ -272,14 +302,14 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
             {
                 Toast toastCalibration = Toast.makeText(
                         getApplicationContext(),
-                        "Scan finished",
+                        R.string.scan_finished,
                         Toast.LENGTH_SHORT
                 );
                 toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
                 toastCalibration.show();
                 Toast toastScan = Toast.makeText(
                         getApplicationContext(),
-                        "Follow given directions and sweep the targetted direction",
+                        R.string.guiding_information,
                         Toast.LENGTH_LONG
                 );
                 toastScan.setGravity(Gravity.TOP,0,toastYPosition);
@@ -326,6 +356,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         Log.i(LOG_TAG, "onResume : Le listener du Guide sur le Compass a bien été ajouté");
         // Enregistrement des capteurs du compass
         this.compass.registerSensors();
+        this.cruiseControl.registerSensors();
+        this.cruiseControl.addCruiseControlListener(this);
         Log.i(LOG_TAG, "onResume : Les capteurs du compass sont bien enregistrés");
         //Démarrage du guide
         this.guide.start();
@@ -343,6 +375,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         this.compass.unregisterSensors();
         // Suppression du listener du guide sur le compass
         this.compass.removeCompassListener(this.guide);
+        this.cruiseControl.unregisterSensors();
+        this.cruiseControl.removeCruiseControlListener(this);
         Log.i(LOG_TAG,"onDestroy : Le listener du Guide sur le Compass a bien été supprimé");
         Log.e("Search","On call le finish");
         // Arrêt du guide
@@ -397,5 +431,26 @@ public class SearchActivity extends ActionBarActivity implements GuideListener{
         this.communication.start();
     }
 
+    /**
+     * Sets the slowDownMessage to visible and make it blink
+     * when the speed is too high
+     */
+    @Override
+    public void notifySpeedTooHigh() {
+        if (this.guide.getSate() == Guide.State.SCAN &&
+                this.slowDownMessage.getVisibility() == View.INVISIBLE){
+            this.slowDownMessage.setVisibility(View.VISIBLE);
+            slowDownMessage.startAnimation(anim);
+        }
+    }
 
+    /**
+     * Sets the slow down message to invisible when the speed is correct
+     */
+    @Override
+    public void notifySpeedOK() {
+        anim.cancel();
+        anim.reset();
+        slowDownMessage.setVisibility(View.INVISIBLE);
+    }
 }
