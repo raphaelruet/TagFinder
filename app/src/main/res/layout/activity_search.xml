@@ -255,6 +255,18 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/speedText"
+            android:text="@string/speed_too_high"
+            android:textColor="@color/main_theme_white"
+            android:layout_centerVertical="true"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true" />
+
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
