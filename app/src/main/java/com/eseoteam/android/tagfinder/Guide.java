@@ -227,4 +227,8 @@ public class Guide extends Thread implements CompassListener, BinderListener{
         }
     }
 
+    public State getSate(){
+        return this.currentState;
+    }
+
 }
