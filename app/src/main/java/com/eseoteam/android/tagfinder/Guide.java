@@ -105,13 +105,13 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                             this.wantedTag.getRssi(),this.wantedTag.getReadCount());
                     updatePieChart(-this.currentCompassAngle, 0);
                     if (this.currentCompassAngle > 355){
-                        notifyUserScanFinished();
                         angles = this.mathematician.bestZoneSelection();
                         if ( angles[0] != -1 && angles[1] != -1 ) {
                             notifyUserGuidingStart();
                             this.setState(State.GUIDE);
                         } else {
                             notifyUserScanFailed();
+                            this.setState(State.IDLE);
                         }
                     }
                     break;
@@ -170,7 +170,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
      * Allows the other classes to change the state of the guide's stateMachine
      * @param state the state to set
      */
-    public void setState(State state){
+    public void setState(State state) {
         this.currentState =state;
     }
 
@@ -197,13 +197,6 @@ public class Guide extends Thread implements CompassListener, BinderListener{
 
     public State getSate(){
         return this.currentState;
-    }
-
-
-    public void notifyUserScanFinished() {
-        for (GuideListener listener : this.listeners) {
-            listener.notifyUserScanFinished();
-        }
     }
 
     public void notifyUserScanFailed() {
