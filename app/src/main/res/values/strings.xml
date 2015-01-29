@@ -62,6 +62,7 @@
         make a 360 degrees turn</string>
         <string name="calibration_information">Please keep the phone still and horizontal,
         then tap the blue radar</string>
+    <string name="scan_failed">Sorry, your tag can\'t be found</string>
 
     <!-- Delete AlertDialog strings -->
     <string name="delete_dialog_title">Confirm Removal</string>
