@@ -26,6 +26,11 @@ public interface GuideListener {
     public void notifyUserScanFinished();
 
     /**
+     * Notify the SearchActivity that the scan is finished
+     */
+    public void notifyScanFailed();
+
+    /**
      * Notify that the PieChart angles has changed
      * @param event the angles
      */
