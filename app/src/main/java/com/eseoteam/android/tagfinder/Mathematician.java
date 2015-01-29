@@ -156,8 +156,14 @@ public class Mathematician {
         int indexZone = tagZoneSelection();
 
         //Put angleStart and angleStop in a tab
-        angleDirection[0] = zoneList.get(indexZone).getAngleStart();
-        angleDirection[1] = zoneList.get(indexZone).getAngleStop();
+        if(zoneList.size() != 0) {
+            angleDirection[0] = zoneList.get(indexZone).getAngleStart();
+            angleDirection[1] = zoneList.get(indexZone).getAngleStop();
+        }
+        else {
+            angleDirection[0] = -1;
+            angleDirection[1] = -1;
+        }
         return angleDirection;
     }
 

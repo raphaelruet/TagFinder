@@ -377,8 +377,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         this.compass.removeCompassListener(this.guide);
         this.cruiseControl.unregisterSensors();
         this.cruiseControl.removeCruiseControlListener(this);
-        Log.i(LOG_TAG,"onDestroy : Le listener du Guide sur le Compass a bien été supprimé");
-        Log.e("Search","On call le finish");
+        Log.i(LOG_TAG,"onPause : Le listener du Guide sur le Compass a bien été supprimé");
         // Arrêt du guide
         this.guide.stopGuide();
         try {
@@ -389,12 +388,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         this.finish();
     }
 
-    @Override
-    protected void onStop(){
-        super.onStop();
-        Log.e("Search","onStop");
-    }
-
     /**
      * Unregister the sensors
      * Remove all the listeners
@@ -402,7 +395,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
      */
     @Override
     protected void onDestroy() {
-        Log.e("Search","Début du onDestroy");
         super.onDestroy();
         if(this.communication !=null) {
             this.communication.closeConnection();
