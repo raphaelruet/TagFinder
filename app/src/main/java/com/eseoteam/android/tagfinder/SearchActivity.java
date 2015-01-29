@@ -291,7 +291,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
             }
         };
         this.runOnUiThread(action);
-        Log.e(LOG_TAG, "User as been asked to scan");
     }
 
     @Override
@@ -307,21 +306,13 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
                 );
                 toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
                 toastCalibration.show();
-                Toast toastScan = Toast.makeText(
-                        getApplicationContext(),
-                        R.string.guiding_information,
-                        Toast.LENGTH_LONG
-                );
-                toastScan.setGravity(Gravity.TOP,0,toastYPosition);
-                toastScan.show();
             }
         };
         this.runOnUiThread(action);
-        Log.e(LOG_TAG, "User as been asked to scan");
     }
 
     @Override
-    public void notifyScanFailed() {
+    public void notifyUserScanFailed() {
         final Runnable action = new Runnable() {
             @Override
             public void run()
@@ -336,7 +327,25 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
             }
         };
         this.runOnUiThread(action);
-        Log.e(LOG_TAG, "User as been asked to scan");
+        this.finish();
+    }
+
+    @Override
+    public void notifyUserGuidingStart() {
+        final Runnable action = new Runnable() {
+            @Override
+            public void run()
+            {
+                Toast toastScan = Toast.makeText(
+                        getApplicationContext(),
+                        R.string.guiding_information,
+                        Toast.LENGTH_LONG
+                );
+                toastScan.setGravity(Gravity.TOP,0,toastYPosition);
+                toastScan.show();
+            }
+        };
+        this.runOnUiThread(action);
     }
 
     /**
