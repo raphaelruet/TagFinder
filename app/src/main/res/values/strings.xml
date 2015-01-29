@@ -51,6 +51,18 @@
     <string name="fake_tag_id">Pierre est un con</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <!-- SearchActivity Strings -->
+    <string name="speed_too_high">Slow down</string>
+    <string name="calibration_finished">Calibration complete</string>
+    <string name="scan_finished">Scan complete</string>
+    <string name="guiding_information">Follow given directions and sweep
+        around to targetted direction</string>
+    <string name="scan_information">Keep the phone horizontal and slowly
+        make a 360 degrees turn</string>
+        <string name="calibration_information">Please keep the phone still and horizontal,
+        then tap the blue radar</string>
+
     <!-- Delete AlertDialog strings -->
     <string name="delete_dialog_title">Confirm Removal</string>
     <string name="delete_dialog_message">Do you confirm the suppression of the tag ?</string>
