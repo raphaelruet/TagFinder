@@ -8,9 +8,9 @@ package com.eseoteam.android.tagfinder;
  */
 public class Zone {
 
-    public static int angleStart;
-    public static int angleStop;
-    public static int angleSize;
+    private int angleStart;
+    private int angleStop;
+    private int angleSize;
 
     public Zone (int angleStart, int angleStop, int angleSize){
         this.angleStart = angleStart;
