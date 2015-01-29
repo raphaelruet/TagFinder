@@ -27,7 +27,7 @@ public interface GuideListener {
 
 
     /**
-     * Notify the SearchActivity that the Guiding has began.
+     * Notify the SearchActivity that the Guiding has begun.
      */
     public void notifyUserGuidingStart();
 
@@ -36,4 +36,5 @@ public interface GuideListener {
      * @param event the angles
      */
     public void notifyPieChartChanged(PieChartChangedEvent event);
+
 }
