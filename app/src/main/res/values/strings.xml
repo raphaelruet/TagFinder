@@ -55,7 +55,6 @@
     <!-- SearchActivity Strings -->
     <string name="speed_too_high">Slow down</string>
     <string name="calibration_finished">Calibration complete</string>
-    <string name="scan_finished">Scan complete</string>
     <string name="guiding_information">Follow given directions and sweep
         around to targetted direction</string>
     <string name="scan_information">Keep the phone horizontal and slowly
