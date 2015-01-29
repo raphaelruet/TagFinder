@@ -79,9 +79,12 @@ public class CruiseControl implements SensorEventListener{
 
     /**
      * Computes the average speed of the device
-     * @param newValue
+     * @param newValue the new speed Value to add
      */
     private void computeAverageSpeed(float newValue) {
+        if (newValue > 2*SPEED_LIMIT){
+            newValue = (float)(2*SPEED_LIMIT);
+        }
         float averageSpeed = 0;
         if (this.index < ROUND_VALUE-1){
             this.speed[index] = newValue;
