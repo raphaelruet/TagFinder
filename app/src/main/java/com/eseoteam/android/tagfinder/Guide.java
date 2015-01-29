@@ -106,18 +106,18 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     updatePieChart(-this.currentCompassAngle, 0);
                     if (this.currentCompassAngle > 355){
                         notifyUserScanFinished();
-                        this.setState(State.GUIDE);
                         angles = this.mathematician.bestZoneSelection();
+                        if ( angles[0] != -1 && angles[1] != -1 ) {
+                            notifyUserGuidingStart();
+                            this.setState(State.GUIDE);
+                        } else {
+                            notifyUserScanFailed();
+                        }
                     }
                     break;
                 case GUIDE:
-                    if ( angles[0] != -1 && angles[1] != -1 ) {
-                        updatePieChart(angles[0]-this.currentCompassAngle,
+                    updatePieChart(angles[0]-this.currentCompassAngle,
                                 angles[1]-this.currentCompassAngle);
-                    } else {
-                        notifyScanFailed();
-                        this.setState(State.ASK_FOR_CALIBRATION);
-                    }
                     break;
                 case DEBUG:
                     updatePieChart(currentCompassAngle, currentCompassAngle+5);
@@ -164,47 +164,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
         this.stop = true;
     }
 
-    /**
-     * Modifies the currentCompassAngle when it has changed
-     */
-    @Override
-    public void notifyAngleChanged(AngleChangedEvent event) {
-        this.currentCompassAngle = event.getAngle();
-        if(this.binder.getWantedTag() != null) {
-            this.wantedTag.setRssi(this.binder.getWantedTag().getRssi());
-            this.wantedTag.setPhase(this.binder.getWantedTag().getPhase());
-            this.wantedTag.setReadCount(this.binder.getWantedTag().getReadCount());
-            //this.binder.acknowledgeFrameTaken();
-        }
-    }
 
-    @Override
-    public void notifyAngleStabilized() {
-        //Nothing to be done here.
-    }
-
-
-    public void notifyUserScanFinished() {
-        for (GuideListener listener : this.listeners) {
-            listener.notifyUserScanFinished();
-        }
-    }
-
-    public void notifyScanFailed() {
-        for (GuideListener listener : this.listeners) {
-            listener.notifyScanFailed();
-        }
-    }
-
-    @Override
-    public void notifyTagToAddFound(AddTagEvent event) {
-        //Nothing to be done here.
-    }
-
-    @Override
-    public void notifyFrameReceived() {
-        //Nothing to be done here.
-    }
 
     /**
      * Allows the other classes to change the state of the guide's stateMachine
@@ -218,10 +178,12 @@ public class Guide extends Thread implements CompassListener, BinderListener{
      * Asks the SearchActivity to inform the user of the calibration process
      */
     private void askForCalibration() {
+        this.updatePieChart(0,360);
         for (GuideListener listener : this.listeners) {
             Log.e(LOG_TAG,"User as been asked to calibrate");
             listener.notifyCalibrationAsked();
         }
+        this.setState(State.IDLE);
     }
 
     /**
@@ -235,6 +197,55 @@ public class Guide extends Thread implements CompassListener, BinderListener{
 
     public State getSate(){
         return this.currentState;
+    }
+
+
+    public void notifyUserScanFinished() {
+        for (GuideListener listener : this.listeners) {
+            listener.notifyUserScanFinished();
+        }
+    }
+
+    public void notifyUserScanFailed() {
+        for (GuideListener listener : this.listeners) {
+            listener.notifyUserScanFailed();
+        }
+    }
+
+    public void notifyUserGuidingStart() {
+        for (GuideListener listener : this.listeners) {
+            listener.notifyUserGuidingStart();
+        }
+    }
+
+
+    @Override
+    public void notifyTagToAddFound(AddTagEvent event) {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyFrameReceived() {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyAngleStabilized() {
+        //Nothing to be done here.
+    }
+
+    /**
+     * Modifies the currentCompassAngle when it has changed
+     */
+    @Override
+    public void notifyAngleChanged(AngleChangedEvent event) {
+        this.currentCompassAngle = event.getAngle();
+        if(this.binder.getWantedTag() != null) {
+            this.wantedTag.setRssi(this.binder.getWantedTag().getRssi());
+            this.wantedTag.setPhase(this.binder.getWantedTag().getPhase());
+            this.wantedTag.setReadCount(this.binder.getWantedTag().getReadCount());
+            //this.binder.acknowledgeFrameTaken();
+        }
     }
 
 }
