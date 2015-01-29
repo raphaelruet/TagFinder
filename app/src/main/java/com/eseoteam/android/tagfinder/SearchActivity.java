@@ -294,24 +294,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     }
 
     @Override
-    public void notifyUserScanFinished() {
-        final Runnable action = new Runnable() {
-            @Override
-            public void run()
-            {
-                Toast toastCalibration = Toast.makeText(
-                        getApplicationContext(),
-                        R.string.scan_finished,
-                        Toast.LENGTH_SHORT
-                );
-                toastCalibration.setGravity(Gravity.TOP,0,toastYPosition);
-                toastCalibration.show();
-            }
-        };
-        this.runOnUiThread(action);
-    }
-
-    @Override
     public void notifyUserScanFailed() {
         final Runnable action = new Runnable() {
             @Override
