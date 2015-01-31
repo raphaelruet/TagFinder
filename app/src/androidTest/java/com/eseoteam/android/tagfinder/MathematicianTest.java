@@ -2,18 +2,13 @@ package com.eseoteam.android.tagfinder;
 
 import android.test.InstrumentationTestCase;
 
-import com.eseoteam.android.tagfinder.Mathematician;
-
 /**
  * Created on 25/01/15.
  * Class test of Mathematician
- * @author Charline LEROUGE.
- * @version 0.1.
+ * @author Charline LEROUGE, Raphael RUET.
+ * @version 0.2.
  */
 public class MathematicianTest extends InstrumentationTestCase {
-
-
-    private int[][] table;
 
     private static final int ANGLE = 360;
 
@@ -24,16 +19,15 @@ public class MathematicianTest extends InstrumentationTestCase {
      */
     public void testAddData(){
 
-        int i = 0;
-        table = new int[3][360];
+        int i;
 
-        table = new int[ROW][ANGLE];
+        int table[][] = new int[ROW][ANGLE];
 
         //Initialisation of the table
         for (i = 0; i <ANGLE; i ++){
-            this.table[0][i] = i ;
-            this.table[1][i] = 0 ;
-            this.table[2][i] = 0;
+            table[0][i] = i ;
+            table[1][i] = 0 ;
+            table[2][i] = 0;
         }
 
         final Mathematician math = new Mathematician();
@@ -51,6 +45,20 @@ public class MathematicianTest extends InstrumentationTestCase {
         assertEquals("addDataTest - Test1 - equals",table[1][1],math.getRssi(36) );
         assertEquals("addDataTest - Test2 - equals", table[2][1], math.getNbPassage(36));
 
+    }
+
+    public void testAddDataWithSmooth() {
+        final Mathematician math = new Mathematician();
+        math.addData(10, -50);
+        assertEquals("addDataWithSmoothTest - Test1 - equals",-50,math.getRssi(10));
+        math.addData(11,-80);
+        assertEquals("addDataWithSmoothTest - Test2 - equals",1,math.getMissedAngles());
+        math.addData(12,-80);
+        assertEquals("addDataWithSmoothTest - Test3 - equals",2,math.getMissedAngles());
+        math.addData(13,-30);
+        assertEquals("addDataWithSmoothTest - Test4 - equals",-40,math.getRssi(11));
+        assertEquals("addDataWithSmoothTest - Test5 - equals",-40,math.getRssi(12));
+        assertEquals("addDataWithSmoothTest - Test5 - equals",0,math.getMissedAngles());
     }
 
     /**
@@ -95,7 +103,7 @@ public class MathematicianTest extends InstrumentationTestCase {
      */
     public void testBestZoneSelection(){
 
-        int angle = 0;
+        int angle;
         final Mathematician math = new Mathematician();
 
         //Fill the matrix with different RSSI values
