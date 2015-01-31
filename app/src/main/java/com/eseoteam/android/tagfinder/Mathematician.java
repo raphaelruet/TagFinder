@@ -37,13 +37,23 @@ public class Mathematician {
     private ArrayList<Zone> zoneList;
 
     /**
+     * The counter of missedAngles where there were no frame
+     */
+    private int missedAngles;
+
+    /**
+     * The maximum number of angles that could conduct to a smoothing of the RSSIs
+     */
+    private static final int MAX_MISSED_ANGLE = 3;
+
+    /**
      * Constructor of the matrix containing information
      * Three rows.
      */
     public Mathematician() {
         int angle ;
-        angleTable = new int[ROW][ANGLE];
-
+        this.angleTable = new int[ROW][ANGLE];
+        this.missedAngles = 0;
         for (angle = 0; angle <ANGLE; angle ++){
             this.angleTable[0][angle] = angle ;
             this.angleTable[1][angle] = MIN_RSSI;
@@ -58,9 +68,10 @@ public class Mathematician {
      * @param rawRssi second row
      */
     public void addData (int angle, int rawRssi){
-
         int rssi;
         int nbPassage = this.angleTable[2][angle];
+        int lastCorrectAngle;
+        int rssiUsedAsAverage;
 
         if(nbPassage == 0){
             rssi = rawRssi;
@@ -68,8 +79,27 @@ public class Mathematician {
             rssi = (this.angleTable[1][angle]*nbPassage + rawRssi) / (nbPassage + 1 );
         }
         nbPassage ++;
+
+        this.angleTable[0][angle] = angle;
         this.angleTable[1][angle] = rssi ;
         this.angleTable[2][angle] = nbPassage;
+
+        if (rawRssi <= -80){
+            this.missedAngles ++;
+        }
+        if (rawRssi > -80 && this.missedAngles != 0){
+            lastCorrectAngle = angle - ( this.missedAngles + 1);
+            rssiUsedAsAverage = (rawRssi + this.angleTable[1][lastCorrectAngle]) / 2;
+            for (int i = lastCorrectAngle +1 ; i < angle ; i++ ){
+                this.angleTable[1][i] = rssiUsedAsAverage;
+            }
+            this.missedAngles = 0;
+        }
+        if (this.missedAngles >= MAX_MISSED_ANGLE) {
+            this.missedAngles = 0;
+        }
+
+
     }
 
     /**
@@ -88,6 +118,10 @@ public class Mathematician {
      */
     public int getNbPassage(int angle){
         return this.angleTable[2][angle];
+    }
+
+    public int getMissedAngles(){
+        return this.missedAngles;
     }
 
     /**
