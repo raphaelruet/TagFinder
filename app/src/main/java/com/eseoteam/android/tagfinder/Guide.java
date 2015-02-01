@@ -34,6 +34,10 @@ public class Guide extends Thread implements CompassListener, BinderListener{
      */
     private static final String LOG_TAG = Guide.class.getSimpleName();
 
+    private static  final int START = 0;
+
+    private static final int STOP = 1;
+
     /**
      * The listeners of the Guide
      */
@@ -91,6 +95,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
 
     public void run() {
         int angles[] = new int[2];
+        int direction = 0;
         while (!(this.stop)){
             switch (currentState){
                 case IDLE:
@@ -106,8 +111,11 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     updatePieChart(-this.currentCompassAngle, 0);
                     if (this.currentCompassAngle > 355){
                         angles = this.mathematician.bestZoneSelection();
-                        if ( angles[0] != -1 && angles[1] != -1 ) {
+                        Log.e("Fin PREMIER scan", "start" + angles[START] + "stop" + angles[STOP]);
+                        if ( angles[START] != -1 && angles[STOP] != -1 ) {
                             notifyUserGuidingStart();
+                            this.mathematician.initMatrix();
+                            this.mathematician.clearZoneList();
                             this.setState(State.GUIDE);
                         } else {
                             notifyUserScanFailed();
@@ -116,8 +124,35 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                     }
                     break;
                 case GUIDE:
-                    updatePieChart(angles[0]-this.currentCompassAngle,
-                                angles[1]-this.currentCompassAngle);
+                    updatePieChart(angles[START]-this.currentCompassAngle,
+                                angles[STOP]-this.currentCompassAngle);
+                    if(direction == 0) {
+                        if (this.currentCompassAngle == angles[START]) {
+                            direction = 1;
+                            Log.e("Guide", " Gauche à droite" );
+                        }
+                        if (this.currentCompassAngle == angles[STOP]) {
+                            direction = 2;
+                            Log.e("Guide", " Droite à gauche" );
+                        }
+                    }
+                    if (this.currentCompassAngle >= angles[START]
+                            && this.currentCompassAngle <= angles[STOP]) {
+                        this.mathematician.addData(this.currentCompassAngle,
+                                this.wantedTag.getRssi());
+                    }
+                    if (direction == 1 && this.currentCompassAngle == angles[STOP]) {
+
+                        angles = this.mathematician.bestZoneSelection();
+                        direction = 0;
+                        Log.e("Fin scan", " direction 1 start" + angles[START] + "stop" + angles[STOP]);
+                    }
+                    if (direction == 2 && this.currentCompassAngle == angles[START]) {
+                        angles = this.mathematician.bestZoneSelection();
+                        direction = 0;
+                        Log.e("Fin scan", " direction 2 start" + angles[START] + "stop" + angles[STOP]);
+                    }
+
                     break;
                 case DEBUG:
                     updatePieChart(currentCompassAngle, currentCompassAngle+5);

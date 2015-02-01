@@ -94,7 +94,7 @@ public class MathematicianTest extends InstrumentationTestCase {
         math.medianAlgorithm();
 
         assertEquals("testMedianAlgorithm - Test1 - equals",0,math.getRssi(30) );
-        assertEquals("testMedianAlgorithm - Test2 - equals",30,math.getRssi(120));
+        assertEquals("testMedianAlgorithm - Test2 - equals",20,math.getRssi(120));
 
     }
 
@@ -108,26 +108,34 @@ public class MathematicianTest extends InstrumentationTestCase {
 
         //Fill the matrix with different RSSI values
         for (angle = 0; angle <20; angle ++){
-            math.addData(angle,0);
+            math.addData(angle,-80);
         }
         for(angle=20; angle<50; angle++){
-            math.addData(angle,0);
+            math.addData(angle,-60);
         }
         for(angle=50; angle<100; angle++){
-            math.addData(angle,0);
+            math.addData(angle,-80);
         }
         for(angle=100; angle<150; angle++){
-            math.addData(angle,30);
+            math.addData(angle,-20);
         }
         for(angle=150; angle<200; angle++){
-            math.addData(angle,0);
+            math.addData(angle,-80);
         }
-        for(angle=200; angle<280; angle++){
-            math.addData(angle,20);
+        for(angle=200; angle<201; angle++){
+            math.addData(angle,-30);
+        }
+        for(angle=201; angle<203; angle++){
+            math.addData(angle,-80);
+        }
+        for(angle=203; angle<280; angle++){
+            math.addData(angle,-30);
         }
         for(angle=280; angle<360; angle++){
-            math.addData(angle,0);
+            math.addData(angle,-80);
         }
+
+
 
         int[] finalTab = math.bestZoneSelection();
 
