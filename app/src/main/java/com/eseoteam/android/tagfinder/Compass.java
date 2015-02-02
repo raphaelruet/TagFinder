@@ -28,8 +28,6 @@ public class Compass implements SensorEventListener{
      * The current angle of the phone
      */
     private float currentCompassAngle;
-    
-    private float currentAngle;
 
     /**
      * The current angle of the phone
@@ -46,7 +44,6 @@ public class Compass implements SensorEventListener{
      */
     private boolean startScanAcknoledgment;
     
-    private boolean direction = false;
 
     // Constructor //
 
@@ -92,33 +89,9 @@ public class Compass implements SensorEventListener{
         }
         this.currentCompassAngle -= this.compassOffset;
         signalAngleChanged();
-        checkDirection();
     }
 
-    private void checkDirection () {
-        if (this.direction){
-            if (this.currentCompassAngle > this.currentAngle){
-                currentAngle = currentCompassAngle;
-            }else if (currentCompassAngle <= currentAngle - 3){
-                direction = false;
-                notifyDirectionChanged ();
-            }
-        }else{
-            if (this.currentCompassAngle < this.currentAngle){
-                currentAngle = currentCompassAngle;
-            }else if (currentCompassAngle >= currentAngle +3){
-                direction = true;
-                notifyDirectionChanged ();
-            }
-        }
 
-    }
-
-    private void notifyDirectionChanged(){
-        for (CompassListener listener : this.listeners) {
-            listener.notifyDirectionChanged();
-        }
-    }
 
     /**
      * Allow to calibrate the compass
