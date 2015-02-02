@@ -25,6 +25,9 @@ public class PieChart extends View
      */
     private int[] angles = {0,0};
 
+    /**
+     * Tells if the pieChart has been initialized
+     */
     private boolean pieChartInitialized;
 
     /**
