@@ -15,23 +15,23 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.eseoteam.android.tagfinder.communication.Communication;
-import com.eseoteam.android.tagfinder.events.DirectionChangedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
-
 /**
- * Manage the research process
+ * Manage the Research screen
  * Created on 12/01/2014.
  * @author Raphael RUET.
- * @version 0.1.
+ * @version 0.8
  */
 public class SearchActivity extends ActionBarActivity implements GuideListener, CruiseControlListener{
 
     // Attributes //
 
     /**
-     * Communication with the UDP client.
+     * The default connection port of the socket.
      */
+    private static final int CONNECTION_PORT = 12345;
+
     private Communication communication;
     /**
      * Header to print a log message
@@ -100,13 +100,10 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
      */
     private TextView slowDownMessage;
 
-
-
     /**
      * The animation of the slowDownMessage
      */
     private Animation anim;
-
 
     // Methods //
 
@@ -120,45 +117,51 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         setContentView(R.layout.activity_search);
         getSupportActionBar().hide();
 
-        // Récupération des dimensions de l 'écran afin de régler la position des toasts
+        // Initialization
+        this.init();
+
+        //Get tag information
+        getTagInformation();
+
+        //Check if the tag exists and if the id isn't null
+        if (this.tag_id != null){
+            //Gets back the sensorManager
+            SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+            //Compass creation
+            this.compass = new Compass(sensorManager);
+            //CruiseControl creation
+            this.cruiseControl = new CruiseControl(sensorManager);
+            //Binder creation
+            this.binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
+            this.initializeCommunication();
+            //Guide creation
+            this.guide = new Guide(this.binder);
+        }else{
+            this.finish();
+        }
+    }
+
+    /**
+     * Does all the initialization process
+     */
+    private void init() {
+        // Gets the display dimensions
         DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
         toastYPosition = (displayMetrics.heightPixels/2);
 
+        // Gets back the 'slow down' message from the view
         this.slowDownMessage = (TextView)findViewById(R.id.speedText);
-
+        // Creates the animation on the 'slow down' message
         anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(200);
         anim.setRepeatMode(Animation.REVERSE);
         anim.setRepeatCount(Animation.INFINITE);
 
-
-        //Ajout des listeners sur les boutons
+        //Adds all the listeners
         setListeners();
 
-        // Récupération du pieChart du Layout
+        // Gets back the pieChart from the view
         this.pieChart = (PieChart)findViewById(R.id.pieChart);
-
-        //Récupération des informations du tag
-        getTagInformation();
-
-        //On vérifie que l'id du tag existe, sinon on finish l'activity
-        if (this.tag_id != null){
-            SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            this.compass = new Compass(sensorManager);
-            this.cruiseControl = new CruiseControl(sensorManager);
-
-            //compass.registerSensors();
-
-            //Création du Binder
-            this.binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
-            // compass.addCompassListener(this.binder);
-            this.initializeCommunication();
-            //Création du guide
-            this.guide = new Guide(this.binder);
-        }else{
-            this.finish();
-        }
-
     }
 
     /**
@@ -206,7 +209,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     };
 
     /**
-     * Sets a listener on the calibrateButton
+     * Sets a listener on the guideButton
      */
     private View.OnClickListener guideButtonListener = new View.OnClickListener() {
         @Override
@@ -367,23 +370,14 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     @Override
     protected void onResume(){
         super.onResume();
-        // Ajout du listener de la SearchActivity sur le Guide
         this.guide.addGuideListener(this);
-        Log.i(LOG_TAG, "onResume : Le listener de la SearchActivity sur le Guide a bien été ajouté");
-        // Ajout du listener du guide sur le compass
         this.compass.addCompassListener(this.guide);
-        Log.i(LOG_TAG, "onResume : Le listener du Guide sur le Compass a bien été ajouté");
-        // Enregistrement des capteurs du compass
         this.compass.registerSensors();
         this.cruiseControl.registerSensors();
         this.cruiseControl.addCruiseControlListener(this);
         this.cruiseControl.addCruiseControlListener(this.guide);
-
-        Log.i(LOG_TAG, "onResume : Les capteurs du compass sont bien enregistrés");
-        //Démarrage du guide
         this.guide.start();
     }
-
 
     /**
      * Unregister the sensors
@@ -392,15 +386,11 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     @Override
     protected void onPause(){
         super.onPause();
-        // Désenregistrement des capteurs du compass
         this.compass.unregisterSensors();
-        // Suppression du listener du guide sur le compass
         this.compass.removeCompassListener(this.guide);
         this.cruiseControl.unregisterSensors();
         this.cruiseControl.removeCruiseControlListener(this);
         this.cruiseControl.removeCruiseControlListener(this.guide);
-        Log.i(LOG_TAG,"onPause : Le listener du Guide sur le Compass a bien été supprimé");
-        // Arrêt du guide
         this.guide.stopGuide();
         try {
             this.guide.join();
@@ -426,13 +416,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
                 Log.e(LOG_TAG,"Join interrupted");
             }
         }
-
-
-        Log.i(LOG_TAG,"onDestroy : Les capteurs du compass sont bien désenregistrés");
-        // Suppression du listener de la SearchActivity sur le Guide
         this.guide.removeGuideListener(this);
-        Log.i(LOG_TAG,"onDestroy : Le listener de la SearchActivity sur le Guide a bien été supprimé");
-
     }
 
     /**
@@ -440,8 +424,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
      */
     private void initializeCommunication() {
         String wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
-        Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
-        this.communication = new Communication(wifiAddress, Communication.CONNECTION_PORT, binder);
+        this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
         this.communication.start();
     }
 
@@ -469,11 +452,10 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     }
 
     /**
-     * Not used
-     * @param event that we don't care about
+     * Nothing to do here
      */
     @Override
-    public void notifyDirectionChanged(DirectionChangedEvent event) {
-        //Nothing to be done here.
+    public void notifyDirectionChanged() {
+        // Nothing to do here
     }
 }

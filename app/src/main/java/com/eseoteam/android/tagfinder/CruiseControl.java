@@ -4,23 +4,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
-
-import com.eseoteam.android.tagfinder.events.DirectionChangedEvent;
-
 import java.util.ArrayList;
 
 /**
+ * Allow the application to be notified when the speed is the high
+ * and when the rotation direction has changed
  * Created by Pierre TOUZE & Raphael RUET
- * 20/01/2014
+ * on 20/01/2014
  */
 public class CruiseControl implements SensorEventListener{
 
     // Attributes //
-    /**
-     * Header to print a log message
-     */
-    private static final String LOG_TAG = CruiseControl.class.getSimpleName();
 
     /**
      * The sensor manager used by the Compass
@@ -51,17 +45,21 @@ public class CruiseControl implements SensorEventListener{
     /**
      * The rotation speed limit in rad/s
      */
-    private static final double SPEED_LIMIT = 0.2;
+    private static final double SPEED_LIMIT = 0.3;
 
     /**
-     * The minimal speed considered as a movement
+     * The average rotation speed
      */
-    private static final double MIN_SPEED = 0.1;
-
     private float averageSpeed;
 
+    /**
+     * The average previous speed
+     */
     private float previousSpeed;
 
+    /**
+     * The direction of the plateform
+     */
     private int direction;
 
     // Constructor //
@@ -79,7 +77,6 @@ public class CruiseControl implements SensorEventListener{
         for (int i = 0 ; i < ROUND_VALUE ; i++){
             this.speed[i] = 0;
         }
-        Log.i(LOG_TAG, "Fin du constructeur");
     }
 
     // Accessor //
@@ -124,13 +121,11 @@ public class CruiseControl implements SensorEventListener{
         //Signal when the direction has changed
         if(previousSpeed > 0 && averageSpeed < 0 && direction != 1) {
             this.direction = 1;
-            Log.e("CruiseControl:compute","On a signal");
-            signalDirectionChanged(true);
+            signalDirectionChanged();
         }
         if (previousSpeed < 0 && averageSpeed > 0 && direction != 2) {
             this.direction = 2;
-            Log.e("CruiseControl:compute","On a signal2");
-            signalDirectionChanged(false);
+            signalDirectionChanged();
         }
     }
 
@@ -152,9 +147,9 @@ public class CruiseControl implements SensorEventListener{
         }
     }
 
-    private void signalDirectionChanged(boolean clockwise) {
+    private void signalDirectionChanged() {
         for (CruiseControlListener listener : this.listeners) {
-            listener.notifyDirectionChanged(new DirectionChangedEvent(clockwise));
+            listener.notifyDirectionChanged();
         }
     }
 
@@ -191,6 +186,11 @@ public class CruiseControl implements SensorEventListener{
         this.listeners.remove(listener);
     }
 
+    /**
+     * Nothing to do here
+     * @param sensor The sensor
+     * @param accuracy The accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Nothing to be done here
