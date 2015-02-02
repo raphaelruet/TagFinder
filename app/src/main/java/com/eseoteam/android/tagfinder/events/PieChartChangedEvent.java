@@ -2,7 +2,7 @@ package com.eseoteam.android.tagfinder.events;
 
 /**
  * Created on 24/01/2015.
- *
+ * The pie chart changed event
  * @author Raphael RUET.
  * @version 0.1.
  */
