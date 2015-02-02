@@ -1,18 +1,15 @@
 package com.eseoteam.android.tagfinder;
 
 import android.util.Log;
-
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.DirectionChangedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
-
 import java.util.ArrayList;
 
 /**
  * Created on 21/01/15.
- *
+ * Contains the state machine and all the calls to the other classes
  * @author Raphael RUET.
- * @version 0.1.
+ * @version 0.9.
  */
 public class Guide extends Thread implements CompassListener, CruiseControlListener {
 
@@ -34,8 +31,14 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
      */
     private static final String LOG_TAG = Guide.class.getSimpleName();
 
+    /**
+     * The index of the start angle in the angle table given by the mathematician
+     */
     private static  final int START = 0;
 
+    /**
+     * The index of the stop angle in the angle table given by the mathematician
+     */
     private static final int STOP = 1;
 
     /**
@@ -73,6 +76,11 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
      */
     private Tag wantedTag;
 
+    /**
+     * Boolean on the direction changed event
+     * True : The direction has changed
+     * False : The direction has not changed
+     */
     private boolean directionChanged;
 
     // Constructors //
@@ -80,7 +88,6 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
     /**
      * Guide constructor
      */
-
     public Guide(Binder binder) {
         this.binder = binder;
         this.listeners = new ArrayList<>();
@@ -91,87 +98,79 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
         this.mathematician = new Mathematician();
     }
 
-    // Accessor //
-
     // Methods //
 
+    /**
+     * The full state-machine of the searching application
+     */
     public void run() {
         int angles[] = new int[2];
-        int tempAngles[] = new int[2];
+        int tempAngles[];
         while (!(this.stop)){
             switch (currentState){
-                case IDLE:
-                    //Wait and do nothing
+
+                case IDLE: // Wait and do nothing
                     break;
-                case ASK_FOR_CALIBRATION:
+
+                case ASK_FOR_CALIBRATION: // Asks for the user to calibrate and goes to IDLE
                     askForCalibration();
                     this.currentState = State.IDLE;
                     break;
-                case SCAN:
+
+                case SCAN: // Gives the RSSI and Angles to the mathematician and make him do the job
+
+                    // Add data with one angle and one RSSI level
                     this.mathematician.addData(this.currentCompassAngle,
                             this.wantedTag.getRssi());
+
+                    // Refresh the PieChart
                     updatePieChart(-this.currentCompassAngle, 0);
+
+                    // If the scan is finished
                     if (this.currentCompassAngle > 355){
+                        // Get the best zone
                         angles = this.mathematician.bestZoneSelection();
-                        Log.e("Fin PREMIER scan", "start" + angles[START] + "stop" + angles[STOP]);
+
+                        // If a tag have been found
                         if ( angles[START] != -1 && angles[STOP] != -1 ) {
                             notifyUserGuidingStart();
+                            //Clear old data
                             this.mathematician.initMatrix();
                             this.mathematician.clearZoneList();
                             this.setState(State.GUIDE);
-                        } else {
+                        } else { // If no tag found
                             notifyUserScanFailed();
                             this.setState(State.IDLE);
                         }
                     }
                     break;
-                case GUIDE:
+
+                case GUIDE: // Guides the user with the data from mathematician
+                    // Refresh the PieChart with the angles of the captation of the tag
                     updatePieChart(angles[START]-this.currentCompassAngle,
                                 angles[STOP]-this.currentCompassAngle);
+                    // Add the real time data
                     this.mathematician.addData(this.currentCompassAngle, this.wantedTag.getRssi());
+                    // If the direction change
                     if(this.directionChanged) {
+                        //Get the new zone from the mathematician
                         tempAngles = this.mathematician.bestZoneSelection();
                         if ( tempAngles[START] != -1 && tempAngles[STOP] != -1 ) {
                             angles = tempAngles;
                         }
+                        // Clear old data
                         this.mathematician.initMatrix();
                         this.mathematician.clearZoneList();
                         this.directionChanged = false;
-                        Log.e("Guide","On a calculé une nouvelle zone" + angles[0] + " end " + angles[1]);
                     }
-                    /*
-                    if(direction == 0) {
-                        if (this.currentCompassAngle == angles[START]) {
-                            direction = 1;
-                            Log.e("Guide", " Gauche à droite" );
-                        }
-                        if (this.currentCompassAngle == angles[STOP]) {
-                            direction = 2;
-                            Log.e("Guide", " Droite à gauche" );
-                        }
-                    }
-                    if (this.currentCompassAngle >= angles[START]
-                            && this.currentCompassAngle <= angles[STOP]) {
-                        this.mathematician.addData(this.currentCompassAngle,
-                                this.wantedTag.getRssi());
-                    }
-                    if (direction == 1 && this.currentCompassAngle == angles[STOP]) {
-
-                        angles = this.mathematician.bestZoneSelection();
-                        direction = 0;
-                        Log.e("Fin scan", " direction 1 start" + angles[START] + "stop" + angles[STOP]);
-                    }
-                    if (direction == 2 && this.currentCompassAngle == angles[START]) {
-                        angles = this.mathematician.bestZoneSelection();
-                        direction = 0;
-                        Log.e("Fin scan", " direction 2 start" + angles[START] + "stop" + angles[STOP]);
-                    }*/
-
                     break;
-                case DEBUG:
+
+                case DEBUG: // Makes the pieChart to show the current angle of the compass
+                            // Also allow the developers to go directly to GUIDE state
                     updatePieChart(currentCompassAngle, currentCompassAngle+5);
                     break;
-                default:
+
+                default: // Default case
                     break;
             }
         }
@@ -213,8 +212,6 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
         this.stop = true;
     }
 
-
-
     /**
      * Allows the other classes to change the state of the guide's stateMachine
      * @param state the state to set
@@ -244,16 +241,26 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
         }
     }
 
+    /**
+     * Gives the state in the state machine of the Guide
+     * @return the state in the state machine
+     */
     public State getSate(){
         return this.currentState;
     }
 
+    /**
+     * Notifies the user that the scan has detected no tag
+     */
     public void notifyUserScanFailed() {
         for (GuideListener listener : this.listeners) {
             listener.notifyUserScanFailed();
         }
     }
 
+    /**
+     * Notifies the user that the Guiding has begun
+     */
     public void notifyUserGuidingStart() {
         for (GuideListener listener : this.listeners) {
             listener.notifyUserGuidingStart();
@@ -274,22 +281,29 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
         }
     }
 
+    /**
+     * Inform the guide that the user changed scanning direction
+     */
+    @Override
+    public void notifyDirectionChanged() {
+        if(this.currentState == State.GUIDE) {
+            this.directionChanged = true;
+        }
+    }
+
+    /**
+     * Nothing to do here
+     */
     @Override
     public void notifySpeedTooHigh() {
         //Nothing to be done here.
     }
 
+    /**
+     * Nothing to do here
+     */
     @Override
     public void notifySpeedOK() {
         //Nothing to be done here.
     }
-
-    @Override
-    public void notifyDirectionChanged(DirectionChangedEvent event) {
-        if(this.currentState == State.GUIDE) {
-            this.directionChanged = true;
-            Log.e("Guide", "Direction changed !!!");
-        }
-    }
-
 }
