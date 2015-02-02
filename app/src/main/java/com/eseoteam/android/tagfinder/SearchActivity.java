@@ -472,7 +472,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
      * @param event that we don't care about
      */
     @Override
-    public void notifySpeedChanged(DirectionChangedEvent event) {
+    public void notifyDirectionChanged(DirectionChangedEvent event) {
         //Nothing to be done here.
     }
 }
