@@ -1,5 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -41,6 +43,8 @@ public class Mathematician {
      */
     private int missedAngles;
 
+    private boolean down;
+
     /**
      * The maximum number of angles that could conduct to a smoothing of the RSSIs
      */
@@ -51,15 +55,29 @@ public class Mathematician {
      * Three rows.
      */
     public Mathematician() {
-        int angle ;
+
         this.angleTable = new int[ROW][ANGLE];
         this.missedAngles = 0;
+        this.down = false;
+        zoneList  = new ArrayList<>();
+        initMatrix();
+    }
+
+    public void initMatrix(){
+        int angle ;
         for (angle = 0; angle <ANGLE; angle ++){
             this.angleTable[0][angle] = angle ;
             this.angleTable[1][angle] = MIN_RSSI;
             this.angleTable[2][angle] = 0;
         }
-        zoneList  = new ArrayList<>();
+    }
+
+    public void clearZoneList() {
+        if(this.zoneList.size() != 0) {
+            for (int i = 0; i < this.zoneList.size(); i++) {
+                this.zoneList.remove(i);
+            }
+        }
     }
 
     /**
@@ -84,7 +102,10 @@ public class Mathematician {
         this.angleTable[1][angle] = rssi ;
         this.angleTable[2][angle] = nbPassage;
 
-        if (rawRssi <= -80){
+        if(angle != 0 && this.angleTable[1][angle] == -80 && this.angleTable[1][angle - 1] != -80 ) {
+            this.down = true;
+        }
+        if (rawRssi <= -80 && down){
             this.missedAngles ++;
         }
         if (rawRssi > -80 && this.missedAngles != 0){
@@ -94,12 +115,12 @@ public class Mathematician {
                 this.angleTable[1][i] = rssiUsedAsAverage;
             }
             this.missedAngles = 0;
+            this.down = false;
         }
         if (this.missedAngles >= MAX_MISSED_ANGLE) {
             this.missedAngles = 0;
+            this.down = false;
         }
-
-
     }
 
     /**
@@ -134,6 +155,7 @@ public class Mathematician {
         int minRSSI = minRSSI();
 
         int median = (int)Math.floor((maxRSSI + minRSSI) / 2);
+        Log.e("Mathematician" ," min "+ minRSSI + "max" + maxRSSI + "median" + median);
         for(angle = 0; angle < ANGLE; angle++) {
             if (angleTable[1][angle] > median){
                 angleTable[1][angle] = angleTable[1][angle] - median;
@@ -230,6 +252,8 @@ public class Mathematician {
             if(angleStart!= angleStop && angleStop!=0) {
 
                 Zone zone = new Zone(angleStart, angleStop, angleStop - angleStart) ;
+                Log.e(" Zone ", " angleStart " + angleStart + " angleStop " + angleStop);
+                Log.e(" Size List", "" + this.zoneList.size());
                 zoneList.add(zone);
 
                 angleStart = 0;
