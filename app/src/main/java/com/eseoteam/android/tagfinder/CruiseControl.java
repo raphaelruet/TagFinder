@@ -5,6 +5,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+
+import com.eseoteam.android.tagfinder.events.DirectionChangedEvent;
+
 import java.util.ArrayList;
 
 /**
@@ -49,6 +52,11 @@ public class CruiseControl implements SensorEventListener{
      * The rotation speed limit in rad/s
      */
     private static final double SPEED_LIMIT = 0.2;
+
+    /**
+     * The minimal speed considered as a movement
+     */
+    private static final double MIN_SPEED = 0.1;
 
     // Constructor //
 
@@ -103,6 +111,14 @@ public class CruiseControl implements SensorEventListener{
         }else{
             this.signalSpeedOk();
         }
+
+        //Signal when the direction has changed
+        if (averageSpeed > MIN_SPEED){
+            signalDirectionChanged(false);
+        }
+        if (averageSpeed < - MIN_SPEED){
+            signalDirectionChanged(true);
+        }
     }
 
     /**
@@ -120,6 +136,12 @@ public class CruiseControl implements SensorEventListener{
     private void signalSpeedOk(){
         for (CruiseControlListener listener : this.listeners) {
             listener.notifySpeedOK();
+        }
+    }
+
+    private void signalDirectionChanged(boolean clockwise) {
+        for (CruiseControlListener listener : this.listeners) {
+            listener.notifyDirectionChanged(new DirectionChangedEvent(clockwise));
         }
     }
 
