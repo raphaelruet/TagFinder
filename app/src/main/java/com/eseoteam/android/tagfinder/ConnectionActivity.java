@@ -17,6 +17,13 @@ import android.widget.Toast;
 import com.eseoteam.android.tagfinder.communication.Communication;
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
 
+
+/**
+ * Manage the Connection screen
+ * Created on 12/01/2014.
+ * @author Raphael RUET, Pierre TOUZE
+ * @version 0.3
+ */
 public class ConnectionActivity extends Activity implements BinderListener{
 
     /**
@@ -50,6 +57,10 @@ public class ConnectionActivity extends Activity implements BinderListener{
      */
     private Binder binder;
 
+    /**
+     * The onCreate method
+     * @param savedInstanceState the state of the saved instance
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +72,9 @@ public class ConnectionActivity extends Activity implements BinderListener{
 
     }
 
+    /**
+     * Called when activity starts
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -214,11 +228,9 @@ public class ConnectionActivity extends Activity implements BinderListener{
             this.communication.start();
     }
 
-    @Override
-    public void notifyTagToAddFound(AddTagEvent event) {
-        //Nothing to be done here.
-    }
-
+    /**
+     * Notifies that a frame has been received
+     */
     @Override
     public void notifyFrameReceived() {
         final Runnable action = new Runnable() {
@@ -235,5 +247,14 @@ public class ConnectionActivity extends Activity implements BinderListener{
         this.runOnUiThread(action);
         //Close the connectionActivity;
         this.finish();
+    }
+
+    /**
+     * Nothing to be done here
+     * @param event Event containing the id of th tag to add.
+     */
+    @Override
+    public void notifyTagToAddFound(AddTagEvent event) {
+        //Nothing to be done here.
     }
 }
