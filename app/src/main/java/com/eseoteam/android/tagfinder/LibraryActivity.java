@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -28,7 +27,6 @@ public class LibraryActivity extends Activity {
      */
     private CustomCursorAdapter customAdapter;
 
-
     /**
      * Helper for the database
      */
@@ -38,11 +36,6 @@ public class LibraryActivity extends Activity {
      * The tag list
      */
     private ListView listView;
-
-    /**
-     * Gets the activity name
-     */
-    private static final String TAG = LibraryActivity.class.getSimpleName();
 
     /**
      * Called when the activity is first created.
@@ -67,8 +60,6 @@ public class LibraryActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "clicked on item: " + position);
-                Log.d("Clicked item id", " "+ id);
 
                 Intent intent = new Intent(LibraryActivity.this, InfoTagActivity.class);
                 intent.putExtra("tag_id_in_db",id);
