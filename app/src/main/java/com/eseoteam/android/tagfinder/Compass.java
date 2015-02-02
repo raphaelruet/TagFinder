@@ -27,7 +27,7 @@ public class Compass implements SensorEventListener{
     /**
      * The current angle of the phone
      */
-    private float currentAngle;
+    private float currentCompassAngle;
 
     /**
      * The current angle of the phone
@@ -43,6 +43,7 @@ public class Compass implements SensorEventListener{
      * The acknoledgment of the beginning of the scan
      */
     private boolean startScanAcknoledgment;
+    
 
     // Constructor //
 
@@ -52,7 +53,7 @@ public class Compass implements SensorEventListener{
     public Compass(SensorManager sensorManager) {
         this.sensorManager = sensorManager;
         this.listeners = new ArrayList<>();
-        this.currentAngle = 0;
+        this.currentCompassAngle = 0;
         this.compassOffset = 0;
         this.startScanAcknoledgment = false;
         Log.i("Compass:Compass", "Fin du constructeur");
@@ -66,12 +67,11 @@ public class Compass implements SensorEventListener{
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
-
         // get the angle around the z-axis rotated
         float degree = Math.round(event.values[0]);
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(
-                currentAngle,
+                currentCompassAngle,
                 -degree,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF,
@@ -83,19 +83,21 @@ public class Compass implements SensorEventListener{
         // set the animation after the end of the reservation status
         ra.setFillAfter(true);
         // Start the animation
-        currentAngle = degree;
-        if (this.currentAngle < this.compassOffset){
-            this.currentAngle = 359 + this.currentAngle;
+        currentCompassAngle = degree;
+        if (this.currentCompassAngle < this.compassOffset){
+            this.currentCompassAngle = 359 + this.currentCompassAngle;
         }
-        this.currentAngle -= this.compassOffset;
+        this.currentCompassAngle -= this.compassOffset;
         signalAngleChanged();
     }
+
+
 
     /**
      * Allow to calibrate the compass
      */
     public void calibrateCompass(){
-        this.compassOffset = this.currentAngle;
+        this.compassOffset = this.currentCompassAngle;
     }
 
     /**
@@ -104,15 +106,15 @@ public class Compass implements SensorEventListener{
     private void signalAngleChanged(){
 
         if (!this.startScanAcknoledgment){
-            if (this.currentAngle > 300 || this.currentAngle < 5){
-                this.currentAngle = 5;
+            if (this.currentCompassAngle > 300 || this.currentCompassAngle < 5){
+                this.currentCompassAngle = 5;
             }
-            if (90 < this.currentAngle && this.currentAngle < 100){
+            if (90 < this.currentCompassAngle && this.currentCompassAngle < 100){
                 this.startScanAcknoledgment = true;
             }
         }
         for (CompassListener listener : this.listeners) {
-            listener.notifyAngleChanged(new AngleChangedEvent((int)this.currentAngle));
+            listener.notifyAngleChanged(new AngleChangedEvent((int)this.currentCompassAngle));
         }
     }
 
