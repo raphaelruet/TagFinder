@@ -272,7 +272,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
             this.wantedTag.setRssi(this.binder.getWantedTag().getRssi());
             this.wantedTag.setPhase(this.binder.getWantedTag().getPhase());
             this.wantedTag.setReadCount(this.binder.getWantedTag().getReadCount());
-            //this.binder.acknowledgeFrameTaken();
+            this.binder.acknowledgeFrameTaken();
         }
     }
 
