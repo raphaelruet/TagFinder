@@ -2,7 +2,7 @@ package com.eseoteam.android.tagfinder.events;
 
 /**
  * Created on 15/01/2015.
- *
+ * The add tag event
  * @author Pierre TOUZE.
  * @version 0.1.
  */
