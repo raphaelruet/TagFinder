@@ -20,11 +20,6 @@ public class Compass implements SensorEventListener{
 
     // Attributes //
     /**
-     * Header to print a log message
-     */
-    private static final String LOG_TAG = Compass.class.getSimpleName();
-
-    /**
      * The sensor manager used by the Compass
      */
     private SensorManager sensorManager;

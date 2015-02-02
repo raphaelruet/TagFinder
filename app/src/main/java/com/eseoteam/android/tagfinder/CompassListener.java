@@ -16,8 +16,5 @@ public interface CompassListener {
      */
     public void notifyAngleChanged(AngleChangedEvent event);
 
-    /**
-     * Notify that the angle of the phone is stabilized.
-     */
-    public void notifyAngleStabilized();
+
 }

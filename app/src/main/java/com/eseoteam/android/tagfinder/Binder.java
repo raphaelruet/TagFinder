@@ -1,10 +1,8 @@
 package com.eseoteam.android.tagfinder;
 
-import com.eseoteam.android.tagfinder.events.AddTagEvent;
-import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
-
 import android.util.Log;
+
+import com.eseoteam.android.tagfinder.events.AddTagEvent;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

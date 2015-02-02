@@ -1,4 +1,4 @@
-package com.eseoteam.android.tagfinder;;
+package com.eseoteam.android.tagfinder;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,8 +19,8 @@ public class CustomCursorAdapter extends CursorAdapter {
 
     /**
      * Definition of the SQL query
-     * @param context
-     * @param c
+     * @param context the current context
+     * @param c cursor
      */
 
     public CustomCursorAdapter(Context context, Cursor c) {
@@ -35,9 +35,8 @@ public class CustomCursorAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.single_tag, parent, false);
 
-        return retView;
+        return inflater.inflate(R.layout.single_tag, parent, false);
     }
 
     /**
