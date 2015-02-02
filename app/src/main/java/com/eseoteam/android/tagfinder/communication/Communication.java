@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 
 /**
- * Manage the communication service.
+ * Manages the communication service.
  * Created on 08/01/2015.
  * @author Pierre TOUZE.
  * @version 0.1.
@@ -22,7 +22,13 @@ import java.nio.ByteOrder;
 public class Communication extends Thread {
 
     //Attributes//
-
+    /**
+     * The connection port.
+     */
+    public static final int CONNECTION_PORT = 12345;
+    /**
+     * The character used to separate the different fields in a frame.
+     */
     private static final String FRAME_FIELD_SEPARATOR = ";";
 
     /**
@@ -41,7 +47,6 @@ public class Communication extends Thread {
     private Command command;
 
     //Constructors//
-
     /**
      * Constructor of a UDP communication
      * @param ip Ip of the device
@@ -62,7 +67,7 @@ public class Communication extends Thread {
     //Methods//
     /**
      * Main routine of the thread.
-     * Wait for messages and interpret frames on receive.
+     * Waits for messages and interpret frames on receive.
      */
     public void run(){
         Log.i(LOG_TAG,"Run Starts");
@@ -88,14 +93,14 @@ public class Communication extends Thread {
     }
 
     /**
-     * Close the connection.
+     * Closes the connection.
      */
     public void  closeConnection(){
         this.connection.closeConnection();
     }
 
     /**
-     * Interpret the received message keeping only the relevant values.
+     * Interprets the received message keeping only the relevant values.
      * @param frame Received message.
      */
     private void interpretMessage(String frame){
@@ -125,7 +130,7 @@ public class Communication extends Thread {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
 
-        // Convert little-endian to big-endianif needed
+        // Convert little-endian to big-endian if needed
         if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
             ipAddress = Integer.reverseBytes(ipAddress);
         }

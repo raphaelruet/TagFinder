@@ -41,7 +41,13 @@ public class Connection {
     private DatagramSocket socket;
 
     //Constructor//
-
+    /**
+     * Constructor of an UDP connection.
+     * @param ip The IP address the socket will be bound to.
+     * @param port The port the socket will be bound to.
+     * @throws UnknownHostException Exception if the host is not known.
+     * @throws SocketException Exception during creation of the socket.
+     */
     public Connection(String ip, int port) throws UnknownHostException, SocketException {
         try {
         InetAddress wifiAddress = InetAddress.getByName(ip);
@@ -61,7 +67,7 @@ public class Connection {
 
     //Methods//
     /**
-     * Read a message on the socket.
+     * Reads a message on the socket.
      * @return The received message.
      * @throws IOException Input/Output Exception
      */
@@ -79,7 +85,7 @@ public class Connection {
     }
 
     /**
-     * Close the connection.
+     * Closes the connection.
      */
     public void closeConnection() {
         this.socket.close();
