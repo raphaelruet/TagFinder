@@ -39,7 +39,7 @@ public class Binder {
     /**
      * Different modes depending on the current "state" of the application.
      */
-    public static enum Mode{CHECK_CONNECTION, ADD_TAG, SEARCH, DEFAULT}
+    public static enum Mode{CHECK_CONNECTION, ADD_TAG, DEFAULT}
 
     /**
      * The mode used by the binder to know which action he has to perform depending on the context.
@@ -54,6 +54,8 @@ public class Binder {
     private String tagTofind;
 
     //Constructor//
+
+
     /**
      * Constructor of a new Binder which initialize attributes.
      */
@@ -68,10 +70,9 @@ public class Binder {
     /**
      * Constructor of a new Binder which initialize attributes.
      */
-    Binder(Mode mode, String id) {
+    Binder(String id) {
         this.frame = null;
         this.tagTofind = id;
-        this.operatingMode = mode;
         this.listeners = new ArrayList<>();
         this.tags = new Hashtable<>();
         this.notifyPerformed = false;
@@ -98,9 +99,6 @@ public class Binder {
                 break;
             case ADD_TAG:
                 this.onAddTagMode();
-                break;
-            case SEARCH:
-                this.onSearchMode();
                 break;
             default:
                 Log.e("Binder","Error incorrect binder operating mode");
@@ -145,13 +143,6 @@ public class Binder {
             }
         }
         return selectedId;
-    }
-
-    /**
-     * What to do when binder is in search mode.
-     */
-    private void onSearchMode() {
-
     }
 
     /**

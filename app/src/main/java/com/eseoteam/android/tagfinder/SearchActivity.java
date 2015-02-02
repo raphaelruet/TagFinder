@@ -127,7 +127,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
             //CruiseControl creation
             this.cruiseControl = new CruiseControl(sensorManager);
             //Binder creation
-            this.binder = new Binder(Binder.Mode.SEARCH,this.tag_id);
+            this.binder = new Binder(this.tag_id);
             this.initializeCommunication();
             //Guide creation
             this.guide = new Guide(this.binder);
