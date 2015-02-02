@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.eseoteam.android.tagfinder.communication.Communication;
+import com.eseoteam.android.tagfinder.events.DirectionChangedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
 
@@ -464,5 +465,14 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         anim.cancel();
         anim.reset();
         slowDownMessage.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Not used
+     * @param event that we don't care about
+     */
+    @Override
+    public void notifySpeedChanged(DirectionChangedEvent event) {
+        //Nothing to be done here.
     }
 }
