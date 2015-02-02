@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 
@@ -42,7 +41,7 @@ public class Compass implements SensorEventListener{
     /**
      * The acknoledgment of the beginning of the scan
      */
-    private boolean startScanAcknoledgment;
+    private boolean startScanAcknowledgement;
     
 
     // Constructor //
@@ -55,8 +54,7 @@ public class Compass implements SensorEventListener{
         this.listeners = new ArrayList<>();
         this.currentCompassAngle = 0;
         this.compassOffset = 0;
-        this.startScanAcknoledgment = false;
-        Log.i("Compass:Compass", "Fin du constructeur");
+        this.startScanAcknowledgement = false;
     }
 
     // Accessor //
@@ -103,12 +101,12 @@ public class Compass implements SensorEventListener{
      */
     private void signalAngleChanged(){
 
-        if (!this.startScanAcknoledgment){
+        if (!this.startScanAcknowledgement){
             if (this.currentCompassAngle > 300 || this.currentCompassAngle < 5){
                 this.currentCompassAngle = 5;
             }
             if (90 < this.currentCompassAngle && this.currentCompassAngle < 100){
-                this.startScanAcknoledgment = true;
+                this.startScanAcknowledgement = true;
             }
         }
         for (CompassListener listener : this.listeners) {
