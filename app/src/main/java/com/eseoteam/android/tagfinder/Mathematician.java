@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * Algorithms to determine the right direction depending on the RSSI level and angle
  * @author Charline LEROUGE, Pierre TOUZE.
- * @version 0.2.
+ * @version 0.12.
  */
 public class Mathematician {
 
@@ -21,7 +21,7 @@ public class Mathematician {
     /**
      * Number of rows in the matrix containing the data.
      */
-    private static final int ROW = 3;
+    private static final int ROW = 2;
 
     /**
      * The minimum value of rssi.
@@ -54,15 +54,20 @@ public class Mathematician {
         initMatrix();
     }
 
+    /**
+     * Initialization of the entire matrix
+     */
     public void initMatrix(){
         int angle ;
         for (angle = 0; angle <ANGLE; angle ++){
-            this.angleTable[0][angle] = angle ;
-            this.angleTable[1][angle] = MIN_RSSI;
-            this.angleTable[2][angle] = 0;
+            this.angleTable[0][angle] = MIN_RSSI;
+            this.angleTable[1][angle] = 0;
         }
     }
 
+    /**
+     * Clear the zone list  after a passage
+     */
     public void clearZoneList() {
         if(this.zoneList.size() != 0) {
             this.zoneList.clear();
@@ -78,16 +83,16 @@ public class Mathematician {
     public void addData (int angle, int rawRssi){
 
         int rssi;
-        int nbPassage = this.angleTable[2][angle];
+        int nbPassage = this.angleTable[1][angle];
 
         if(nbPassage == 0){
             rssi = rawRssi;
         }else{
-            rssi = (this.angleTable[1][angle]*nbPassage + rawRssi) / (nbPassage + 1 );
+            rssi = (this.angleTable[0][angle]*nbPassage + rawRssi) / (nbPassage + 1 );
         }
         nbPassage ++;
-        this.angleTable[1][angle] = rssi ;
-        this.angleTable[2][angle] = nbPassage;
+        this.angleTable[0][angle] = rssi ;
+        this.angleTable[1][angle] = nbPassage;
     }
 
     /**
@@ -96,7 +101,7 @@ public class Mathematician {
      * @return The rssi at the specified angle.
      */
     public int getRssi(int angle){
-       return this.angleTable[1][angle];
+       return this.angleTable[0][angle];
     }
 
     /**
@@ -105,7 +110,7 @@ public class Mathematician {
      * @return The number of passage.
      */
     public int getNbPassage(int angle){
-        return this.angleTable[2][angle];
+        return this.angleTable[1][angle];
     }
 
     /**
@@ -120,10 +125,10 @@ public class Mathematician {
         int median = (int)Math.floor((maxRSSI + minRSSI) / 2);
         Log.e("Mathematician" ," min "+ minRSSI + "max" + maxRSSI + "median" + median);
         for(angle = 0; angle < ANGLE; angle++) {
-            if (angleTable[1][angle] > median){
-                angleTable[1][angle] = angleTable[1][angle] - median;
+            if (angleTable[0][angle] > median){
+                angleTable[0][angle] = angleTable[0][angle] - median;
             }else{
-                angleTable[1][angle] = 0;
+                angleTable[0][angle] = 0;
             }
         }
     }
@@ -136,8 +141,8 @@ public class Mathematician {
         int maxRSSI = -80;
 
         for(angle = 0; angle < ANGLE; angle++){
-            if (angleTable[1][angle]> maxRSSI){
-                maxRSSI = angleTable[1][angle];
+            if (angleTable[0][angle]> maxRSSI){
+                maxRSSI = angleTable[0][angle];
             }
         }
         return maxRSSI;
@@ -152,8 +157,8 @@ public class Mathematician {
         int minRSSI = 0;
 
         for(angle = 0; angle < ANGLE; angle++){
-            if (angleTable[1][angle]< minRSSI && angleTable[1][angle] != MIN_RSSI){
-                minRSSI = angleTable[1][angle];
+            if (angleTable[0][angle]< minRSSI && angleTable[0][angle] != MIN_RSSI){
+                minRSSI = angleTable[0][angle];
             }
         }
         return minRSSI;
@@ -165,7 +170,7 @@ public class Mathematician {
      * @return tab with angles values of the searched tag.
      */
     public int[] bestZoneSelection(){
-        this.filterRssi();
+        this.rssiSmoothing();
         this.medianAlgorithm();
         int [] angleDirection = new int [2];
         
@@ -184,7 +189,6 @@ public class Mathematician {
         return angleDirection;
     }
 
-
     /**
      * Add Zone in ArrayList when RSSI value is positive.
      */
@@ -197,18 +201,18 @@ public class Mathematician {
         // Determine angleStart and angleStop of each zone
         for (currentAngle = 0; currentAngle < ANGLE; currentAngle++) {
             if (currentAngle == 0) {
-                if (angleTable[1][currentAngle] != 0) {
+                if (angleTable[0][currentAngle] != 0) {
                     angleStart = currentAngle;
                 }
             } else if (currentAngle == ANGLE - 1) {
-                 if(angleTable[1][currentAngle] != 0) {
+                 if(angleTable[0][currentAngle] != 0) {
                      angleStop = currentAngle;
                  }
             } else {
-                if ((angleTable[1][currentAngle] != 0) && (angleTable[1][currentAngle - 1] == 0)) {
+                if ((angleTable[0][currentAngle] != 0) && (angleTable[0][currentAngle - 1] == 0)) {
                     angleStart = currentAngle;
                 }
-                if ((angleTable[1][currentAngle - 1] != 0) && (angleTable[1][currentAngle] == 0)) {
+                if ((angleTable[0][currentAngle - 1] != 0) && (angleTable[0][currentAngle] == 0)) {
                     angleStop = currentAngle-1;
                 }
             }
@@ -234,11 +238,11 @@ public class Mathematician {
         int biggestArea =0;
         int indexZone =0;
 
-        // Calculate area of each zone to return the biggest
+        // Calculate area of each zone to return the index of the biggest
         for (int indexOfZone=0; indexOfZone<zoneList.size(); indexOfZone++) {
             for(int j=zoneList.get(indexOfZone).getAngleStart(); 
                 j<=zoneList.get(indexOfZone).getAngleStop();j++ ){
-                sumRssi += angleTable[1][j];
+                sumRssi += angleTable[0][j];
             }
             if (sumRssi*zoneList.get(indexOfZone).getAngleSize() > biggestArea){
                 biggestArea = sumRssi*zoneList.get(indexOfZone).getAngleSize();
@@ -249,37 +253,46 @@ public class Mathematician {
         return indexZone;
     }
 
-    public void filterRssi() {
+    /**
+     * Smoothing of the RSSI to obtain clear zones
+     */
+    public void rssiSmoothing() {
+
         boolean down = false;
         int missedAngles = 0;
         int currentAngle;
         int lastCorrectAngle;
         int rssiUsedAsAverage;
 
+        // Detection of a minimal Rssi value just after a zone
         for (currentAngle = 0 ; currentAngle < ANGLE ; currentAngle ++) {
-            if(currentAngle != 0 && this.angleTable[1][currentAngle] == -80 && this.angleTable[1][currentAngle - 1] != -80 ) {
+            if(currentAngle != 0 && this.angleTable[0][currentAngle] == -80
+                    && this.angleTable[0][currentAngle - 1] != -80 ) {
                 down = true;
             }
-            if (this.angleTable[1][currentAngle] <= -80 && down){
+            //Count the number of consecutive minimal  RSSI values
+            if (this.angleTable[0][currentAngle] <= -80 && down){
                 missedAngles ++;
             }
-            if (this.angleTable[1][currentAngle] > -80 && missedAngles != 0){
+
+            //Catch the last Rssi value (>-80), calculate average
+            // and replace minimal values to complete zone
+            if (this.angleTable[0][currentAngle] > -80 && missedAngles != 0){
                 lastCorrectAngle = currentAngle - ( missedAngles + 1);
-                rssiUsedAsAverage = (this.angleTable[1][currentAngle] + this.angleTable[1][lastCorrectAngle]) / 2;
+                rssiUsedAsAverage = (this.angleTable[0][currentAngle] +
+                        this.angleTable[0][lastCorrectAngle]) / 2;
                 for (int i = lastCorrectAngle +1 ; i < currentAngle ; i++ ){
-                    this.angleTable[1][i] = rssiUsedAsAverage;
+                    this.angleTable[0][i] = rssiUsedAsAverage;
                 }
                 missedAngles = 0;
                 down = false;
             }
+
+            //Verify the number of consecutive minimal values to replace
             if (missedAngles >= MAX_MISSED_ANGLE) {
                 missedAngles = 0;
                 down = false;
             }
         }
-        /*
-        for (currentAngle = 0 ; currentAngle < ANGLE ; currentAngle ++) {
-            Log.e("Math","Angle:" + currentAngle + "Rssi" + this.angleTable[1][currentAngle]+";");
-        }*/
     }
 }
