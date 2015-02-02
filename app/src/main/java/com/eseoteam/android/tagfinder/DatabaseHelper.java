@@ -11,11 +11,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class DatabaseHelper {
-
-    private static final String TAG = DatabaseHelper.class.getSimpleName();
 
     /**
      * Table configuration: columns of the database
@@ -25,10 +22,8 @@ public class DatabaseHelper {
     private static final String TAG_NAME = "tag_name";
     private static final String TAG_MID = "tag_mid";
     private static final String TAG_DATA = "tag_data";
-    //private static final String KEY_TIMESTAMP = "timestamp";
 
     private SQLiteDatabase database;
-
 
     /**
      * Wrapper class: DatabaseHelper will perform database operations
@@ -67,8 +62,6 @@ public class DatabaseHelper {
 
         String buildSQL = "SELECT * FROM " + TABLE_NAME;
 
-        Log.d(TAG, "getAllData SQL: " + buildSQL);
-
         return database.rawQuery(buildSQL, null);
     }
 
@@ -82,12 +75,14 @@ public class DatabaseHelper {
 
         String buildSQL = "SELECT * FROM " + TABLE_NAME + " WHERE _id = ?";
 
-        Log.d(TAG, "getOneTag SQL: " + buildSQL);
-
         return database.rawQuery(buildSQL, new String[] { String.valueOf(id) });
 
     }
 
+    /**
+     * Delete one tag and his information from the database
+     * @param id of the tag
+     */
     public void deleteOneTag(long id){
 
         String whereClause = TAG_ID + "=?";
@@ -95,6 +90,4 @@ public class DatabaseHelper {
         database.delete(TABLE_NAME, whereClause, whereArgs);
 
     }
-
-
 }

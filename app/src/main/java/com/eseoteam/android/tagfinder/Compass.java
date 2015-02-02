@@ -91,8 +91,6 @@ public class Compass implements SensorEventListener{
         signalAngleChanged();
     }
 
-
-
     /**
      * Allow to calibrate the compass
      */

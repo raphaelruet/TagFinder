@@ -20,7 +20,6 @@ public class MathematicianTest extends InstrumentationTestCase {
     public void testAddData(){
 
         int i;
-
         int table[][] = new int[ROW][ANGLE];
 
         //Initialisation of the table
@@ -47,19 +46,22 @@ public class MathematicianTest extends InstrumentationTestCase {
 
     }
 
+    /**
+     * Test Rssi smoothing
+     */
     public void testFilterRssi() {
         final Mathematician math = new Mathematician();
         math.addData(10, -50);
-        math.addData(11,-80);
+        math.addData(11, -80);
         math.addData(12,-80);
-        math.addData(13,-30);
+        math.addData(13, -30);
         math.addData(14,-80);
-        math.addData(15,-80);
+        math.addData(15, -80);
         math.addData(16,-80);
-        math.addData(17,-80);
-        math.addData(18,-50);
+        math.addData(17, -80);
+        math.addData(18, -50);
 
-        math.filterRssi();
+        math.rssiSmoothing();
         assertEquals("addDataWithSmoothTest - Test5 - equals",-40,math.getRssi(11));
         assertEquals("addDataWithSmoothTest - Test5 - equals",-40,math.getRssi(12));
         assertEquals("addDataWithSmoothTest - Test5 - equals",-80,math.getRssi(17));
@@ -140,8 +142,6 @@ public class MathematicianTest extends InstrumentationTestCase {
         for(angle=280; angle<360; angle++){
             math.addData(angle,-80);
         }
-
-
 
         int[] finalTab = math.bestZoneSelection();
 
