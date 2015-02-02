@@ -15,6 +15,4 @@ public interface CompassListener {
      * @param event Event of a angle change.
      */
     public void notifyAngleChanged(AngleChangedEvent event);
-
-
 }
