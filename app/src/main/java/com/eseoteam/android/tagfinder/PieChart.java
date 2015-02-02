@@ -9,8 +9,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import java.util.Map;
-
 /**
  * Manage the Creation of the PieChart
  * Created on 12/01/2014.
