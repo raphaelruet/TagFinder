@@ -2,8 +2,8 @@ package com.eseoteam.android.tagfinder;
 
 import android.util.Log;
 
-import com.eseoteam.android.tagfinder.events.AddTagEvent;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
+import com.eseoteam.android.tagfinder.events.DirectionChangedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class Guide extends Thread implements CompassListener, BinderListener{
+public class Guide extends Thread implements CompassListener, CruiseControlListener {
 
     // Attributes //
 
@@ -73,6 +73,8 @@ public class Guide extends Thread implements CompassListener, BinderListener{
      */
     private Tag wantedTag;
 
+    private boolean directionChanged;
+
     // Constructors //
 
     /**
@@ -83,7 +85,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
         this.binder = binder;
         this.listeners = new ArrayList<>();
         this.currentState = State.ASK_FOR_CALIBRATION;
-
+        this.directionChanged = false;
         this.currentCompassAngle = 0;
         this.wantedTag = new Tag(-80,0,0,"","");
         this.mathematician = new Mathematician();
@@ -95,7 +97,6 @@ public class Guide extends Thread implements CompassListener, BinderListener{
 
     public void run() {
         int angles[] = new int[2];
-        int direction = 0;
         while (!(this.stop)){
             switch (currentState){
                 case IDLE:
@@ -126,6 +127,15 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                 case GUIDE:
                     updatePieChart(angles[START]-this.currentCompassAngle,
                                 angles[STOP]-this.currentCompassAngle);
+                    this.mathematician.addData(this.currentCompassAngle, this.wantedTag.getRssi());
+                    if(this.directionChanged) {
+                        angles = this.mathematician.bestZoneSelection();
+                        this.mathematician.initMatrix();
+                        this.mathematician.clearZoneList();
+                        this.directionChanged = false;
+                        Log.e("Guide","On a calculé une nouvelle zone" + angles[0] + " end " + angles[1]);
+                    }
+                    /*
                     if(direction == 0) {
                         if (this.currentCompassAngle == angles[START]) {
                             direction = 1;
@@ -151,7 +161,7 @@ public class Guide extends Thread implements CompassListener, BinderListener{
                         angles = this.mathematician.bestZoneSelection();
                         direction = 0;
                         Log.e("Fin scan", " direction 2 start" + angles[START] + "stop" + angles[STOP]);
-                    }
+                    }*/
 
                     break;
                 case DEBUG:
@@ -246,22 +256,6 @@ public class Guide extends Thread implements CompassListener, BinderListener{
         }
     }
 
-
-    @Override
-    public void notifyTagToAddFound(AddTagEvent event) {
-        //Nothing to be done here.
-    }
-
-    @Override
-    public void notifyFrameReceived() {
-        //Nothing to be done here.
-    }
-
-    @Override
-    public void notifyAngleStabilized() {
-        //Nothing to be done here.
-    }
-
     /**
      * Modifies the currentCompassAngle when it has changed
      */
@@ -274,6 +268,22 @@ public class Guide extends Thread implements CompassListener, BinderListener{
             this.wantedTag.setReadCount(this.binder.getWantedTag().getReadCount());
             this.binder.acknowledgeFrameTaken();
         }
+    }
+
+    @Override
+    public void notifySpeedTooHigh() {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifySpeedOK() {
+        //Nothing to be done here.
+    }
+
+    @Override
+    public void notifyDirectionChanged(DirectionChangedEvent event) {
+        this.directionChanged = true;
+        Log.e("Guide","Direction changed !!!");
     }
 
 }

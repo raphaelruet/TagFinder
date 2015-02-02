@@ -16,9 +16,6 @@ import android.widget.Toast;
 
 import com.eseoteam.android.tagfinder.communication.Communication;
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
-import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
-
 
 public class ConnectionActivity extends Activity implements BinderListener{
 

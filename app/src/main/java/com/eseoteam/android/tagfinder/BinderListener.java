@@ -1,8 +1,7 @@
 package com.eseoteam.android.tagfinder;
 
 import com.eseoteam.android.tagfinder.events.AddTagEvent;
-import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
-import com.eseoteam.android.tagfinder.events.FrameBindedEvent;
+
 
 /**
  * Listener on the Binder class events.

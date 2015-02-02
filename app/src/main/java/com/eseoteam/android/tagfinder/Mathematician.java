@@ -65,10 +65,9 @@ public class Mathematician {
 
     public void clearZoneList() {
         if(this.zoneList.size() != 0) {
-            for (int i = 0; i < this.zoneList.size(); i++) {
-                this.zoneList.remove(i);
-            }
+            this.zoneList.clear();
         }
+        Log.e("ClearzoneList","Size : "+this.zoneList.size());
     }
 
     /**
@@ -278,9 +277,9 @@ public class Mathematician {
                 down = false;
             }
         }
-
+        /*
         for (currentAngle = 0 ; currentAngle < ANGLE ; currentAngle ++) {
             Log.e("Math","Angle:" + currentAngle + "Rssi" + this.angleTable[1][currentAngle]+";");
-        }
+        }*/
     }
 }

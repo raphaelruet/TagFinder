@@ -379,6 +379,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         this.compass.registerSensors();
         this.cruiseControl.registerSensors();
         this.cruiseControl.addCruiseControlListener(this);
+        this.cruiseControl.addCruiseControlListener(this.guide);
+
         Log.i(LOG_TAG, "onResume : Les capteurs du compass sont bien enregistrés");
         //Démarrage du guide
         this.guide.start();
@@ -398,6 +400,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
         this.compass.removeCompassListener(this.guide);
         this.cruiseControl.unregisterSensors();
         this.cruiseControl.removeCruiseControlListener(this);
+        this.cruiseControl.removeCruiseControlListener(this.guide);
         Log.i(LOG_TAG,"onPause : Le listener du Guide sur le Compass a bien été supprimé");
         // Arrêt du guide
         this.guide.stopGuide();
