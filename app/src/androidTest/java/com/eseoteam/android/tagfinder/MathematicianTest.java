@@ -47,18 +47,24 @@ public class MathematicianTest extends InstrumentationTestCase {
 
     }
 
-    public void testAddDataWithSmooth() {
+    public void testFilterRssi() {
         final Mathematician math = new Mathematician();
         math.addData(10, -50);
-        assertEquals("addDataWithSmoothTest - Test1 - equals",-50,math.getRssi(10));
         math.addData(11,-80);
-        assertEquals("addDataWithSmoothTest - Test2 - equals",1,math.getMissedAngles());
         math.addData(12,-80);
-        assertEquals("addDataWithSmoothTest - Test3 - equals",2,math.getMissedAngles());
         math.addData(13,-30);
-        assertEquals("addDataWithSmoothTest - Test4 - equals",-40,math.getRssi(11));
+        math.addData(14,-80);
+        math.addData(15,-80);
+        math.addData(16,-80);
+        math.addData(17,-80);
+        math.addData(18,-50);
+
+        math.filterRssi();
+        assertEquals("addDataWithSmoothTest - Test5 - equals",-40,math.getRssi(11));
         assertEquals("addDataWithSmoothTest - Test5 - equals",-40,math.getRssi(12));
-        assertEquals("addDataWithSmoothTest - Test5 - equals",0,math.getMissedAngles());
+        assertEquals("addDataWithSmoothTest - Test5 - equals",-80,math.getRssi(17));
+
+
     }
 
     /**

@@ -39,13 +39,6 @@ public class Mathematician {
     private ArrayList<Zone> zoneList;
 
     /**
-     * The counter of missedAngles where there were no frame
-     */
-    private int missedAngles;
-
-    private boolean down;
-
-    /**
      * The maximum number of angles that could conduct to a smoothing of the RSSIs
      */
     private static final int MAX_MISSED_ANGLE = 3;
@@ -57,8 +50,6 @@ public class Mathematician {
     public Mathematician() {
 
         this.angleTable = new int[ROW][ANGLE];
-        this.missedAngles = 0;
-        this.down = false;
         zoneList  = new ArrayList<>();
         initMatrix();
     }
@@ -86,10 +77,9 @@ public class Mathematician {
      * @param rawRssi second row
      */
     public void addData (int angle, int rawRssi){
+
         int rssi;
         int nbPassage = this.angleTable[2][angle];
-        int lastCorrectAngle;
-        int rssiUsedAsAverage;
 
         if(nbPassage == 0){
             rssi = rawRssi;
@@ -97,30 +87,8 @@ public class Mathematician {
             rssi = (this.angleTable[1][angle]*nbPassage + rawRssi) / (nbPassage + 1 );
         }
         nbPassage ++;
-
-        this.angleTable[0][angle] = angle;
         this.angleTable[1][angle] = rssi ;
         this.angleTable[2][angle] = nbPassage;
-
-        if(angle != 0 && this.angleTable[1][angle] == -80 && this.angleTable[1][angle - 1] != -80 ) {
-            this.down = true;
-        }
-        if (rawRssi <= -80 && down){
-            this.missedAngles ++;
-        }
-        if (rawRssi > -80 && this.missedAngles != 0){
-            lastCorrectAngle = angle - ( this.missedAngles + 1);
-            rssiUsedAsAverage = (rawRssi + this.angleTable[1][lastCorrectAngle]) / 2;
-            for (int i = lastCorrectAngle +1 ; i < angle ; i++ ){
-                this.angleTable[1][i] = rssiUsedAsAverage;
-            }
-            this.missedAngles = 0;
-            this.down = false;
-        }
-        if (this.missedAngles >= MAX_MISSED_ANGLE) {
-            this.missedAngles = 0;
-            this.down = false;
-        }
     }
 
     /**
@@ -139,10 +107,6 @@ public class Mathematician {
      */
     public int getNbPassage(int angle){
         return this.angleTable[2][angle];
-    }
-
-    public int getMissedAngles(){
-        return this.missedAngles;
     }
 
     /**
@@ -202,6 +166,7 @@ public class Mathematician {
      * @return tab with angles values of the searched tag.
      */
     public int[] bestZoneSelection(){
+        this.filterRssi();
         this.medianAlgorithm();
         int [] angleDirection = new int [2];
         
@@ -283,5 +248,39 @@ public class Mathematician {
             sumRssi = 0;
         }
         return indexZone;
+    }
+
+    public void filterRssi() {
+        boolean down = false;
+        int missedAngles = 0;
+        int currentAngle;
+        int lastCorrectAngle;
+        int rssiUsedAsAverage;
+
+        for (currentAngle = 0 ; currentAngle < ANGLE ; currentAngle ++) {
+            if(currentAngle != 0 && this.angleTable[1][currentAngle] == -80 && this.angleTable[1][currentAngle - 1] != -80 ) {
+                down = true;
+            }
+            if (this.angleTable[1][currentAngle] <= -80 && down){
+                missedAngles ++;
+            }
+            if (this.angleTable[1][currentAngle] > -80 && missedAngles != 0){
+                lastCorrectAngle = currentAngle - ( missedAngles + 1);
+                rssiUsedAsAverage = (this.angleTable[1][currentAngle] + this.angleTable[1][lastCorrectAngle]) / 2;
+                for (int i = lastCorrectAngle +1 ; i < currentAngle ; i++ ){
+                    this.angleTable[1][i] = rssiUsedAsAverage;
+                }
+                missedAngles = 0;
+                down = false;
+            }
+            if (missedAngles >= MAX_MISSED_ANGLE) {
+                missedAngles = 0;
+                down = false;
+            }
+        }
+
+        for (currentAngle = 0 ; currentAngle < ANGLE ; currentAngle ++) {
+            Log.e("Math","Angle:" + currentAngle + "Rssi" + this.angleTable[1][currentAngle]+";");
+        }
     }
 }
