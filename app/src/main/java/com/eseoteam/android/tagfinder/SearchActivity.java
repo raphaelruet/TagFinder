@@ -30,10 +30,8 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     // Attributes //
 
     /**
-     * The default connection port of the socket.
+     * Communication with the UDP client.
      */
-    private static final int CONNECTION_PORT = 12345;
-
     private Communication communication;
     /**
      * Header to print a log message
@@ -443,7 +441,7 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
     private void initializeCommunication() {
         String wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
         Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
-        this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
+        this.communication = new Communication(wifiAddress, Communication.CONNECTION_PORT, binder);
         this.communication.start();
     }
 

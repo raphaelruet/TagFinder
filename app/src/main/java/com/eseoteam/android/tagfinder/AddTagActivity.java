@@ -21,11 +21,6 @@ import com.eseoteam.android.tagfinder.events.AddTagEvent;
 public class AddTagActivity extends Activity implements BinderListener {
 
     /**
-     * The default connection port of the socket.
-     */
-    private static final int CONNECTION_PORT = 12345;
-
-    /**
      * Header to print a log message
      */
     private static final String LOG_TAG = "AddTagActivity";
@@ -152,7 +147,7 @@ public class AddTagActivity extends Activity implements BinderListener {
 
         this.binder = new Binder(Binder.Mode.ADD_TAG);
         this.binder.addListener(this);
-        this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
+        this.communication = new Communication(wifiAddress, Communication.CONNECTION_PORT, binder);
         this.communication.start();
     }
 
