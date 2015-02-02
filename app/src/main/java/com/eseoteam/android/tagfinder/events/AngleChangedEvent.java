@@ -2,9 +2,9 @@ package com.eseoteam.android.tagfinder.events;
 
 /**
  * Created on 19/01/2015.
- *
+ * The angle changed event
  * @author Raphael RUET.
- * @version 0.1.
+ * @version 0.2.
  */
 public class AngleChangedEvent {
 
@@ -21,6 +21,10 @@ public class AngleChangedEvent {
         this.angle = changedAngle;
     }
 
+    /**
+     * Allow to get the angle
+     * @return the angle
+     */
     public int getAngle() {
         return this.angle;
     }
