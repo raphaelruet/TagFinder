@@ -38,11 +38,6 @@ public class ConnectionActivity extends Activity implements BinderListener{
     private static final int REQUEST_ENABLE_WIFI = 1;
 
     /**
-     * The default connection port of the socket.
-     */
-    private static final int CONNECTION_PORT = 12345;
-
-    /**
      * Ip address of the device.
      */
     private String wifiAddress;
@@ -224,7 +219,7 @@ public class ConnectionActivity extends Activity implements BinderListener{
 
             this.binder = new Binder(Binder.Mode.CHECK_CONNECTION);
             this.binder.addListener(this);
-            this.communication = new Communication(this.wifiAddress, CONNECTION_PORT, binder);
+            this.communication = new Communication(this.wifiAddress, Communication.CONNECTION_PORT, binder);
             this.communication.start();
     }
 
@@ -239,7 +234,7 @@ public class ConnectionActivity extends Activity implements BinderListener{
             {
                 //Notify user he's connected.
                 Toast.makeText(getApplicationContext(),"Connected with IP: " + wifiAddress
-                        + "\nOn port : " + CONNECTION_PORT,Toast.LENGTH_LONG).show();
+                        + "\nOn port : " + Communication.CONNECTION_PORT,Toast.LENGTH_LONG).show();
                 //Go to library screen
                 startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
             }

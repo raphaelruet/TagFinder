@@ -21,11 +21,6 @@ import com.eseoteam.android.tagfinder.events.AddTagEvent;
 public class AddTagActivity extends Activity implements BinderListener {
 
     /**
-     * The default connection port of the socket.
-     */
-    private static final int CONNECTION_PORT = 12345;
-
-    /**
      * Header to print a log message
      */
     private static final String LOG_TAG = "AddTagActivity";
@@ -88,14 +83,14 @@ public class AddTagActivity extends Activity implements BinderListener {
             EditText tagNameField = (EditText) findViewById(R.id.tagNameField);
             EditText tagIdField = (EditText) findViewById(R.id.tagIdField);
             EditText tagDataField = (EditText) findViewById(R.id.tagDataField);
+
             //Get the string contained in the editTexts.
             final String tagNameFieldString = tagNameField.getText().toString();
             final String tagIdFieldString = tagIdField.getText().toString();
             final String tagDataFieldString = tagDataField.getText().toString();
 
             //Checks if tagName or tagId are empty
-            //TODO Put the security for empty tag field over.
-            if(tagNameFieldString.matches("")/* || tagIdFieldString.matches("")*/) {
+            if(tagNameFieldString.matches("") || tagIdFieldString.matches("")) {
                 Toast.makeText(getApplicationContext(),
                         R.string.toast_empty_field, Toast.LENGTH_SHORT).show();
             }
@@ -152,10 +147,14 @@ public class AddTagActivity extends Activity implements BinderListener {
 
         this.binder = new Binder(Binder.Mode.ADD_TAG);
         this.binder.addListener(this);
-        this.communication = new Communication(wifiAddress, CONNECTION_PORT, binder);
+        this.communication = new Communication(wifiAddress, Communication.CONNECTION_PORT, binder);
         this.communication.start();
     }
 
+    /**
+     * Notify when a tag to add is found
+     * @param event Event containing the id of th tag to add.
+     */
     @Override
     public void notifyTagToAddFound(AddTagEvent event) {
         final String id = event.getId();

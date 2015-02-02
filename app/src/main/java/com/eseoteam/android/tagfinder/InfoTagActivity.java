@@ -66,14 +66,13 @@ public class InfoTagActivity extends ActionBarActivity {
         setContentView(R.layout.activity_info_tag);
         getSupportActionBar().hide();
 
-        // Récupération des dimensions de l 'écran afin de régler la position des toasts
+        //Get back screen dimension in order to ajust toats position
         DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
         toastYPosition = (displayMetrics.heightPixels/2);
 
         //Sets the listener
         setListeners();
 
-        //String tagName = this.getIntent().getStringExtra(TAG_NAME);
         this.databaseHelper = new DatabaseHelper(this);
 
         //Find the fields to fill with information
@@ -81,8 +80,6 @@ public class InfoTagActivity extends ActionBarActivity {
         textTagId = (TextView) findViewById(R.id.tagId);
         textTimestamp = (TextView) findViewById(R.id.tagDate);
         textTagData = (TextView) findViewById(R.id.tagInfo);
-
-
 
         //Find clicked tag in database
         this.idInDatabase = getIntent().getLongExtra("tag_id_in_db", -1);
@@ -103,7 +100,7 @@ public class InfoTagActivity extends ActionBarActivity {
     }
 
     /**
-     * Calls the differents listener setters
+     * Call the different listeners' setters
      */
     private void setListeners() {
         //searchButton
