@@ -97,6 +97,7 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
 
     public void run() {
         int angles[] = new int[2];
+        int tempAngles[] = new int[2];
         while (!(this.stop)){
             switch (currentState){
                 case IDLE:
@@ -129,7 +130,10 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
                                 angles[STOP]-this.currentCompassAngle);
                     this.mathematician.addData(this.currentCompassAngle, this.wantedTag.getRssi());
                     if(this.directionChanged) {
-                        angles = this.mathematician.bestZoneSelection();
+                        tempAngles = this.mathematician.bestZoneSelection();
+                        if ( tempAngles[START] != -1 && tempAngles[STOP] != -1 ) {
+                            angles = tempAngles;
+                        }
                         this.mathematician.initMatrix();
                         this.mathematician.clearZoneList();
                         this.directionChanged = false;
@@ -282,8 +286,10 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
 
     @Override
     public void notifyDirectionChanged(DirectionChangedEvent event) {
-        this.directionChanged = true;
-        Log.e("Guide","Direction changed !!!");
+        if(this.currentState == State.GUIDE) {
+            this.directionChanged = true;
+            Log.e("Guide", "Direction changed !!!");
+        }
     }
 
 }

@@ -58,6 +58,12 @@ public class CruiseControl implements SensorEventListener{
      */
     private static final double MIN_SPEED = 0.1;
 
+    private float averageSpeed;
+
+    private float previousSpeed;
+
+    private int direction;
+
     // Constructor //
 
     /**
@@ -67,6 +73,8 @@ public class CruiseControl implements SensorEventListener{
         this.sensorManager = sensorManager;
         this.listeners = new ArrayList<>();
         this.index = 0;
+        this.direction = 1;
+        this.previousSpeed = 0;
         this.speed = new double[ROUND_VALUE];
         for (int i = 0 ; i < ROUND_VALUE ; i++){
             this.speed[i] = 0;
@@ -93,7 +101,8 @@ public class CruiseControl implements SensorEventListener{
         if (newValue > 2*SPEED_LIMIT){
             newValue = (float)(2*SPEED_LIMIT);
         }
-        float averageSpeed = 0;
+        previousSpeed = averageSpeed;
+        averageSpeed = 0;
         if (this.index < ROUND_VALUE-1){
             this.speed[index] = newValue;
             this.index ++;
@@ -113,11 +122,15 @@ public class CruiseControl implements SensorEventListener{
         }
 
         //Signal when the direction has changed
-        if (averageSpeed > MIN_SPEED){
-            signalDirectionChanged(false);
-        }
-        if (averageSpeed < - MIN_SPEED){
+        if(previousSpeed > 0 && averageSpeed < 0 && direction != 1) {
+            this.direction = 1;
+            Log.e("CruiseControl:compute","On a signal");
             signalDirectionChanged(true);
+        }
+        if (previousSpeed < 0 && averageSpeed > 0 && direction != 2) {
+            this.direction = 2;
+            Log.e("CruiseControl:compute","On a signal2");
+            signalDirectionChanged(false);
         }
     }
 
