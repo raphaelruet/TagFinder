@@ -15,8 +15,7 @@ import android.view.View;
  * @author Raphael RUET.
  * @version 0.1.
  */
-public class PieChart extends View
-{
+public class PieChart extends View{
     // Attributes //
 
     /**
