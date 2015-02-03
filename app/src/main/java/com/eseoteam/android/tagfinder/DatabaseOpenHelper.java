@@ -10,11 +10,8 @@ package com.eseoteam.android.tagfinder;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
-
-    private static final String TAG = DatabaseHelper.class.getSimpleName();
 
     /**
      * Database configuration : name & version
@@ -33,6 +30,10 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private static final String TAG_DATA = "tag_data";
     private static final String COLUMN_TIME_STAMP = "timestamp";
 
+    /**
+     * Class constructor
+     * @param aContext the current context
+     */
     public DatabaseOpenHelper(Context aContext) {
         super(aContext, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -47,8 +48,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         String buildSQL = "CREATE TABLE " + TABLE_NAME + "( " + TAG_ID + " INTEGER PRIMARY KEY, " +
                 TAG_NAME + " TEXT, " + TAG_MID + " TEXT, " + TAG_DATA + " TEXT, " +
                 COLUMN_TIME_STAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ");";
-
-        Log.d(TAG, "onCreate SQL: " + buildSQL);
         sqLiteDatabase.execSQL(buildSQL);
     }
 
@@ -63,7 +62,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
         String buildSQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-        Log.d(TAG, "onUpgrade SQL: " + buildSQL);
         // drop previous table
         sqLiteDatabase.execSQL(buildSQL);
         // create the table from the beginning

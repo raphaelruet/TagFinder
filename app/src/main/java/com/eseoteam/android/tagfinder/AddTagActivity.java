@@ -143,7 +143,6 @@ public class AddTagActivity extends Activity implements BinderListener {
      */
     private void initializeCommunication() {
         String wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
-        Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
 
         this.binder = new Binder(Binder.Mode.ADD_TAG);
         this.binder.addListener(this);

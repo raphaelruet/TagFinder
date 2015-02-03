@@ -93,14 +93,26 @@ public class Tag {
         return this.time;
     }
 
+    /**
+     * Set the specified RSSI
+     * @param rssi The RSSI to set.
+     */
     public void setRssi(int rssi){
         this.rssi = rssi;
     }
 
+    /**
+     * Set the specified phase
+     * @param phase The pase to set.
+     */
     public void setPhase(int phase) {
         this.phase = phase;
     }
 
+    /**
+     * Set the specified readCount
+     * @param readCount The readCount to set.
+     */
     public void setReadCount(int readCount) {
         this.readCount = readCount;
     }

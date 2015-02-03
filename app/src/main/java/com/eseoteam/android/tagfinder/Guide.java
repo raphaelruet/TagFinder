@@ -1,8 +1,8 @@
 package com.eseoteam.android.tagfinder;
 
-import android.util.Log;
 import com.eseoteam.android.tagfinder.events.AngleChangedEvent;
 import com.eseoteam.android.tagfinder.events.PieChartChangedEvent;
+
 import java.util.ArrayList;
 
 /**
@@ -25,11 +25,6 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
         GUIDE,
         DEBUG
     }
-
-    /**
-     * Header to print a log message
-     */
-    private static final String LOG_TAG = Guide.class.getSimpleName();
 
     /**
      * The index of the start angle in the angle table given by the mathematician
@@ -208,7 +203,6 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
      * Stops the Guide
      */
     public void stopGuide() {
-        Log.i(LOG_TAG, "Guide has been correctly stopped");
         this.stop = true;
     }
 
@@ -226,7 +220,6 @@ public class Guide extends Thread implements CompassListener, CruiseControlListe
     private void askForCalibration() {
         this.updatePieChart(0,360);
         for (GuideListener listener : this.listeners) {
-            Log.e(LOG_TAG,"User as been asked to calibrate");
             listener.notifyCalibrationAsked();
         }
         this.setState(State.IDLE);
