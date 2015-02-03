@@ -1,7 +1,5 @@
 package com.eseoteam.android.tagfinder;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 /**
@@ -72,7 +70,6 @@ public class Mathematician {
         if(this.zoneList.size() != 0) {
             this.zoneList.clear();
         }
-        Log.e("ClearzoneList","Size : "+this.zoneList.size());
     }
 
     /**
@@ -123,7 +120,6 @@ public class Mathematician {
         int minRSSI = minRSSI();
 
         int median = (int)Math.floor((maxRSSI + minRSSI) / 2);
-        Log.e("Mathematician" ," min "+ minRSSI + "max" + maxRSSI + "median" + median);
         for(angle = 0; angle < ANGLE; angle++) {
             if (angleTable[0][angle] > median){
                 angleTable[0][angle] = angleTable[0][angle] - median;
@@ -220,8 +216,6 @@ public class Mathematician {
             if(angleStart!= angleStop && angleStop!=0) {
 
                 Zone zone = new Zone(angleStart, angleStop, angleStop - angleStart) ;
-                Log.e(" Zone ", " angleStart " + angleStart + " angleStop " + angleStop);
-                Log.e(" Size List", "" + this.zoneList.size());
                 zoneList.add(zone);
 
                 angleStart = 0;

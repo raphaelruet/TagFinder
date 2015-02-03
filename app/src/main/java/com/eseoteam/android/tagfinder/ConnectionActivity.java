@@ -145,7 +145,6 @@ public class ConnectionActivity extends Activity implements BinderListener{
         //If the wifi is disabled, ask the user to enable it.
         switch (requestCode) {
             case REQUEST_ENABLE_WIFI:
-                Log.i(LOG_TAG, "Everything is ok");
                 break;
             default:
                 Toast.makeText(getApplicationContext(),
@@ -215,7 +214,6 @@ public class ConnectionActivity extends Activity implements BinderListener{
      */
     private void initializeCommunication() {
             this.wifiAddress = Communication.getWifiIpAddress(getApplicationContext());
-            Log.e(LOG_TAG, "Wifi Address:" + wifiAddress);
 
             this.binder = new Binder(Binder.Mode.CHECK_CONNECTION);
             this.binder.addListener(this);

@@ -199,7 +199,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
             guide.setState(Guide.State.SCAN);
             guide.askForScan();
             compass.calibrateCompass();
-            Log.e(LOG_TAG, "On est passé");
         }
     };
 
@@ -263,7 +262,6 @@ public class SearchActivity extends ActionBarActivity implements GuideListener, 
             }
         };
         this.runOnUiThread(action);
-        Log.e(LOG_TAG,"User as been asked to calibrate");
     }
 
     /**
